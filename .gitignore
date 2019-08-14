@@ -1,1 +1,5 @@
-.vscode/settings.json
+node_modules/
+.vscode/
+**/*.js
+**/*.js.map
+!build/build.jsbuild
