@@ -116,7 +116,7 @@ let trackedVehicle: Vehicle;
 let shootOsc: p5.Oscillator;
 let shootEnv: p5.Envelope;
 
-const stars: any[] = [];
+const stars: Star[] = [];
 const vehicles: Vehicle[] = [];
 const asteroids: Asteroid[] = [];
 const gTargets: Target[] = [];
@@ -297,6 +297,7 @@ function createVehicles(n: number) {
 function createAsteroids(n: number) {
   repeat(n, (ix: number) => asteroids.push(createAsteroid()));
 }
+
 function createStarfield() {
   repeat(1000 * numberOfWorldPages(), (ix: number) =>
     stars.push({
@@ -941,7 +942,7 @@ function drawTarget(t: Target) {
 
   pop();
 }
-function drawTargetPetals(numPetals: number, fn: (ix: number) => any) {
+function drawTargetPetals(numPetals: number, fn: (ix: number) => void) {
   const angle = TWO_PI / numPetals;
   push();
   repeat(numPetals, (ix: number) => {
