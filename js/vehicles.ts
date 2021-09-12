@@ -90,12 +90,12 @@ function updateVehicle(v: Vehicle) {
     //reset accel for next time
 
     v.life -= random(0.001, 0.01);
-    const particle = createParticleAt(v.pos);
-    particle.vel = v.accel
+    const trailParticle = createParticleAt(v.pos);
+    trailParticle.vel = v.accel
         .copy()
         .mult(20)
-        .rotate(PI + random(-0.3, 0.3));
-    addParticle(particle, v.trail.particles);
+        .rotate(180 + random(-1, 1));
+    addParticle(trailParticle, v.trail.particles);
     v.accel.mult(0);
     v.tookDamage = false;
 }

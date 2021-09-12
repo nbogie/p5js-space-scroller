@@ -1,5 +1,6 @@
 function shatterAsteroid(a: Asteroid) {
-    playSoundAsteroidDestroyed();
+
+    playSoundAsteroidDestroyed(a.sizeCategory);
     if (a.sizeCategory >= 2) {
         addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });
         addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });
@@ -21,11 +22,12 @@ function drawAsteroid(a: Asteroid) {
         noStroke();
         square(0, 0, a.radius * 2.7, 6, 6);
         pop();
-
-        textSize(12);
+        fill('white')
+        textSize(14);
+        textAlign(CENTER, CENTER);
         stroke("black");
         strokeWeight(2);
-        text(a.hp, 20, 20);
+        text(a.hp, 0, 0);
 
         pop();
     }

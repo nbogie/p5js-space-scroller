@@ -1,10 +1,11 @@
 
+type AsteroidSize = 4 | 3 | 2 | 1;
 interface Asteroid {
     live: boolean;
     pos: p5.Vector;
     vel: p5.Vector;
     resType: ResourceType;
-    sizeCategory: number;
+    sizeCategory: AsteroidSize;
     radius: number;
     damage: number;
     hp: number;
@@ -103,3 +104,5 @@ interface Vehicle {
     desiredVector: p5.Vector;
     tookDamage: boolean;
 }
+
+type BoomEventSize = 'small' | 'med' | 'big'

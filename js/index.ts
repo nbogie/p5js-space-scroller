@@ -8,12 +8,10 @@ p5.disableFriendlyErrors = true;
 
 const shouldDrawTrails = true;
 const shouldDrawStars = false;
-const shouldPlaySound = true;
+let shouldPlaySound = true;
+let soundNotYetEnabledByGesture = true;
 
 let trackedVehicle: Vehicle;
-
-let shootOsc: p5.Oscillator;
-let shootEnv: p5.Envelope;
 
 const stars: Star[] = [];
 const vehicles: Vehicle[] = [];
@@ -37,7 +35,7 @@ let gPalette: Palette;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
-  setupSound();
+
   cameraPos = createVector(0, 0);
   frameRate(60);
   angleMode(RADIANS);
@@ -47,7 +45,6 @@ function setup() {
   createVehicles(gNumVehicles);
   createAsteroids(10 * numberOfWorldPages());
   createStarfield();
-
   background("black");
   ellipseMode(CENTER);
   rectMode(CENTER);
@@ -95,21 +92,25 @@ function updateAll() {
   updateCamera(cameraPos, trackedVehicle);
 
   trackedVehicle = vehicles.find((v: Vehicle) => v.hp > 0);
+  updateEngineWhistleSound()
+
 }
 
 
 function keyPressed() {
   switch (key) {
+    case "m":
+      toggleMute();
+      break;
     case "r":
       randomizePalette();
-      redraw();
       break;
     case "o":
       if (trackedVehicle) {
         addOrb(trackedVehicle);
       }
       break;
-    case "m":
+    case "b":
       randomizeMonoPalette();
       redraw();
       break;
@@ -119,6 +120,11 @@ function keyPressed() {
 
 function mouseMoved() { }
 function mousePressed() {
+  if (shouldPlaySound && soundNotYetEnabledByGesture) {
+    soundNotYetEnabledByGesture = false;
+    setupSound();
+  }
+
   addAsteroid({ pos: mouseWorldPos() });
 }
 
