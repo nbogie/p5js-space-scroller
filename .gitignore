@@ -4,3 +4,4 @@ node_modules/
 **/*.js.map
 !libs/*.js
 !build/build.js
+.DS_Store
