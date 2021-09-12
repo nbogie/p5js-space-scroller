@@ -155,7 +155,7 @@ const FaveColors = {
     "#D1F2A5,#EFFAB4,#FFC48C,#FF9F80,#F56991|mellon ball surprise by Skyblue2u|",
     "#00A8C6,#40C0CB,#F9F2E7,#AEE239,#8FBE00|fresh cut day by electrikmonk|"
   ],
-  createPalettes: function() {
+  createPalettes: function () {
     const makePalette = (str: string) => {
       const [colorsStr, name, url] = str.split("|");
       return {
@@ -168,18 +168,18 @@ const FaveColors = {
     const palettes = FaveColors.paletteStrs.map(makePalette);
     return palettes;
   },
-  randomPalette: function() {
+  randomPalette: function () {
     return random(FaveColors.createPalettes());
   },
 
-  randomBigPalette: function(minSize: number) {
+  randomBigPalette: function (minSize: number) {
     return random(
       FaveColors.createPalettes().filter(p => p.colors.length >= minSize)
     );
   },
-  randomMonoPalette: function() {
+  randomMonoPalette: function () {
     const pal = Object.assign({}, FaveColors.randomPalette());
-    pal.colors = _.sample(pal.colors, 2);
+    pal.colors = _.sampleSize(pal.colors, 2);
     return pal;
   }
 };
@@ -431,8 +431,8 @@ function drawVehicle(p: Vehicle) {
     p.tookDamage
       ? color("white")
       : p.canShoot
-      ? color(p.hue, 40, 100)
-      : color("gray")
+        ? color(p.hue, 40, 100)
+        : color("gray")
   );
   noStroke();
   const sz = 10;
@@ -516,7 +516,7 @@ function mousePos(): p5.Vector {
   return createVector(mouseX, mouseY);
 }
 
-function mouseMoved() {}
+function mouseMoved() { }
 function mousePressed() {
   addAsteroid({ pos: mouseWorldPos() });
 }
@@ -851,10 +851,10 @@ function draw() {
 
   text(
     "Camera: " +
-      JSON.stringify({
-        x: Math.round(cameraPos.x),
-        y: Math.round(cameraPos.y)
-      }),
+    JSON.stringify({
+      x: Math.round(cameraPos.x),
+      y: Math.round(cameraPos.y)
+    }),
     50,
     600
   );
@@ -956,7 +956,7 @@ function randInt(min: number, max: number): number {
 }
 
 function atLeastTwoOf(fns: (() => () => any)[]) {
-  const pickedFns = _.sample(fns, randInt(2, fns.length));
+  const pickedFns = _.sampleSize(fns, randInt(2, fns.length));
   pickedFns.forEach((f: () => any) => f());
 }
 
