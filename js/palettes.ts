@@ -58,3 +58,21 @@ function randomizeBigPalette() {
 function randomizeMonoPalette() {
     gPalette = FaveColors.randomMonoPalette();
 }
+
+function randomColor() {
+    return random(gPalette.colors);
+}
+function createEmptyColor(): p5.Color {
+    return color(255, 0);
+}
+function randomColorOrTransparent() {
+    return random([randomColor(), createEmptyColor()]);
+}
+
+
+function setPaletteForResources() {
+    randomizeBigPalette();
+    resTypes.forEach((rt, ix) => {
+        rt.color = gPalette.colors[ix];
+    });
+}

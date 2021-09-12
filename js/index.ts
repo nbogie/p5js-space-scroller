@@ -35,133 +35,6 @@ let screenShakeAmount = 0;
 
 let gPalette: Palette;
 
-function keyPressed() {
-  switch (key) {
-    case "r":
-      randomizePalette();
-      redraw();
-    case "o":
-      if (trackedVehicle) {
-        addOrb(trackedVehicle);
-      }
-      break;
-    case "m":
-      randomizeMonoPalette();
-      redraw();
-      break;
-  }
-}
-
-function createVehicle(): Vehicle {
-  return {
-    live: true,
-    pos: randomWorldPos(),
-    vel: createVector(0, 0),
-    accel: createVector(0, 0),
-    radius: 10,
-    hp: 100,
-    target: undefined,
-    fuel: 100,
-    desiredVector: createVector(0, 0),
-    maxSteeringForce: 0.2,
-    maxSpeed: random(2, 10),
-    facing: random(TWO_PI),
-    hue: random(0, 100),
-    color: randomColor(),
-    traction: 0.3,
-    steer: createVector(0, 0),
-    rammingDamage: 3,
-    canShoot: false,
-    lastShot: -99999,
-    shotDelay: 100,
-    trail: createTrail(),
-    tookDamage: false,
-    life: 1
-  };
-}
-
-function createTrail() {
-  const ps: Particle[] = [];
-  return { particles: ps };
-}
-
-const resTypes: ResourceType[] = [
-  { label: "fuel", hue: 55, color: null },
-  { label: "laser", hue: 30, color: null },
-  { label: "explosive", hue: 0, color: null },
-  { label: "magic", hue: 80, color: null }
-];
-
-function createParticle() {
-  return createParticleAt(createVector(random(width), random(height)));
-}
-
-function createParticleAt(pos: p5.Vector) {
-  return {
-    pos: pos.copy(),
-    vel: p5.Vector.random2D(),
-    hue: random(10),
-    radius: random(0.5, 3),
-    color: randomColor(),
-    life: 1
-  };
-}
-
-function createVehicles(n: number) {
-  repeat(n, (ix: number) => vehicles.push(createVehicle()));
-}
-
-function createStarfield() {
-  repeat(1000 * numberOfWorldPages(), (ix: number) =>
-    stars.push({
-      pos: randomWorldPos(),
-      radius: random(0.5, random(0.5, 3)),
-      strength: random(100)
-    })
-  );
-}
-function setPaletteForResources() {
-  randomizeBigPalette();
-  resTypes.forEach((rt, ix) => {
-    rt.color = gPalette.colors[ix];
-  });
-}
-function numberOfWorldPages() {
-  return Math.pow(worldWidth / width, 2);
-}
-
-function setupSound() {
-  if (!shouldPlaySound) {
-    return;
-  }
-  var attackLevel = 1.0;
-  var releaseLevel = 0;
-
-  var attackTime = 0.001;
-  var decayTime = 0.01;
-  var susPercent = 0.2;
-  var releaseTime = 0.05;
-
-  shootEnv = new p5.Envelope();
-  shootEnv.setADSR(attackTime, decayTime, susPercent, releaseTime);
-  shootEnv.setRange(attackLevel, releaseLevel);
-
-  shootOsc = new p5.Oscillator(440, "triangle");
-  shootOsc.amp(shootEnv);
-  shootOsc.start();
-  shootOsc.freq(880);
-}
-function drawOrb(o: Orb) {
-  if (o.live) {
-    push();
-    translateForScreenCoords(o.pos);
-    noStroke();
-    fill("white");
-    circle(0, 0, o.radius);
-    pop();
-  }
-}
-
 function setup() {
   createCanvas(windowWidth, windowHeight);
   setupSound();
@@ -178,388 +51,6 @@ function setup() {
   background("black");
   ellipseMode(CENTER);
   rectMode(CENTER);
-}
-
-function repeat(n: number, fn: (i: number, n: number) => any) {
-  for (let i = 0; i < n; i++) {
-    fn(i, n);
-  }
-}
-
-function randomColor() {
-  return random(gPalette.colors);
-}
-function randomPos(): p5.Vector {
-  return createVector(random(width), random(height));
-}
-function randomWorldPos(): p5.Vector {
-  return createVector(
-    random(-worldWidth / 2, worldWidth / 2),
-    random(-worldHeight / 2, worldHeight / 2)
-  );
-}
-
-function createEmptyColor(): p5.Color {
-  return color(255, 0);
-}
-function randomColorOrTransparent() {
-  return random([randomColor(), createEmptyColor()]);
-}
-
-function drawParticle(p: Particle) {
-  if (p.life <= 0) {
-    return;
-  }
-  push();
-  translateForScreenCoords(p.pos);
-  colorMode(HSB, 100);
-  fill(color(p.hue, 100, 100, map(p.life, 0.8, 1, 0, 100)));
-  noStroke();
-  const sz = map(p.life, 0, 1, 0, 2);
-  circle(0, 0, sz);
-  pop();
-}
-
-function translateForScreenCoords(pos: p5.Vector, labelled = false) {
-  const screenCoords = pos.copy().sub(cameraPos);
-  translate(Math.round(pos.x - cameraPos.x), Math.round(pos.y - cameraPos.y));
-  if (labelled) {
-    fill("white");
-    textSize(10);
-    text(`${Math.round(screenCoords.x)},${Math.round(screenCoords.y)}`, 20, 0);
-  }
-}
-function posToString(p: p5.Vector) {
-  return `${Math.round(p.x)}, ${Math.round(p.y)}`;
-}
-function drawVehicle(p: Vehicle) {
-  if (shouldDrawTrails) {
-    drawTrail(p.trail);
-  }
-  push();
-  translateForScreenCoords(p.pos);
-  colorMode(HSB, 100);
-
-  fill(
-    p.tookDamage
-      ? color("white")
-      : p.canShoot
-        ? color(p.hue, 40, 100)
-        : color("gray")
-  );
-  noStroke();
-  const sz = 10;
-
-  push();
-  rotate(p.facing);
-  beginShape();
-  vertex(-sz, -sz);
-  vertex(-sz, sz);
-  vertex(sz, 0);
-  endShape();
-
-  pop();
-
-  drawVec(p.desiredVector, 100, 0, 1, color(0, 0, 100, 20), 1);
-  drawVec(p.vel, 50, 0, p.maxSpeed, color(30, 0, 100, 30), 4);
-  drawVec(p.steer, 30, 0, p.maxSteeringForce, color(0, 100, 100, 25), 1);
-
-  push();
-  if (p.live) {
-    translate(0, -30);
-    fill("#101010");
-    rectMode(CENTER);
-    rect(0, 0, 30, 6);
-
-    fill(getColorForShipHP(p.hp));
-    rectMode(CORNER);
-    rect(-15, -3, map(p.hp, 0, 100, 0, 30), 6);
-    rectMode(CENTER);
-  } else {
-    translate(-15, -30);
-    text("DEAD", 0, 0);
-  }
-  pop();
-
-  pop();
-}
-function getColorForShipHP(hp: number) {
-  return lerpColor(color("red"), color("green"), (max(hp, 20) - 20) / 100);
-}
-
-function drawTrail(trail: Trail) {
-  trail.particles.forEach((p: Particle) => {
-    push();
-    translateForScreenCoords(p.pos);
-
-    noStroke();
-    fill(p.color);
-
-    square(0, 0, p.radius * 2);
-    pop();
-  });
-}
-function drawVec(
-  vec: p5.Vector,
-  len: number,
-  minMag: number,
-  maxMag: number,
-  c: p5.Color,
-  lineWidth: number = 1
-) {
-  push();
-  rotate(vec.heading());
-  stroke(c);
-  strokeWeight(lineWidth);
-  line(0, 0, map(vec.mag(), 0, maxMag, 0, len), 0);
-  pop();
-}
-function addTarget(pos: Target) {
-  gTargets.unshift(pos);
-  gTargets.splice(gNumTargets);
-  vehicles.forEach((v, ix) => {
-    v.target = gTargets[ix % gTargets.length];
-  });
-}
-function mouseWorldPos(): p5.Vector {
-  return cameraPos.copy().add(mousePos());
-}
-
-function mousePos(): p5.Vector {
-  return createVector(mouseX, mouseY);
-}
-
-function mouseMoved() { }
-function mousePressed() {
-  addAsteroid({ pos: mouseWorldPos() });
-}
-function updateParticle(p: Particle) {
-  p.pos.x += p.vel.x;
-  p.pos.y += p.vel.y;
-  p.life -= random(0.001, 0.01);
-}
-function isColliding(a: Collidable, s: Collidable) {
-  return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
-}
-function distFromCamera(p: p5.Vector) {
-  return p5.Vector.dist(
-    cameraPos.copy().add(createVector(width / 2, height / 2)),
-    p
-  );
-}
-function nearCamera(pos: p5.Vector) {
-  return distFromCamera(pos) < height;
-}
-
-function screenShake(amt: number) {
-  screenShakeAmount += amt;
-  if (screenShakeAmount > maxScreenShakeAmount) {
-    screenShakeAmount = maxScreenShakeAmount;
-  }
-}
-function updateOrb(p: Orb) {
-  if (p.live) {
-    p.pos.add(p.vel);
-    if (Math.random() < 0.01) {
-      p.exploding = true;
-      screenShake(4);
-    }
-    if (p.exploding) {
-      p.radius *= 2;
-      p.life -= 0.03;
-      if (p.life <= 0) {
-        p.live = false;
-      }
-    } else {
-      p.radius = map(sin(frameCount / 3), -1, 1, 10, 30);
-    }
-  }
-}
-function updateShot(p: Shot) {
-  if (p.live) {
-    p.pos.x += p.vel.x;
-    p.pos.y += p.vel.y;
-    asteroids
-      .filter(a => a.live)
-      .forEach(a => {
-        if (isColliding(a, p)) {
-          a.hp -= p.damage;
-          a.tookDamage = true;
-          p.live = false;
-          if (a.hp <= 0) {
-            a.live = false;
-            shatterAsteroid(a);
-          }
-        }
-      });
-    p.life -= random(0.001, 0.01);
-  }
-}
-
-function updateVehicle(v: Vehicle) {
-  v.pos.add(v.vel);
-
-  const vel = createVector(v.vel.x, v.vel.y);
-
-  const currPos = createVector(v.pos.x, v.pos.y);
-  if (!v.live) {
-    return;
-  }
-  if (v.target && v.target.live) {
-    const targetPos = createVector(v.target.pos.x, v.target.pos.y);
-    const desired = p5.Vector.sub(targetPos, currPos);
-    desired.normalize();
-    desired.mult(v.maxSpeed);
-    v.desiredVector = desired.copy().normalize();
-    v.facing = v.desiredVector
-      .copy()
-      .normalize()
-      .heading();
-
-    //steering = desired minus velocity
-    const steer = p5.Vector.sub(desired, vel);
-    steer.limit(v.maxSteeringForce);
-    v.steer = steer.copy();
-    v.accel.add(steer);
-    v.fuel -= v.accel.mag();
-  } else {
-    v.target = acquireTarget(v);
-  }
-  v.vel.add(v.accel);
-
-  updateShooting(v);
-
-  v.trail.particles.forEach(updateParticle);
-
-  //reset accel for next time
-
-  v.life -= random(0.001, 0.01);
-  const particle = createParticleAt(v.pos);
-  particle.vel = v.accel
-    .copy()
-    .mult(20)
-    .rotate(PI + random(-0.3, 0.3));
-  addParticle(particle, v.trail.particles);
-  v.accel.mult(0);
-  v.tookDamage = false;
-}
-
-function acquireTarget(vehicle: Vehicle) {
-  const closeAsteroids = asteroids.filter(
-    a => a.pos.dist(vehicle.pos) < height
-  );
-  return random(closeAsteroids.length > 0 ? closeAsteroids : asteroids);
-}
-
-function addOrb(opts: OrbOptions) {
-  const orb = {
-    pos: opts.pos.copy(),
-    vel: opts.vel.copy(),
-    live: true,
-    life: 1,
-    radius: 30,
-    exploding: false
-  };
-  orbs.unshift(orb);
-  orbs.splice(10);
-}
-
-function createShot(opts: ShotOptions): Shot {
-  colorMode(HSB, 100);
-  const shotSpread = PI / 32;
-  const sz = random([4, 5, 6, 7]);
-  const vel = opts.vel
-    .copy()
-    .normalize()
-    .mult(25)
-    .rotate(random(-shotSpread, shotSpread));
-
-  const shot = {
-    live: true,
-    pos: opts.pos.copy().add(vel),
-    rotation: vel.heading(),
-    vel: vel,
-    radius: Math.pow(sz, 2),
-    damage: sz,
-    color: color(random(50, 70), 100, 100, 100),
-    life: 1
-  };
-  return shot;
-}
-
-function addShot(opts: ShotOptions) {
-  const shot = createShot(opts);
-  gShots.unshift(shot);
-  gShots.splice(100);
-  if (nearCamera(shot.pos)) {
-    playEnv();
-  }
-}
-function drawShot(s: Shot) {
-  if (s.live) {
-    push();
-    translateForScreenCoords(s.pos);
-    fill(s.color);
-    noStroke();
-    rotate(s.rotation);
-    rect(0, 0, s.radius, s.radius / 2);
-    pop();
-  }
-}
-
-
-function shootIfTime(p: Vehicle) {
-  const ms = millis();
-  if (ms - p.lastShot > p.shotDelay) {
-    addShot({
-      pos: p.pos,
-      vel: p.vel
-        .copy()
-        .normalize()
-        .mult(40)
-        .add(p.vel)
-    });
-    p.lastShot = ms;
-  }
-}
-function updateShooting(p: Vehicle) {
-  const angleOff = p.desiredVector.angleBetween(p.vel);
-
-  p.canShoot = angleOff < TWO_PI / 36;
-  if (p.canShoot) {
-    shootIfTime(p);
-  }
-}
-
-function addParticle(p: Particle, ps: Particle[]) {
-  ps.unshift(p);
-  ps.splice(100);
-}
-function onScreen(pos: p5.Vector, radius: number) {
-  return (
-    pos.x + radius >= cameraPos.x &&
-    pos.x - radius <= cameraPos.x + width &&
-    pos.y + radius >= cameraPos.y &&
-    pos.y - radius <= cameraPos.y + height
-  );
-}
-function drawStarfield() {
-  stars
-    .filter(s => onScreen(s.pos, 5))
-    .forEach(s => {
-      const r = Math.random() > 0.9 ? s.radius * 2 : 0;
-      push();
-      colorMode(HSB, 100);
-      const colr = color(0, 0, 100, s.strength);
-      translateForScreenCoords(s.pos);
-      fill(colr);
-      noStroke();
-      circle(0, 0, s.radius);
-      stroke(colr);
-      line(-r, 0, r, 0);
-      line(0, -r, 0, r);
-      pop();
-    });
 }
 
 function draw() {
@@ -611,6 +102,102 @@ function draw() {
   updateCamera(cameraPos, trackedVehicle);
 }
 
+function keyPressed() {
+  switch (key) {
+    case "r":
+      randomizePalette();
+      redraw();
+    case "o":
+      if (trackedVehicle) {
+        addOrb(trackedVehicle);
+      }
+      break;
+    case "m":
+      randomizeMonoPalette();
+      redraw();
+      break;
+  }
+}
+
+
+const resTypes: ResourceType[] = [
+  { label: "fuel", hue: 55, color: null },
+  { label: "laser", hue: 30, color: null },
+  { label: "explosive", hue: 0, color: null },
+  { label: "magic", hue: 80, color: null }
+];
+
+
+function numberOfWorldPages() {
+  return Math.pow(worldWidth / width, 2);
+}
+
+
+function randomPos(): p5.Vector {
+  return createVector(random(width), random(height));
+}
+function randomWorldPos(): p5.Vector {
+  return createVector(
+    random(-worldWidth / 2, worldWidth / 2),
+    random(-worldHeight / 2, worldHeight / 2)
+  );
+}
+
+
+
+
+function getColorForShipHP(hp: number) {
+  return lerpColor(color("red"), color("green"), (max(hp, 20) - 20) / 100);
+}
+
+function drawVec(
+  vec: p5.Vector,
+  len: number,
+  minMag: number,
+  maxMag: number,
+  c: p5.Color,
+  lineWidth: number = 1
+) {
+  push();
+  rotate(vec.heading());
+  stroke(c);
+  strokeWeight(lineWidth);
+  line(0, 0, map(vec.mag(), 0, maxMag, 0, len), 0);
+  pop();
+}
+function addTarget(pos: Target) {
+  gTargets.unshift(pos);
+  gTargets.splice(gNumTargets);
+  vehicles.forEach((v, ix) => {
+    v.target = gTargets[ix % gTargets.length];
+  });
+}
+function mouseWorldPos(): p5.Vector {
+  return cameraPos.copy().add(mousePos());
+}
+
+function mousePos(): p5.Vector {
+  return createVector(mouseX, mouseY);
+}
+
+function mouseMoved() { }
+function mousePressed() {
+  addAsteroid({ pos: mouseWorldPos() });
+}
+function isColliding(a: Collidable, s: Collidable) {
+  return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
+}
+
+
+function acquireTarget(vehicle: Vehicle) {
+  const closeAsteroids = asteroids.filter(
+    a => a.pos.dist(vehicle.pos) < height
+  );
+  return random(closeAsteroids.length > 0 ? closeAsteroids : asteroids);
+}
+
+
+
 function drawGridLines() {
   const numCols = (8 * worldWidth) / width;
   const numRows = (8 * worldHeight) / width;
@@ -630,37 +217,6 @@ function drawGridLines() {
       pop();
     }
   }
-}
-function updateCamera(cameraPos: p5.Vector, trackedVehicle: Vehicle) {
-  if (keyIsDown(LEFT_ARROW)) {
-    cameraPos.x += cameraMoveSpeed;
-  }
-  if (keyIsDown(RIGHT_ARROW)) {
-    cameraPos.x -= cameraMoveSpeed;
-  }
-  if (keyIsDown(UP_ARROW)) {
-    cameraPos.y += cameraMoveSpeed;
-  }
-  if (keyIsDown(DOWN_ARROW)) {
-    cameraPos.y -= cameraMoveSpeed;
-  }
-
-  if (trackedVehicle) {
-    trackVehicleWithCamera(trackedVehicle);
-    if (screenShakeAmount > 0) {
-      shakeCamera(screenShakeAmount);
-      screenShakeAmount -= 0.4;
-    }
-  }
-}
-
-function shakeCamera(amt: number) {
-  cameraPos.add(p5.Vector.random2D().mult(amt));
-}
-function trackVehicleWithCamera(v: Vehicle) {
-  const velExtra = v.vel.copy().mult(20);
-  cameraPos.x = v.pos.x - width / 2 + velExtra.x;
-  cameraPos.y = v.pos.y - height / 2 + velExtra.y;
 }
 
 function drawTarget(t: Target) {
@@ -691,21 +247,4 @@ function drawTargetPetals(numPetals: number, fn: (ix: number) => void) {
     rotate(angle);
   });
   pop();
-}
-function randInt(min: number, max: number): number {
-  return Math.floor(random(min, max + 1));
-}
-
-function atLeastTwoOf(fns: (() => () => any)[]) {
-  const pickedFns = _.sampleSize(fns, randInt(2, fns.length));
-  pickedFns.forEach((f: () => any) => f());
-}
-
-function playEnv() {
-  if (!shouldPlaySound) {
-    return;
-  }
-  shootOsc.freq(random([110, 220, 330, 260]));
-
-  shootEnv.play(shootOsc);
 }
