@@ -76,3 +76,8 @@ function setPaletteForResources() {
         rt.color = gPalette.colors[ix];
     });
 }
+
+
+function getColorForShipHP(hp: number) {
+    return lerpColor(color("red"), color("green"), (max(hp, 20) - 20) / 100);
+}

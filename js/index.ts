@@ -107,6 +107,7 @@ function keyPressed() {
     case "r":
       randomizePalette();
       redraw();
+      break;
     case "o":
       if (trackedVehicle) {
         addOrb(trackedVehicle);
@@ -133,38 +134,9 @@ function numberOfWorldPages() {
 }
 
 
-function randomPos(): p5.Vector {
-  return createVector(random(width), random(height));
-}
-function randomWorldPos(): p5.Vector {
-  return createVector(
-    random(-worldWidth / 2, worldWidth / 2),
-    random(-worldHeight / 2, worldHeight / 2)
-  );
-}
 
 
 
-
-function getColorForShipHP(hp: number) {
-  return lerpColor(color("red"), color("green"), (max(hp, 20) - 20) / 100);
-}
-
-function drawVec(
-  vec: p5.Vector,
-  len: number,
-  minMag: number,
-  maxMag: number,
-  c: p5.Color,
-  lineWidth: number = 1
-) {
-  push();
-  rotate(vec.heading());
-  stroke(c);
-  strokeWeight(lineWidth);
-  line(0, 0, map(vec.mag(), 0, maxMag, 0, len), 0);
-  pop();
-}
 function addTarget(pos: Target) {
   gTargets.unshift(pos);
   gTargets.splice(gNumTargets);
@@ -197,27 +169,6 @@ function acquireTarget(vehicle: Vehicle) {
 }
 
 
-
-function drawGridLines() {
-  const numCols = (8 * worldWidth) / width;
-  const numRows = (8 * worldHeight) / width;
-  for (let col = 0; col < numCols; col++) {
-    for (let row = 0; row < numRows; row++) {
-      const pos = createVector(
-        (col * width) / 2 - worldWidth / 2,
-        (row * width) / 2 - worldHeight / 2
-      );
-      push();
-      translateForScreenCoords(pos);
-      strokeWeight(0.1);
-      colorMode(RGB, 255);
-      stroke(color(255, 255, 255, 120));
-      line(0, -width / 2, 0, width / 2);
-      line(-width / 2, 0, width / 2, 0);
-      pop();
-    }
-  }
-}
 
 function drawTarget(t: Target) {
   push();

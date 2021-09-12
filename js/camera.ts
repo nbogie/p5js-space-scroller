@@ -70,3 +70,25 @@ function isOnScreen(pos: p5.Vector, radius: number) {
         pos.y - radius <= cameraPos.y + height
     );
 }
+
+
+function drawGridLines() {
+    const numCols = (8 * worldWidth) / width;
+    const numRows = (8 * worldHeight) / width;
+    for (let col = 0; col < numCols; col++) {
+        for (let row = 0; row < numRows; row++) {
+            const pos = createVector(
+                (col * width) / 2 - worldWidth / 2,
+                (row * width) / 2 - worldHeight / 2
+            );
+            push();
+            translateForScreenCoords(pos);
+            strokeWeight(0.1);
+            colorMode(RGB, 255);
+            stroke(color(255, 255, 255, 120));
+            line(0, -width / 2, 0, width / 2);
+            line(-width / 2, 0, width / 2, 0);
+            pop();
+        }
+    }
+}
