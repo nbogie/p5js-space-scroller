@@ -908,10 +908,6 @@ function updateCamera(cameraPos: p5.Vector, trackedVehicle: Vehicle) {
     }
   }
 }
-declare var LEFT_ARROW: number;
-declare var RIGHT_ARROW: number;
-declare var UP_ARROW: number;
-declare var DOWN_ARROW: number;
 
 function shakeCamera(amt: number) {
   cameraPos.add(p5.Vector.random2D().mult(amt));
