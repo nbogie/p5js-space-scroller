@@ -1,6 +1,8 @@
 "use strict";
 
-p5.disableFriendlyErrors = true; // disables FES
+// This property only exists in non-minified p5
+// @ts-expect-error
+p5.disableFriendlyErrors = true;
 
 interface Asteroid {
   live: boolean;
