@@ -1,4 +1,5 @@
 function shatterAsteroid(a: Asteroid) {
+    playSoundAsteroidDestroyed();
     if (a.sizeCategory >= 2) {
         addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });
         addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });

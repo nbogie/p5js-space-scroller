@@ -27,7 +27,7 @@ function addShot(opts: ShotOptions) {
     gShots.unshift(shot);
     gShots.splice(100);
     if (nearCamera(shot.pos)) {
-        playEnv();
+        playSoundShot()
     }
 }
 function drawShot(s: Shot) {

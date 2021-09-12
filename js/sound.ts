@@ -22,11 +22,19 @@ function setupSound() {
 }
 
 
-function playEnv() {
+function playSoundAsteroidDestroyed() {
+    if (!shouldPlaySound) {
+        return;
+    }
+    shootOsc.freq(random([1100, 2200, 3300, 2600]));
+
+    shootEnv.play(shootOsc);
+}
+
+function playSoundShot() {
     if (!shouldPlaySound) {
         return;
     }
     shootOsc.freq(random([110, 220, 330, 260]));
-
     shootEnv.play(shootOsc);
 }
