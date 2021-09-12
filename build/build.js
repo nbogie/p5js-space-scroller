@@ -63,7 +63,7 @@ var FaveColors = {
     },
     randomMonoPalette: function () {
         var pal = Object.assign({}, FaveColors.randomPalette());
-        pal.colors = _.sample(pal.colors, 2);
+        pal.colors = _.sampleSize(pal.colors, 2);
         return pal;
     }
 };
@@ -737,7 +737,7 @@ function randInt(min, max) {
     return Math.floor(random(min, max + 1));
 }
 function atLeastTwoOf(fns) {
-    var pickedFns = _.sample(fns, randInt(2, fns.length));
+    var pickedFns = _.sampleSize(fns, randInt(2, fns.length));
     pickedFns.forEach(function (f) { return f(); });
 }
 function playEnv() {
