@@ -52,12 +52,17 @@ function screenShake(amt: number) {
 
 function translateForScreenCoords(pos: p5.Vector, labelled = false) {
     const screenCoords = pos.copy().sub(cameraPos);
-    translate(Math.round(pos.x - cameraPos.x), Math.round(pos.y - cameraPos.y));
+    const translation = getTranslationForScreenCoords(pos);
+    translate((translation.x), (translation.y));
     if (labelled) {
         fill("white");
         textSize(10);
         text(`${Math.round(screenCoords.x)},${Math.round(screenCoords.y)}`, 20, 0);
     }
+}
+
+function getTranslationForScreenCoords(pos: p5.Vector): p5.Vector {
+    return createVector(round(pos.x - cameraPos.x), round(pos.y - cameraPos.y));
 }
 
 
@@ -73,9 +78,12 @@ function isOnScreen(pos: p5.Vector, radius: number) {
 
 
 function drawGridLines() {
+
     push()
-    const numCols = (8 * worldWidth) / width;
-    const numRows = (8 * worldHeight) / width;
+    const numCols = floor((8 * worldWidth) / width);
+    const numRows = floor((8 * worldHeight) / width);
+
+    //TODO: work out which row and col we're in and only draw the neighbourhood
     for (let col = 0; col < numCols; col++) {
         for (let row = 0; row < numRows; row++) {
             const pos = createVector(
@@ -83,12 +91,15 @@ function drawGridLines() {
                 (row * width) / 2 - worldHeight / 2
             );
             push();
-            translateForScreenCoords(pos);
-            strokeWeight(0.1);
-            colorMode(RGB, 255);
-            stroke(color(255, 255, 255, 120));
-            line(0, -width / 2, 0, width / 2);
-            line(-width / 2, 0, width / 2, 0);
+            const translation = getTranslationForScreenCoords(pos);
+            if (translation.mag() < width) {
+                translateForScreenCoords(pos);
+                strokeWeight(0.1);
+                colorMode(RGB, 255);
+                stroke(color(255, 255, 255, 120));
+                line(0, -width / 2, 0, width / 2);
+                line(-width / 2, 0, width / 2, 0);
+            }
             pop();
         }
     }

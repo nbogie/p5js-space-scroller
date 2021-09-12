@@ -19,7 +19,7 @@ function drawAsteroid(a: Asteroid) {
 
         push();
         rotate(a.rotation);
-        fill(a.tookDamage ? color("white") : a.resType.color);
+        fill(a.tookDamage ? stdColours.white : a.resType.color);
         noStroke();
         square(0, 0, a.radius * 2.7, 6, 6);
         pop();

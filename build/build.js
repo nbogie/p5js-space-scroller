@@ -16,7 +16,7 @@ function drawAsteroid(a) {
         colorMode(HSB, 100);
         push();
         rotate(a.rotation);
-        fill(a.tookDamage ? color("white") : a.resType.color);
+        fill(a.tookDamage ? stdColours.white : a.resType.color);
         noStroke();
         square(0, 0, a.radius * 2.7, 6, 6);
         pop();
@@ -135,12 +135,16 @@ function screenShake(amt) {
 function translateForScreenCoords(pos, labelled) {
     if (labelled === void 0) { labelled = false; }
     var screenCoords = pos.copy().sub(cameraPos);
-    translate(Math.round(pos.x - cameraPos.x), Math.round(pos.y - cameraPos.y));
+    var translation = getTranslationForScreenCoords(pos);
+    translate((translation.x), (translation.y));
     if (labelled) {
         fill("white");
         textSize(10);
         text(Math.round(screenCoords.x) + "," + Math.round(screenCoords.y), 20, 0);
     }
+}
+function getTranslationForScreenCoords(pos) {
+    return createVector(round(pos.x - cameraPos.x), round(pos.y - cameraPos.y));
 }
 function isOnScreen(pos, radius) {
     return (pos.x + radius >= cameraPos.x &&
@@ -149,21 +153,26 @@ function isOnScreen(pos, radius) {
         pos.y - radius <= cameraPos.y + height);
 }
 function drawGridLines() {
-    var numCols = (8 * worldWidth) / width;
-    var numRows = (8 * worldHeight) / width;
+    push();
+    var numCols = floor((8 * worldWidth) / width);
+    var numRows = floor((8 * worldHeight) / width);
     for (var col = 0; col < numCols; col++) {
         for (var row = 0; row < numRows; row++) {
             var pos = createVector((col * width) / 2 - worldWidth / 2, (row * width) / 2 - worldHeight / 2);
             push();
-            translateForScreenCoords(pos);
-            strokeWeight(0.1);
-            colorMode(RGB, 255);
-            stroke(color(255, 255, 255, 120));
-            line(0, -width / 2, 0, width / 2);
-            line(-width / 2, 0, width / 2, 0);
+            var translation = getTranslationForScreenCoords(pos);
+            if (translation.mag() < width) {
+                translateForScreenCoords(pos);
+                strokeWeight(0.1);
+                colorMode(RGB, 255);
+                stroke(color(255, 255, 255, 120));
+                line(0, -width / 2, 0, width / 2);
+                line(-width / 2, 0, width / 2, 0);
+            }
             pop();
         }
     }
+    pop();
 }
 function numberOfWorldPages() {
     return Math.pow(worldWidth / width, 2);
@@ -204,12 +213,12 @@ var cameraPos;
 var cameraMoveSpeed = 5;
 var maxScreenShakeAmount = 10;
 var screenShakeAmount = 0;
-var gPalette;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     cameraPos = createVector(0, 0);
     frameRate(60);
     angleMode(RADIANS);
+    setupStandardColours();
     randomizeBigPalette();
     setPaletteForResources();
     createVehicles(gNumVehicles);
@@ -220,7 +229,7 @@ function setup() {
     rectMode(CENTER);
 }
 function draw() {
-    background(0);
+    background(15);
     drawAll();
     updateAll();
 }
@@ -330,6 +339,8 @@ function drawOrb(o) {
         pop();
     }
 }
+var gPalette;
+var stdColours;
 var FaveColors = {
     paletteStrs: [
         "#F8B195,#F67280,#C06C84,#6C5B7B,#355C7D,#F8B195,#F67280,#C06C84|1001 stories|http://www.colourlovers.com/palette/1811244/1001_Stories",
@@ -376,6 +387,9 @@ var FaveColors = {
         return pal;
     }
 };
+function setupStandardColours() {
+    stdColours = { white: color('white'), black: color('black') };
+}
 function randomizePalette() {
     gPalette = FaveColors.randomPalette();
 }
@@ -453,6 +467,7 @@ function drawTrail(trail) {
     });
 }
 function createShot(opts) {
+    push();
     colorMode(HSB, 100);
     var shotSpread = PI / 32;
     var sz = random([4, 5, 6, 7]);
@@ -471,6 +486,7 @@ function createShot(opts) {
         color: color(random(50, 70), 100, 100, 100),
         life: 1
     };
+    pop();
     return shot;
 }
 function addShot(opts) {

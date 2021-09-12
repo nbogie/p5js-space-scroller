@@ -1,3 +1,8 @@
+
+let gPalette: Palette;
+type ColourName = 'white' | 'black'
+let stdColours: Record<ColourName, p5.Color>;
+
 const FaveColors = {
     paletteStrs: [
         "#F8B195,#F67280,#C06C84,#6C5B7B,#355C7D,#F8B195,#F67280,#C06C84|1001 stories|http://www.colourlovers.com/palette/1811244/1001_Stories",
@@ -48,6 +53,10 @@ const FaveColors = {
         return pal;
     }
 };
+
+function setupStandardColours() {
+    stdColours = { white: color('white'), black: color('black') }
+}
 
 function randomizePalette() {
     gPalette = FaveColors.randomPalette();

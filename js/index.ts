@@ -31,7 +31,6 @@ const maxScreenShakeAmount: number = 10;
 
 let screenShakeAmount = 0;
 
-let gPalette: Palette;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -39,7 +38,11 @@ function setup() {
   cameraPos = createVector(0, 0);
   frameRate(60);
   angleMode(RADIANS);
+
+  setupStandardColours();
+
   randomizeBigPalette();
+
   setPaletteForResources();
   //vehicles.push(createVehicle());
   createVehicles(gNumVehicles);
