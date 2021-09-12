@@ -8,7 +8,7 @@ p5.disableFriendlyErrors = true;
 
 const shouldDrawTrails = true;
 const shouldDrawStars = false;
-const shouldPlaySound = false;
+const shouldPlaySound = true;
 
 let trackedVehicle: Vehicle;
 
@@ -55,6 +55,11 @@ function setup() {
 
 function draw() {
   background(0);
+  drawAll();
+  updateAll()
+}
+
+function drawAll() {
   push();
   if (shouldDrawStars) {
     drawStarfield();
@@ -62,45 +67,36 @@ function draw() {
 
   drawGridLines();
   orbs.forEach(o => drawOrb(o));
-  const filteredShots = gShots.filter(
+
+  const shotsToDraw = gShots.filter(
     s => s.live && distFromCamera(s.pos) < width
   );
 
-  filteredShots.forEach(drawShot);
+  shotsToDraw.forEach(drawShot);
   asteroids.forEach(drawAsteroid);
   vehicles.forEach(drawVehicle);
 
-  trackedVehicle = vehicles.find((v: Vehicle) => v.hp > 0);
 
+  //Draw targets of vehicles
   vehicles
     .filter(v => v.target && v.target.live)
     .forEach(v => drawTarget(v.target));
+
   pop();
 
-  fill("white");
-  textSize(12);
+  drawHUD();
 
-  if (trackedVehicle) {
-    text("Health: " + trackedVehicle.hp, width - 100, 50);
-  }
-  text(Math.round(frameRate()) + " fps", 50, 575);
-
-  text(
-    "Camera: " +
-    JSON.stringify({
-      x: Math.round(cameraPos.x),
-      y: Math.round(cameraPos.y)
-    }),
-    50,
-    600
-  );
-
+}
+function updateAll() {
   gShots.forEach(updateShot);
   vehicles.forEach(updateVehicle);
   asteroids.forEach(updateAsteroid);
   orbs.forEach(updateOrb);
   updateCamera(cameraPos, trackedVehicle);
+
+  trackedVehicle = vehicles.find((v: Vehicle) => v.hp > 0);
 }
+
 
 function keyPressed() {
   switch (key) {
@@ -121,81 +117,15 @@ function keyPressed() {
 }
 
 
+function mouseMoved() { }
+function mousePressed() {
+  addAsteroid({ pos: mouseWorldPos() });
+}
+
+
 const resTypes: ResourceType[] = [
   { label: "fuel", hue: 55, color: null },
   { label: "laser", hue: 30, color: null },
   { label: "explosive", hue: 0, color: null },
   { label: "magic", hue: 80, color: null }
 ];
-
-
-function numberOfWorldPages() {
-  return Math.pow(worldWidth / width, 2);
-}
-
-
-
-
-
-function addTarget(pos: Target) {
-  gTargets.unshift(pos);
-  gTargets.splice(gNumTargets);
-  vehicles.forEach((v, ix) => {
-    v.target = gTargets[ix % gTargets.length];
-  });
-}
-function mouseWorldPos(): p5.Vector {
-  return cameraPos.copy().add(mousePos());
-}
-
-function mousePos(): p5.Vector {
-  return createVector(mouseX, mouseY);
-}
-
-function mouseMoved() { }
-function mousePressed() {
-  addAsteroid({ pos: mouseWorldPos() });
-}
-function isColliding(a: Collidable, s: Collidable) {
-  return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
-}
-
-
-function acquireTarget(vehicle: Vehicle) {
-  const closeAsteroids = asteroids.filter(
-    a => a.pos.dist(vehicle.pos) < height
-  );
-  return random(closeAsteroids.length > 0 ? closeAsteroids : asteroids);
-}
-
-
-
-function drawTarget(t: Target) {
-  push();
-
-  translateForScreenCoords(t.pos);
-  noFill();
-  colorMode(HSB, 100);
-
-  stroke(0, 100, 100);
-  circle(0, 0, 25);
-  drawTargetPetals(4, (ix: number) => {
-    repeat(3, (jx: number) => {
-      push();
-      translate(jx * 4 + 8, 0);
-      line(0, -2 * jx, 0, 2 * jx);
-      pop();
-    });
-  });
-
-  pop();
-}
-function drawTargetPetals(numPetals: number, fn: (ix: number) => void) {
-  const angle = TWO_PI / numPetals;
-  push();
-  repeat(numPetals, (ix: number) => {
-    fn(ix);
-    rotate(angle);
-  });
-  pop();
-}

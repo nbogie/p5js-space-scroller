@@ -46,3 +46,8 @@ function drawVec(
     line(0, 0, map(vec.mag(), 0, maxMag, 0, len), 0);
     pop();
 }
+
+
+function isColliding(a: Collidable, s: Collidable) {
+    return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
+}

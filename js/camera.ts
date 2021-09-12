@@ -92,3 +92,7 @@ function drawGridLines() {
         }
     }
 }
+
+function numberOfWorldPages() {
+    return Math.pow(worldWidth / width, 2);
+}
