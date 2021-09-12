@@ -11,6 +11,7 @@ function shatterAsteroid(a: Asteroid) {
 }
 
 function drawAsteroid(a: Asteroid) {
+
     if (a.live) {
         push();
         translateForScreenCoords(a.pos);

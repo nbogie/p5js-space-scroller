@@ -51,7 +51,7 @@ function setup() {
 }
 
 function draw() {
-  background(0);
+  background(15);
   drawAll();
   updateAll()
 }

@@ -1,5 +1,6 @@
 
 function createShot(opts: ShotOptions): Shot {
+    push();
     colorMode(HSB, 100);
     const shotSpread = PI / 32;
     const sz = random([4, 5, 6, 7]);
@@ -19,6 +20,7 @@ function createShot(opts: ShotOptions): Shot {
         color: color(random(50, 70), 100, 100, 100),
         life: 1
     };
+    pop()
     return shot;
 }
 

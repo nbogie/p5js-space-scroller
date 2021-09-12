@@ -73,6 +73,7 @@ function isOnScreen(pos: p5.Vector, radius: number) {
 
 
 function drawGridLines() {
+    push()
     const numCols = (8 * worldWidth) / width;
     const numRows = (8 * worldHeight) / width;
     for (let col = 0; col < numCols; col++) {
@@ -91,6 +92,7 @@ function drawGridLines() {
             pop();
         }
     }
+    pop()
 }
 
 function numberOfWorldPages() {
