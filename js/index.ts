@@ -92,30 +92,6 @@ const resTypes: ResourceType[] = [
   { label: "magic", hue: 80, color: null }
 ];
 
-function addAsteroid(opts: AsteroidOpts) {
-  asteroids.push(createAsteroidAt(opts));
-}
-function createAsteroid() {
-  return createAsteroidAt({ pos: randomWorldPos() });
-}
-
-function createAsteroidAt(opts: AsteroidOpts) {
-  const sz = opts.sizeCategory || random([1, 2, 3, 4]);
-  return {
-    live: true,
-    pos: opts.pos.copy(),
-    vel: p5.Vector.random2D().mult(random(1, 5)),
-    resType: random(resTypes),
-    sizeCategory: sz,
-    radius: sz * 7,
-    damage: sz,
-    hp: sz * 20,
-    rotation: random(TWO_PI),
-    rotationSpeed: random(-0.1, 0.1),
-    tookDamage: false
-  };
-}
-
 function createParticle() {
   return createParticleAt(createVector(random(width), random(height)));
 }
@@ -133,9 +109,6 @@ function createParticleAt(pos: p5.Vector) {
 
 function createVehicles(n: number) {
   repeat(n, (ix: number) => vehicles.push(createVehicle()));
-}
-function createAsteroids(n: number) {
-  repeat(n, (ix: number) => asteroids.push(createAsteroid()));
 }
 
 function createStarfield() {
@@ -365,56 +338,8 @@ function updateParticle(p: Particle) {
   p.pos.y += p.vel.y;
   p.life -= random(0.001, 0.01);
 }
-function updateAsteroid(p: Asteroid) {
-  if (p.live) {
-    p.pos.x += p.vel.x;
-    p.pos.y += p.vel.y;
-    if (p.pos.x < -worldWidth / 2) {
-      p.pos.x += worldWidth / 2;
-    }
-    if (p.pos.x > worldWidth / 2) {
-      p.pos.x -= worldWidth / 2;
-    }
-
-    if (p.pos.y < -worldHeight / 2) {
-      p.pos.y += worldHeight / 2;
-    }
-    if (p.pos.y > worldHeight / 2) {
-      p.pos.y -= worldHeight / 2;
-    }
-    p.rotation += p.rotationSpeed;
-
-    vehicles
-      .filter(v => true || v.live)
-      .forEach(v => {
-        if (isColliding(p, v)) {
-          p.hp -= v.rammingDamage;
-          p.tookDamage = true;
-          v.hp -= p.damage;
-          if (v.hp <= 0) {
-            v.live = false;
-          }
-          v.tookDamage = true;
-          if (p.hp <= 0) {
-            p.live = false;
-            shatterAsteroid(p);
-          }
-        }
-      });
-  }
-  p.tookDamage = false;
-}
 function isColliding(a: Collidable, s: Collidable) {
   return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
-}
-function shatterAsteroid(a: Asteroid) {
-  if (a.sizeCategory >= 2) {
-    addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });
-    addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });
-    if (nearCamera(a.pos)) {
-      screenShake(a.sizeCategory);
-    }
-  }
 }
 function distFromCamera(p: p5.Vector) {
   return p5.Vector.dist(
@@ -581,27 +506,7 @@ function drawShot(s: Shot) {
     pop();
   }
 }
-function drawAsteroid(a: Asteroid) {
-  if (a.live) {
-    push();
-    translateForScreenCoords(a.pos);
-    colorMode(HSB, 100);
 
-    push();
-    rotate(a.rotation);
-    fill(a.tookDamage ? color("white") : a.resType.color);
-    noStroke();
-    square(0, 0, a.radius * 2.7, 6, 6);
-    pop();
-
-    textSize(12);
-    stroke("black");
-    strokeWeight(2);
-    text(a.hp, 20, 20);
-
-    pop();
-  }
-}
 
 function shootIfTime(p: Vehicle) {
   const ms = millis();
