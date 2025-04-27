@@ -12,13 +12,15 @@ interface World {
     worldWidth: number;
     worldHeight: number;
 
-    //camera stuff
-    cameraPos: p5.Vector;
-    cameraMoveSpeed: number;
+    camera: GameCamera;
+}
+
+interface GameCamera {
+    pos: p5.Vector;
+    moveSpeed: number;
     maxScreenShakeAmount: number;
     screenShakeAmount: number;
 }
-
 interface Config {
     shouldDrawTrails: boolean;
     shouldDrawStars: boolean;

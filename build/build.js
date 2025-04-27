@@ -93,48 +93,48 @@ function updateAsteroid(p) {
 }
 function updateCamera(posToChange, trackedVehicle) {
     if (keyIsDown(LEFT_ARROW)) {
-        posToChange.x += world.cameraMoveSpeed;
+        posToChange.x += world.camera.moveSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        posToChange.x -= world.cameraMoveSpeed;
+        posToChange.x -= world.camera.moveSpeed;
     }
     if (keyIsDown(UP_ARROW)) {
-        posToChange.y += world.cameraMoveSpeed;
+        posToChange.y += world.camera.moveSpeed;
     }
     if (keyIsDown(DOWN_ARROW)) {
-        posToChange.y -= world.cameraMoveSpeed;
+        posToChange.y -= world.camera.moveSpeed;
     }
     if (trackedVehicle) {
         trackVehicleWithCamera(trackedVehicle);
-        if (world.screenShakeAmount > 0) {
-            shakeCamera(world.screenShakeAmount);
-            world.screenShakeAmount -= 0.4;
+        if (world.camera.screenShakeAmount > 0) {
+            shakeCamera(world.camera.screenShakeAmount);
+            world.camera.screenShakeAmount -= 0.4;
         }
     }
 }
 function shakeCamera(amt) {
-    world.cameraPos.add(p5.Vector.random2D().mult(amt));
+    world.camera.pos.add(p5.Vector.random2D().mult(amt));
 }
 function trackVehicleWithCamera(v) {
     var velExtra = v.vel.copy().mult(20);
-    world.cameraPos.x = v.pos.x - width / 2 + velExtra.x;
-    world.cameraPos.y = v.pos.y - height / 2 + velExtra.y;
+    world.camera.pos.x = v.pos.x - width / 2 + velExtra.x;
+    world.camera.pos.y = v.pos.y - height / 2 + velExtra.y;
 }
 function distFromCamera(p) {
-    return p5.Vector.dist(world.cameraPos.copy().add(createVector(width / 2, height / 2)), p);
+    return p5.Vector.dist(world.camera.pos.copy().add(createVector(width / 2, height / 2)), p);
 }
 function nearCamera(pos) {
     return distFromCamera(pos) < height;
 }
 function screenShake(amt) {
-    world.screenShakeAmount += amt;
-    if (world.screenShakeAmount > world.maxScreenShakeAmount) {
-        world.screenShakeAmount = world.maxScreenShakeAmount;
+    world.camera.screenShakeAmount += amt;
+    if (world.camera.screenShakeAmount > world.camera.maxScreenShakeAmount) {
+        world.camera.screenShakeAmount = world.camera.maxScreenShakeAmount;
     }
 }
 function translateForScreenCoords(pos, labelled) {
     if (labelled === void 0) { labelled = false; }
-    var screenCoords = pos.copy().sub(world.cameraPos);
+    var screenCoords = pos.copy().sub(world.camera.pos);
     var translation = getTranslationForScreenCoords(pos);
     translate(translation.x, translation.y);
     if (labelled) {
@@ -144,13 +144,13 @@ function translateForScreenCoords(pos, labelled) {
     }
 }
 function getTranslationForScreenCoords(pos) {
-    return createVector(round(pos.x - world.cameraPos.x), round(pos.y - world.cameraPos.y));
+    return createVector(round(pos.x - world.camera.pos.x), round(pos.y - world.camera.pos.y));
 }
 function isOnScreen(pos, radius) {
-    return (pos.x + radius >= world.cameraPos.x &&
-        pos.x - radius <= world.cameraPos.x + width &&
-        pos.y + radius >= world.cameraPos.y &&
-        pos.y - radius <= world.cameraPos.y + height);
+    return (pos.x + radius >= world.camera.pos.x &&
+        pos.x - radius <= world.camera.pos.x + width &&
+        pos.y + radius >= world.camera.pos.y &&
+        pos.y - radius <= world.camera.pos.y + height);
 }
 function drawGridLines() {
     push();
@@ -187,8 +187,8 @@ function drawHUD() {
     text(Math.round(frameRate()) + " fps", 50, 575);
     text("Camera: " +
         JSON.stringify({
-            x: Math.round(world.cameraPos.x),
-            y: Math.round(world.cameraPos.y),
+            x: Math.round(world.camera.pos.x),
+            y: Math.round(world.camera.pos.y),
         }), 50, 600);
     pop();
 }
@@ -238,11 +238,13 @@ function createWorld() {
     var shots = [];
     var worldWidth = 6000;
     var worldHeight = 5000;
-    var cameraPos = createVector(0, 0);
-    var cameraMoveSpeed = 5;
-    var maxScreenShakeAmount = 10;
-    var screenShakeAmount = 0;
     var trackedVehicle = undefined;
+    var camera = {
+        pos: createVector(0, 0),
+        moveSpeed: 5,
+        maxScreenShakeAmount: 10,
+        screenShakeAmount: 0,
+    };
     var newWorld = {
         stars: stars,
         vehicles: vehicles,
@@ -255,10 +257,7 @@ function createWorld() {
         shots: shots,
         worldWidth: worldWidth,
         worldHeight: worldHeight,
-        cameraPos: cameraPos,
-        cameraMoveSpeed: cameraMoveSpeed,
-        maxScreenShakeAmount: maxScreenShakeAmount,
-        screenShakeAmount: screenShakeAmount,
+        camera: camera,
     };
     return newWorld;
 }
@@ -284,7 +283,7 @@ function updateAll() {
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);
-    updateCamera(world.cameraPos, world.trackedVehicle);
+    updateCamera(world.camera.pos, world.trackedVehicle);
     world.trackedVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
     updateEngineWhistleSound();
 }
@@ -333,7 +332,7 @@ function mousePressed() {
     addAsteroid({ pos: mouseWorldPos() });
 }
 function mouseWorldPos() {
-    return world.cameraPos.copy().add(mousePos());
+    return world.camera.pos.copy().add(mousePos());
 }
 function mousePos() {
     return createVector(mouseX, mouseY);

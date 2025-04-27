@@ -61,13 +61,15 @@ function createWorld() {
     const shots: Shot[] = [];
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
-
-    //camera stuff
-    let cameraPos: p5.Vector = createVector(0, 0);
-    let cameraMoveSpeed: number = 5;
-    const maxScreenShakeAmount: number = 10;
-    let screenShakeAmount = 0;
     const trackedVehicle: Vehicle = undefined;
+
+    const camera: GameCamera = {
+        pos: createVector(0, 0),
+        moveSpeed: 5,
+        maxScreenShakeAmount: 10,
+        screenShakeAmount: 0,
+    };
+
     const newWorld = {
         stars,
         vehicles,
@@ -80,10 +82,7 @@ function createWorld() {
         shots,
         worldWidth,
         worldHeight,
-        cameraPos,
-        cameraMoveSpeed,
-        maxScreenShakeAmount,
-        screenShakeAmount,
+        camera,
     };
     return newWorld;
 }
@@ -119,7 +118,7 @@ function updateAll() {
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);
-    updateCamera(world.cameraPos, world.trackedVehicle);
+    updateCamera(world.camera.pos, world.trackedVehicle);
 
     world.trackedVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
     updateEngineWhistleSound();
