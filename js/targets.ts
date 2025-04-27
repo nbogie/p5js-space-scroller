@@ -1,6 +1,6 @@
 function addTarget(pos: Target) {
     world.targets.unshift(pos);
-    world.targets.splice(world.gNumTargets);
+    world.targets.splice(world.MAX_NUM_TARGETS);
     world.vehicles.forEach((v, ix) => {
         v.target = world.targets[ix % world.targets.length];
     });

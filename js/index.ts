@@ -56,7 +56,7 @@ function createWorld() {
     const asteroids: Asteroid[] = [];
     const targets: Target[] = [];
     const orbs: Orb[] = [];
-    const gNumTargets: number = 6;
+    const MAX_NUM_TARGETS: number = 6;
     const gNumVehicles: number = 6;
     const gShots: Shot[] = [];
     const worldWidth: number = 6000;
@@ -75,7 +75,7 @@ function createWorld() {
         trackedVehicle,
         targets,
         orbs,
-        gNumTargets,
+        MAX_NUM_TARGETS,
         gNumVehicles,
         gShots,
         worldWidth,

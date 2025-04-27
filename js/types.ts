@@ -5,7 +5,7 @@ interface World {
     trackedVehicle?: Vehicle;
     targets: Target[];
     orbs: Orb[];
-    gNumTargets: number;
+    MAX_NUM_TARGETS: number;
     gNumVehicles: number;
 
     gShots: Shot[];
