@@ -275,6 +275,9 @@ function keyPressed() {
             randomizeMonoPalette();
             redraw();
             break;
+        case "p":
+            togglePause();
+            break;
     }
 }
 function mouseMoved() { }
@@ -291,6 +294,14 @@ var resTypes = [
     { label: "explosive", hue: 0, color: null },
     { label: "magic", hue: 80, color: null },
 ];
+function togglePause() {
+    if (isLooping()) {
+        noLoop();
+    }
+    else {
+        loop();
+    }
+}
 function mouseWorldPos() {
     return cameraPos.copy().add(mousePos());
 }

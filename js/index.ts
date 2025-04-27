@@ -109,6 +109,9 @@ function keyPressed() {
             randomizeMonoPalette();
             redraw();
             break;
+        case "p":
+            togglePause();
+            break;
     }
 }
 
@@ -128,3 +131,11 @@ const resTypes: ResourceType[] = [
     { label: "explosive", hue: 0, color: null },
     { label: "magic", hue: 80, color: null },
 ];
+function togglePause() {
+    //function to toggle the running of this p5 sketch
+    if (isLooping()) {
+        noLoop();
+    } else {
+        loop();
+    }
+}
