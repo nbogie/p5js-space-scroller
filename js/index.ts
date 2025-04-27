@@ -27,7 +27,7 @@ function setup() {
     setPaletteForResources();
     //vehicles.push(createVehicle());
     createVehicles(world.gNumVehicles);
-    createAsteroids(10 * numberOfWorldPages());
+    createAsteroids(30);
     createStarfield();
     ellipseMode(CENTER);
     rectMode(CENTER);
@@ -38,6 +38,10 @@ function draw() {
     drawAll();
     updateAll();
 }
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+
 function createConfig() {
     const newConfig = {
         shouldDrawTrails: true,
@@ -124,45 +128,13 @@ function updateAll() {
     updateEngineWhistleSound();
 }
 
-function keyPressed() {
-    switch (key) {
-        case "m":
-            toggleMute();
-            break;
-        case "r":
-            randomizePalette();
-            break;
-        case "o":
-            if (world.trackedVehicle) {
-                addOrb(world.trackedVehicle);
-            }
-            break;
-        case "b":
-            randomizeMonoPalette();
-            redraw();
-            break;
-        case "p":
-            togglePause();
-            break;
-    }
-}
-
-function mouseMoved() {}
-function mousePressed() {
-    if (config.shouldPlaySound && soundNotYetEnabledByGesture) {
-        soundNotYetEnabledByGesture = false;
-        setupSound();
-    }
-
-    addAsteroid({ pos: mouseWorldPos() });
-}
-
 const resTypes: ResourceType[] = [
     { label: "fuel", hue: 55, color: null },
     { label: "laser", hue: 30, color: null },
     { label: "explosive", hue: 0, color: null },
     { label: "magic", hue: 80, color: null },
 ];
+
 function togglePause() {
     if (isLooping()) {
         noLoop();

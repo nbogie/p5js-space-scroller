@@ -207,7 +207,7 @@ function setup() {
     randomizeBigPalette();
     setPaletteForResources();
     createVehicles(world.gNumVehicles);
-    createAsteroids(10 * numberOfWorldPages());
+    createAsteroids(30);
     createStarfield();
     ellipseMode(CENTER);
     rectMode(CENTER);
@@ -216,6 +216,9 @@ function draw() {
     background(15);
     drawAll();
     updateAll();
+}
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
 }
 function createConfig() {
     var newConfig = {
@@ -288,6 +291,20 @@ function updateAll() {
     world.trackedVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
     updateEngineWhistleSound();
 }
+var resTypes = [
+    { label: "fuel", hue: 55, color: null },
+    { label: "laser", hue: 30, color: null },
+    { label: "explosive", hue: 0, color: null },
+    { label: "magic", hue: 80, color: null },
+];
+function togglePause() {
+    if (isLooping()) {
+        noLoop();
+    }
+    else {
+        loop();
+    }
+}
 function keyPressed() {
     switch (key) {
         case "m":
@@ -317,20 +334,6 @@ function mousePressed() {
         setupSound();
     }
     addAsteroid({ pos: mouseWorldPos() });
-}
-var resTypes = [
-    { label: "fuel", hue: 55, color: null },
-    { label: "laser", hue: 30, color: null },
-    { label: "explosive", hue: 0, color: null },
-    { label: "magic", hue: 80, color: null },
-];
-function togglePause() {
-    if (isLooping()) {
-        noLoop();
-    }
-    else {
-        loop();
-    }
 }
 function mouseWorldPos() {
     return world.cameraPos.copy().add(mousePos());
