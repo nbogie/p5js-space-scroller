@@ -5,7 +5,7 @@
 p5.disableFriendlyErrors = true;
 
 const shouldDrawTrails = true;
-const shouldDrawStars = false;
+const shouldDrawStars = true;
 let shouldPlaySound = false;
 let soundNotYetEnabledByGesture = true;
 
