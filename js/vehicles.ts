@@ -86,8 +86,7 @@ function steerVehicleAutonomously(v: Vehicle) {
     if (v.target && v.target.live) {
         const targetPos = createVector(v.target.pos.x, v.target.pos.y);
         const desired = p5.Vector.sub(targetPos, currPos);
-        desired.normalize();
-        desired.mult(v.maxSpeed);
+        desired.setMag(v.maxSpeed);
         v.desiredVector = desired.copy().normalize();
         v.facing = v.desiredVector.copy().normalize().heading();
 
