@@ -6,7 +6,7 @@ p5.disableFriendlyErrors = true;
 
 const shouldDrawTrails = true;
 const shouldDrawStars = false;
-let shouldPlaySound = true;
+let shouldPlaySound = false;
 let soundNotYetEnabledByGesture = true;
 
 let trackedVehicle: Vehicle;
@@ -45,7 +45,6 @@ function setup() {
     createVehicles(gNumVehicles);
     createAsteroids(10 * numberOfWorldPages());
     createStarfield();
-    background("black");
     ellipseMode(CENTER);
     rectMode(CENTER);
 }

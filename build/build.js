@@ -195,7 +195,7 @@ function drawHUD() {
 p5.disableFriendlyErrors = true;
 var shouldDrawTrails = true;
 var shouldDrawStars = false;
-var shouldPlaySound = true;
+var shouldPlaySound = false;
 var soundNotYetEnabledByGesture = true;
 var trackedVehicle;
 var stars = [];
@@ -224,7 +224,6 @@ function setup() {
     createVehicles(gNumVehicles);
     createAsteroids(10 * numberOfWorldPages());
     createStarfield();
-    background("black");
     ellipseMode(CENTER);
     rectMode(CENTER);
 }
