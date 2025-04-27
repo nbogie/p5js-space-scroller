@@ -6,7 +6,7 @@ interface World {
     targets: Target[];
     orbs: Orb[];
     MAX_NUM_TARGETS: number;
-    gNumVehicles: number;
+    MAX_NUM_VEHICLES: number;
 
     gShots: Shot[];
     worldWidth: number;

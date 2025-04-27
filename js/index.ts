@@ -25,7 +25,7 @@ function setup() {
     randomizeBigPalette();
     setPaletteForResources();
 
-    createVehicles(world.gNumVehicles);
+    createVehicles(world.MAX_NUM_VEHICLES);
     createAsteroids(30);
     createStarfield();
     ellipseMode(CENTER);
@@ -57,7 +57,7 @@ function createWorld() {
     const targets: Target[] = [];
     const orbs: Orb[] = [];
     const MAX_NUM_TARGETS: number = 6;
-    const gNumVehicles: number = 6;
+    const MAX_NUM_VEHICLES: number = 6;
     const gShots: Shot[] = [];
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
@@ -76,7 +76,7 @@ function createWorld() {
         targets,
         orbs,
         MAX_NUM_TARGETS,
-        gNumVehicles,
+        MAX_NUM_VEHICLES,
         gShots,
         worldWidth,
         worldHeight,
