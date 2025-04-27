@@ -1,11 +1,9 @@
-function createStarfield() {
-    repeat(1000 * numberOfWorldPages(), (ix: number) =>
-        world.stars.push({
-            pos: randomWorldPos(),
-            radius: random(0.5, random(0.5, 3)),
-            strength: random(100),
-        }),
-    );
+function setupStarfield() {
+    world.stars = collect(1000 * numberOfWorldPages(), (ix: number) => ({
+        pos: randomWorldPos(),
+        radius: random(0.5, random(0.5, 3)),
+        strength: random(100),
+    }));
 }
 
 function drawStarfield() {

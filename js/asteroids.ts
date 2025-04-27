@@ -57,8 +57,8 @@ function createAsteroidAt(opts: AsteroidOpts) {
     } satisfies Asteroid;
 }
 
-function createAsteroids(n: number) {
-    repeat(n, (ix: number) => world.asteroids.push(createAsteroid()));
+function setupAsteroids(n: number) {
+    world.asteroids = collect(n, createAsteroid);
 }
 
 function updateAsteroid(p: Asteroid) {

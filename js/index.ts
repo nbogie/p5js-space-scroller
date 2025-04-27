@@ -22,10 +22,10 @@ function setup() {
     randomizeBigPalette();
     setPaletteForResources();
 
-    createVehicles(world.MAX_NUM_VEHICLES);
-    createAsteroids(10);
-    createStarfield();
-    createInitialMobs(10);
+    setupVehicles(world.MAX_NUM_VEHICLES);
+    setupAsteroids(10);
+    setupStarfield();
+    setupMobs(10);
 
     frameRate(60);
     angleMode(RADIANS);

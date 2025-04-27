@@ -95,8 +95,8 @@ function updateVehicle(v: Vehicle) {
     v.tookDamage = false;
 }
 
-function createVehicles(n: number) {
-    repeat(n, (ix: number) => world.vehicles.push(createVehicle()));
+function setupVehicles(n: number) {
+    world.vehicles = collect(n, createVehicle);
 }
 
 function createVehicle(): Vehicle {

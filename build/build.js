@@ -52,8 +52,8 @@ function createAsteroidAt(opts) {
         minimapColour: color(0, 200, 200, 100),
     };
 }
-function createAsteroids(n) {
-    repeat(n, function (ix) { return world.asteroids.push(createAsteroid()); });
+function setupAsteroids(n) {
+    world.asteroids = collect(n, createAsteroid);
 }
 function updateAsteroid(p) {
     if (p.live) {
@@ -247,10 +247,10 @@ function setup() {
     setupStandardColours();
     randomizeBigPalette();
     setPaletteForResources();
-    createVehicles(world.MAX_NUM_VEHICLES);
-    createAsteroids(10);
-    createStarfield();
-    createInitialMobs(10);
+    setupVehicles(world.MAX_NUM_VEHICLES);
+    setupAsteroids(10);
+    setupStarfield();
+    setupMobs(10);
     frameRate(60);
     angleMode(RADIANS);
     ellipseMode(CENTER);
@@ -331,7 +331,7 @@ function keyPressed() {
             break;
     }
 }
-function createInitialMobs(n) {
+function setupMobs(n) {
     world.mobs = collect(n, function (ix) { return createRandomMob(); });
 }
 function createRandomMob() {
@@ -348,11 +348,6 @@ function drawExploderMob(mob) {
     square(0, 0, 20 + sin(frameCount / 20) * 10);
     text("Exploder", 20, 20);
     pop();
-    console.log("drawing exp");
-    push();
-    stroke("magenta");
-    text("exploder", 100, 100);
-    pop();
 }
 function drawTeleporterMob(mob) {
     push();
@@ -361,7 +356,7 @@ function drawTeleporterMob(mob) {
     translateForScreenCoords(mob.pos);
     rectMode(CENTER);
     circle(0, 0, 20);
-    text("Tele", 20, 20);
+    text("Teleporter", 20, 20);
     pop();
 }
 function updateExploderMob() {
@@ -736,14 +731,12 @@ function updateEngineWhistleSound() {
     }
     engineWhistleFilter.set(engineWhistleFilterFreq, engineWhistleFilterWidth);
 }
-function createStarfield() {
-    repeat(1000 * numberOfWorldPages(), function (ix) {
-        return world.stars.push({
-            pos: randomWorldPos(),
-            radius: random(0.5, random(0.5, 3)),
-            strength: random(100),
-        });
-    });
+function setupStarfield() {
+    world.stars = collect(1000 * numberOfWorldPages(), function (ix) { return ({
+        pos: randomWorldPos(),
+        radius: random(0.5, random(0.5, 3)),
+        strength: random(100),
+    }); });
 }
 function drawStarfield() {
     world.stars
@@ -932,8 +925,8 @@ function updateVehicle(v) {
     v.accel.mult(0);
     v.tookDamage = false;
 }
-function createVehicles(n) {
-    repeat(n, function (ix) { return world.vehicles.push(createVehicle()); });
+function setupVehicles(n) {
+    world.vehicles = collect(n, createVehicle);
 }
 function createVehicle() {
     return {

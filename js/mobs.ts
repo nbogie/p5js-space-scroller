@@ -25,7 +25,7 @@ interface TeleporterMob extends BaseMob, DrawableMob, UpdatableMob {
     timeOfLastTeleport: number | null;
 }
 
-function createInitialMobs(n: number): Mob[] {
+function setupMobs(n: number): void {
     world.mobs = collect(n, (ix: number) => createRandomMob());
 }
 
@@ -40,15 +40,9 @@ function drawExploderMob(mob: Mob) {
     noStroke();
     fill(mob.colour);
     translateForScreenCoords(mob.pos);
-    // rotate(mob.rotation)
     rectMode(CENTER);
     square(0, 0, 20 + sin(frameCount / 20) * 10);
     text("Exploder", 20, 20);
-    pop();
-    console.log("drawing exp");
-    push();
-    stroke("magenta");
-    text("exploder", 100, 100);
     pop();
 }
 
@@ -57,10 +51,9 @@ function drawTeleporterMob(mob: Mob) {
     noStroke();
     fill(mob.colour);
     translateForScreenCoords(mob.pos);
-    // rotate(mob.rotation)
     rectMode(CENTER);
     circle(0, 0, 20);
-    text("Tele", 20, 20);
+    text("Teleporter", 20, 20);
     pop();
 }
 
