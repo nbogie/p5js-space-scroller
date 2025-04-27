@@ -1,3 +1,32 @@
+interface Vehicle {
+    pos: p5.Vector;
+    vel: p5.Vector;
+    accel: p5.Vector;
+    live: boolean;
+    life: number;
+    radius: number;
+    hp: number;
+    fuel: number;
+    maxSteeringForce: number;
+    facing: number;
+    maxSpeed: number;
+    maxThrust: number;
+    hue: number;
+    color: p5.Color;
+    traction: 0.3;
+
+    steer: p5.Vector;
+    canShoot: boolean;
+    rammingDamage: number;
+    lastShot: number;
+    shotDelay: number;
+    trail: Trail;
+    target: Target;
+    desiredVector: p5.Vector;
+    tookDamage: boolean;
+    isUnderPlayerControl: boolean;
+}
+
 function drawVehicle(p: Vehicle) {
     if (config.shouldDrawTrails) {
         drawTrail(p.trail);
@@ -49,12 +78,7 @@ function drawVehicle(p: Vehicle) {
 
     pop();
 }
-
-function updateVehicle(v: Vehicle) {
-    v.pos.add(v.vel);
-
-    const vel = createVector(v.vel.x, v.vel.y);
-
+function steerVehicleAutonomously(v: Vehicle) {
     const currPos = createVector(v.pos.x, v.pos.y);
     if (!v.live) {
         return;
@@ -68,7 +92,7 @@ function updateVehicle(v: Vehicle) {
         v.facing = v.desiredVector.copy().normalize().heading();
 
         //steering = desired minus velocity
-        const steer = p5.Vector.sub(desired, vel);
+        const steer = p5.Vector.sub(desired, v.vel);
         steer.limit(v.maxSteeringForce);
         v.steer = steer.copy();
         v.accel.add(steer);
@@ -76,9 +100,18 @@ function updateVehicle(v: Vehicle) {
     } else {
         v.target = acquireTarget(v);
     }
-    v.vel.add(v.accel);
 
     updateShooting(v);
+}
+
+function updateVehicle(v: Vehicle) {
+    v.pos.add(v.vel);
+    if (v.isUnderPlayerControl) {
+        steerVehicleWithUserInput(v);
+    } else {
+        steerVehicleAutonomously(v);
+    }
+    v.vel.add(v.accel);
 
     v.trail.particles.forEach(updateParticle);
 
@@ -111,6 +144,7 @@ function createVehicle(): Vehicle {
         fuel: 100,
         desiredVector: createVector(0, 0),
         maxSteeringForce: 0.2,
+        maxThrust: 0.1,
         maxSpeed: random(2, 10),
         facing: random(TWO_PI),
         hue: random(0, 100),
@@ -124,5 +158,43 @@ function createVehicle(): Vehicle {
         trail: createTrail(),
         tookDamage: false,
         life: 1,
+        isUnderPlayerControl: false,
     };
+}
+function steerVehicleWithUserInput(v: Vehicle) {
+    if (keyIsDown(UP_ARROW)) {
+        const thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust);
+        v.accel.add(thrust);
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+        v.accel.add(v.desiredVector.copy().mult(-v.traction));
+    }
+    if (keyIsDown(LEFT_ARROW)) {
+        v.facing -= 0.05;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        v.facing += 0.05;
+    }
+}
+
+function toggleAutopilot() {
+    if (world.trackedVehicle) {
+        console.log(
+            "tracked vehicle status: ",
+            world.trackedVehicle.isUnderPlayerControl,
+            millis(),
+        );
+        debugger;
+
+        if (world.trackedVehicle.isUnderPlayerControl) {
+            world.trackedVehicle.isUnderPlayerControl = false;
+            console.log(
+                "relinquishing control of vehicle: ",
+                world.trackedVehicle.isUnderPlayerControl,
+            );
+        } else {
+            console.log("user now has control of vehicle");
+            world.trackedVehicle.isUnderPlayerControl = true;
+        }
+    }
 }

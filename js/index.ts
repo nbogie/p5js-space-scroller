@@ -22,10 +22,13 @@ function setup() {
     randomizeBigPalette();
     setPaletteForResources();
 
-    setupVehicles(world.MAX_NUM_VEHICLES);
     setupAsteroids(10);
     setupStarfield();
+    setupVehicles(world.MAX_NUM_VEHICLES);
     setupMobs(10);
+
+    const firstLiveVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
+    switchPlayerControlToVehicle(firstLiveVehicle);
 
     frameRate(60);
     angleMode(RADIANS);
@@ -34,6 +37,12 @@ function setup() {
 }
 
 function draw() {
+    // if (frameCount % 200 === 0) {
+    //     debugger;
+    //     const x = world.trackedVehicle;
+    //     const y = world.trackedVehicle?.isUnderPlayerControl;
+    // }
+
     background(15);
     drawAll();
     updateAll();
@@ -79,8 +88,21 @@ function updateAll() {
 
     updateCamera(world.camera.pos, world.trackedVehicle);
 
-    world.trackedVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
     updateEngineWhistleSound();
+}
+function switchPlayerControlToVehicle(v?: Vehicle) {
+    if (v) {
+        const prevTrackedVehicle = world.trackedVehicle;
+
+        if (prevTrackedVehicle && prevTrackedVehicle.isUnderPlayerControl) {
+            prevTrackedVehicle.isUnderPlayerControl = false;
+        }
+        world.trackedVehicle = v;
+        v.isUnderPlayerControl = true;
+    } else {
+        world.trackedVehicle.isUnderPlayerControl = false;
+        world.trackedVehicle = undefined;
+    }
 }
 
 const resTypes: ResourceType[] = [

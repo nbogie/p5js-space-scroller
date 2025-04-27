@@ -247,10 +247,12 @@ function setup() {
     setupStandardColours();
     randomizeBigPalette();
     setPaletteForResources();
-    setupVehicles(world.MAX_NUM_VEHICLES);
     setupAsteroids(10);
     setupStarfield();
+    setupVehicles(world.MAX_NUM_VEHICLES);
     setupMobs(10);
+    var firstLiveVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
+    switchPlayerControlToVehicle(firstLiveVehicle);
     frameRate(60);
     angleMode(RADIANS);
     ellipseMode(CENTER);
@@ -289,8 +291,21 @@ function updateAll() {
     world.orbs.forEach(updateOrb);
     world.mobs.forEach(function (ent) { return ent.updateFn(ent); });
     updateCamera(world.camera.pos, world.trackedVehicle);
-    world.trackedVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
     updateEngineWhistleSound();
+}
+function switchPlayerControlToVehicle(v) {
+    if (v) {
+        var prevTrackedVehicle = world.trackedVehicle;
+        if (prevTrackedVehicle && prevTrackedVehicle.isUnderPlayerControl) {
+            prevTrackedVehicle.isUnderPlayerControl = false;
+        }
+        world.trackedVehicle = v;
+        v.isUnderPlayerControl = true;
+    }
+    else {
+        world.trackedVehicle.isUnderPlayerControl = false;
+        world.trackedVehicle = undefined;
+    }
 }
 var resTypes = [
     { label: "fuel", hue: 55, color: null },
@@ -318,6 +333,9 @@ function keyPressed() {
             if (world.trackedVehicle) {
                 addOrb(world.trackedVehicle);
             }
+            break;
+        case "a":
+            toggleAutopilot();
             break;
         case "b":
             randomizeMonoPalette();
@@ -889,9 +907,7 @@ function drawVehicle(p) {
     pop();
     pop();
 }
-function updateVehicle(v) {
-    v.pos.add(v.vel);
-    var vel = createVector(v.vel.x, v.vel.y);
+function steerVehicleAutonomously(v) {
     var currPos = createVector(v.pos.x, v.pos.y);
     if (!v.live) {
         return;
@@ -903,7 +919,7 @@ function updateVehicle(v) {
         desired.mult(v.maxSpeed);
         v.desiredVector = desired.copy().normalize();
         v.facing = v.desiredVector.copy().normalize().heading();
-        var steer = p5.Vector.sub(desired, vel);
+        var steer = p5.Vector.sub(desired, v.vel);
         steer.limit(v.maxSteeringForce);
         v.steer = steer.copy();
         v.accel.add(steer);
@@ -912,8 +928,17 @@ function updateVehicle(v) {
     else {
         v.target = acquireTarget(v);
     }
-    v.vel.add(v.accel);
     updateShooting(v);
+}
+function updateVehicle(v) {
+    v.pos.add(v.vel);
+    if (v.isUnderPlayerControl) {
+        steerVehicleWithUserInput(v);
+    }
+    else {
+        steerVehicleAutonomously(v);
+    }
+    v.vel.add(v.accel);
     v.trail.particles.forEach(updateParticle);
     v.life -= random(0.001, 0.01);
     var trailParticle = createParticleAt(v.pos);
@@ -940,6 +965,7 @@ function createVehicle() {
         fuel: 100,
         desiredVector: createVector(0, 0),
         maxSteeringForce: 0.2,
+        maxThrust: 0.1,
         maxSpeed: random(2, 10),
         facing: random(TWO_PI),
         hue: random(0, 100),
@@ -953,7 +979,37 @@ function createVehicle() {
         trail: createTrail(),
         tookDamage: false,
         life: 1,
+        isUnderPlayerControl: false,
     };
+}
+function steerVehicleWithUserInput(v) {
+    if (keyIsDown(UP_ARROW)) {
+        var thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust);
+        v.accel.add(thrust);
+    }
+    if (keyIsDown(DOWN_ARROW)) {
+        v.accel.add(v.desiredVector.copy().mult(-v.traction));
+    }
+    if (keyIsDown(LEFT_ARROW)) {
+        v.facing -= 0.05;
+    }
+    if (keyIsDown(RIGHT_ARROW)) {
+        v.facing += 0.05;
+    }
+}
+function toggleAutopilot() {
+    if (world.trackedVehicle) {
+        console.log("tracked vehicle status: ", world.trackedVehicle.isUnderPlayerControl, millis());
+        debugger;
+        if (world.trackedVehicle.isUnderPlayerControl) {
+            world.trackedVehicle.isUnderPlayerControl = false;
+            console.log("relinquishing control of vehicle: ", world.trackedVehicle.isUnderPlayerControl);
+        }
+        else {
+            console.log("user now has control of vehicle");
+            world.trackedVehicle.isUnderPlayerControl = true;
+        }
+    }
 }
 function createWorld() {
     var stars = [];

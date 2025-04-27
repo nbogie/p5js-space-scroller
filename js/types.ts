@@ -92,30 +92,4 @@ interface Target {
 interface Trail {
     particles: Particle[];
 }
-interface Vehicle {
-    pos: p5.Vector;
-    vel: p5.Vector;
-    accel: p5.Vector;
-    live: boolean;
-    life: number;
-    radius: number;
-    hp: number;
-    fuel: number;
-    maxSteeringForce: number;
-    facing: number;
-    maxSpeed: number;
-    hue: number;
-    color: p5.Color;
-    traction: 0.3;
-    steer: p5.Vector;
-    canShoot: boolean;
-    rammingDamage: number;
-    lastShot: number;
-    shotDelay: number;
-    trail: Trail;
-    target: Target;
-    desiredVector: p5.Vector;
-    tookDamage: boolean;
-}
-
 type BoomEventSize = "small" | "med" | "big";

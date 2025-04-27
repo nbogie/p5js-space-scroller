@@ -11,6 +11,9 @@ function keyPressed() {
                 addOrb(world.trackedVehicle);
             }
             break;
+        case "a":
+            toggleAutopilot();
+            break;
         case "b":
             randomizeMonoPalette();
             redraw();
