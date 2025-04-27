@@ -1,5 +1,5 @@
 function drawVehicle(p: Vehicle) {
-    if (shouldDrawTrails) {
+    if (config.shouldDrawTrails) {
         drawTrail(p.trail);
     }
     push();

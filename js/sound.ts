@@ -17,7 +17,7 @@ function setupSound() {
 }
 
 function toggleMute() {
-    shouldPlaySound = !shouldPlaySound;
+    config.shouldPlaySound = !config.shouldPlaySound;
 }
 function setupAsteroidHitSound() {
     asteroidHitNoise = new p5.Noise("white"); // other types include 'brown' and 'pink'
@@ -57,7 +57,7 @@ function setupEngineWhistleSound() {
     engineWhistleNoise.start();
 }
 function playSoundAsteroidDestroyed(level: AsteroidSize) {
-    if (!shouldPlaySound || soundNotYetEnabledByGesture) {
+    if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
 
@@ -78,7 +78,7 @@ function playSoundAsteroidDestroyed(level: AsteroidSize) {
 }
 
 function playSoundShot() {
-    if (!shouldPlaySound || soundNotYetEnabledByGesture) {
+    if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
     shootOsc.freq(random([110, 220, 330, 260]));
@@ -86,7 +86,7 @@ function playSoundShot() {
 }
 
 function updateEngineWhistleSound() {
-    if (!shouldPlaySound || soundNotYetEnabledByGesture) {
+    if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
 

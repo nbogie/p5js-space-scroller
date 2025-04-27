@@ -193,13 +193,12 @@ function drawHUD() {
     pop();
 }
 p5.disableFriendlyErrors = true;
-var shouldDrawTrails = true;
-var shouldDrawStars = true;
-var shouldPlaySound = false;
-var soundNotYetEnabledByGesture = true;
 var world;
+var config;
+var soundNotYetEnabledByGesture = true;
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    config = createConfig();
     world = createWorld();
     world.cameraPos = createVector(0, 0);
     frameRate(60);
@@ -217,6 +216,14 @@ function draw() {
     background(15);
     drawAll();
     updateAll();
+}
+function createConfig() {
+    var newConfig = {
+        shouldDrawTrails: true,
+        shouldDrawStars: true,
+        shouldPlaySound: false,
+    };
+    return newConfig;
 }
 function createWorld() {
     var stars = [];
@@ -257,7 +264,7 @@ function createWorld() {
 }
 function drawAll() {
     push();
-    if (shouldDrawStars) {
+    if (config.shouldDrawStars) {
         drawStarfield();
     }
     drawGridLines();
@@ -305,7 +312,7 @@ function keyPressed() {
 }
 function mouseMoved() { }
 function mousePressed() {
-    if (shouldPlaySound && soundNotYetEnabledByGesture) {
+    if (config.shouldPlaySound && soundNotYetEnabledByGesture) {
         soundNotYetEnabledByGesture = false;
         setupSound();
     }
@@ -591,7 +598,7 @@ function setupSound() {
     setupAsteroidHitSound();
 }
 function toggleMute() {
-    shouldPlaySound = !shouldPlaySound;
+    config.shouldPlaySound = !config.shouldPlaySound;
 }
 function setupAsteroidHitSound() {
     asteroidHitNoise = new p5.Noise("white");
@@ -621,7 +628,7 @@ function setupEngineWhistleSound() {
     engineWhistleNoise.start();
 }
 function playSoundAsteroidDestroyed(level) {
-    if (!shouldPlaySound || soundNotYetEnabledByGesture) {
+    if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
     var env = new p5.Envelope();
@@ -636,7 +643,7 @@ function playSoundAsteroidDestroyed(level) {
     env.play(asteroidHitNoise);
 }
 function playSoundShot() {
-    if (!shouldPlaySound || soundNotYetEnabledByGesture) {
+    if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
     shootOsc.freq(random([110, 220, 330, 260]));
@@ -644,7 +651,7 @@ function playSoundShot() {
 }
 function updateEngineWhistleSound() {
     var _a, _b;
-    if (!shouldPlaySound || soundNotYetEnabledByGesture) {
+    if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
     engineWhistleFilterWidth = 50;
@@ -753,7 +760,7 @@ function isColliding(a, s) {
     return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
 }
 function drawVehicle(p) {
-    if (shouldDrawTrails) {
+    if (config.shouldDrawTrails) {
         drawTrail(p.trail);
     }
     push();

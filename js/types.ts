@@ -20,6 +20,12 @@ interface World {
     screenShakeAmount: number;
 }
 
+interface Config {
+    shouldDrawTrails: boolean;
+    shouldDrawStars: boolean;
+    shouldPlaySound: boolean;
+}
+
 type AsteroidSize = 4 | 3 | 2 | 1;
 interface Asteroid {
     live: boolean;

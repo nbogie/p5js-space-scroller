@@ -8,7 +8,7 @@ p5.disableFriendlyErrors = true;
 let world: World;
 
 /** contains user config like stars, trails, sound on/off */
-let config;
+let config: Config;
 
 let soundNotYetEnabledByGesture = true;
 
@@ -39,12 +39,12 @@ function draw() {
     updateAll();
 }
 function createConfig() {
-    const config = {
+    const newConfig = {
         shouldDrawTrails: true,
         shouldDrawStars: true,
         shouldPlaySound: false,
     };
-    return config;
+    return newConfig;
 }
 
 function createWorld() {
@@ -89,7 +89,7 @@ function createWorld() {
 
 function drawAll() {
     push();
-    if (shouldDrawStars) {
+    if (config.shouldDrawStars) {
         drawStarfield();
     }
 
@@ -149,7 +149,7 @@ function keyPressed() {
 
 function mouseMoved() {}
 function mousePressed() {
-    if (shouldPlaySound && soundNotYetEnabledByGesture) {
+    if (config.shouldPlaySound && soundNotYetEnabledByGesture) {
         soundNotYetEnabledByGesture = false;
         setupSound();
     }
