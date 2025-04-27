@@ -15,17 +15,16 @@ let soundNotYetEnabledByGesture = true;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     config = createConfig();
+
     world = createWorld();
-    world.cameraPos = createVector(0, 0);
+
     frameRate(60);
     angleMode(RADIANS);
 
     setupStandardColours();
-
     randomizeBigPalette();
-
     setPaletteForResources();
-    //vehicles.push(createVehicle());
+
     createVehicles(world.gNumVehicles);
     createAsteroids(30);
     createStarfield();
@@ -65,7 +64,7 @@ function createWorld() {
     const worldHeight: number = 5000;
 
     //camera stuff
-    let cameraPos: p5.Vector;
+    let cameraPos: p5.Vector = createVector(0, 0);
     let cameraMoveSpeed: number = 5;
     const maxScreenShakeAmount: number = 10;
     let screenShakeAmount = 0;

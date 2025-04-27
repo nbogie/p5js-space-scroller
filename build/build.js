@@ -200,7 +200,6 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     config = createConfig();
     world = createWorld();
-    world.cameraPos = createVector(0, 0);
     frameRate(60);
     angleMode(RADIANS);
     setupStandardColours();
@@ -240,7 +239,7 @@ function createWorld() {
     var gShots = [];
     var worldWidth = 6000;
     var worldHeight = 5000;
-    var cameraPos;
+    var cameraPos = createVector(0, 0);
     var cameraMoveSpeed = 5;
     var maxScreenShakeAmount = 10;
     var screenShakeAmount = 0;
