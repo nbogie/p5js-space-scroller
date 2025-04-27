@@ -13,6 +13,12 @@ function repeat(n: number, fn: (i: number, n: number) => any) {
     }
 }
 
+function collect<T>(n: number, creatorFn: (n?: number) => T): T[] {
+    const arr: T[] = [];
+    repeat(n, (ix) => arr.push(creatorFn(ix)));
+    return arr;
+}
+
 function posToString(p: p5.Vector) {
     return `${Math.round(p.x)}, ${Math.round(p.y)}`;
 }
@@ -45,4 +51,22 @@ function drawVec(
 
 function isColliding(a: Collidable, s: Collidable) {
     return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
+}
+
+function calcNearestEntity<
+    A extends { pos: p5.Vector },
+    B extends { pos: p5.Vector },
+>(ship: A, entities: B[]): B | null {
+    //TODO: just use minBy from lodash or something
+    let recordDist = Number.MAX_SAFE_INTEGER;
+    let recordEnt = null;
+
+    entities.forEach((ent) => {
+        const dst = ent.pos.dist(ship.pos);
+        if (dst < recordDist) {
+            recordDist = dst;
+            recordEnt = ent;
+        }
+    });
+    return recordEnt;
 }

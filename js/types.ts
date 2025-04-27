@@ -1,19 +1,3 @@
-interface World {
-    stars: Star[];
-    asteroids: Asteroid[];
-    vehicles: Vehicle[];
-    MAX_NUM_VEHICLES: number;
-    trackedVehicle?: Vehicle;
-    targets: Target[];
-    MAX_NUM_TARGETS: number;
-    orbs: Orb[];
-    shots: Shot[];
-
-    worldWidth: number;
-    worldHeight: number;
-    camera: GameCamera;
-}
-
 interface GameCamera {
     pos: p5.Vector;
     moveSpeed: number;
@@ -40,6 +24,7 @@ interface Asteroid {
     tookDamage: boolean;
     rotation: number;
     rotationSpeed: number;
+    minimapColour: p5.Color;
 }
 interface AsteroidOpts {
     sizeCategory?: number;

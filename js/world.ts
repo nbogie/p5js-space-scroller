@@ -1,4 +1,20 @@
-function createWorld() {
+interface World {
+    stars: Star[];
+    asteroids: Asteroid[];
+    vehicles: Vehicle[];
+    MAX_NUM_VEHICLES: number;
+    trackedVehicle?: Vehicle;
+    targets: Target[];
+    MAX_NUM_TARGETS: number;
+    orbs: Orb[];
+    shots: Shot[];
+    mobs: Mob[];
+    worldWidth: number;
+    worldHeight: number;
+    camera: GameCamera;
+}
+
+function createWorld(): World {
     const stars: Star[] = [];
     const vehicles: Vehicle[] = [];
     const asteroids: Asteroid[] = [];
@@ -10,6 +26,7 @@ function createWorld() {
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
     const trackedVehicle: Vehicle = undefined;
+    const mobs: Mob[] = [];
 
     const camera: GameCamera = {
         pos: createVector(0, 0),
@@ -31,6 +48,7 @@ function createWorld() {
         worldWidth,
         worldHeight,
         camera,
-    };
+        mobs,
+    } satisfies World;
     return newWorld;
 }

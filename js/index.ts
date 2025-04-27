@@ -23,8 +23,9 @@ function setup() {
     setPaletteForResources();
 
     createVehicles(world.MAX_NUM_VEHICLES);
-    createAsteroids(30);
+    createAsteroids(10);
     createStarfield();
+    createInitialMobs(10);
 
     frameRate(60);
     angleMode(RADIANS);
@@ -50,6 +51,7 @@ function drawAll() {
 
     drawGridLines();
     world.orbs.forEach((o) => drawOrb(o));
+    world.mobs.forEach((ent) => ent.drawFn(ent));
 
     const shotsToDraw = world.shots.filter(
         (s) => s.live && distFromCamera(s.pos) < width,
@@ -73,6 +75,8 @@ function updateAll() {
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);
+    world.mobs.forEach((ent) => ent.updateFn(ent));
+
     updateCamera(world.camera.pos, world.trackedVehicle);
 
     world.trackedVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);

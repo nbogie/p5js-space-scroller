@@ -53,7 +53,8 @@ function createAsteroidAt(opts: AsteroidOpts) {
         rotation: random(TWO_PI),
         rotationSpeed: random(-0.1, 0.1),
         tookDamage: false,
-    };
+        minimapColour: color(0, 200, 200, 100),
+    } satisfies Asteroid;
 }
 
 function createAsteroids(n: number) {
