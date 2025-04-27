@@ -3,7 +3,7 @@ interface World {
     asteroids: Asteroid[];
     vehicles: Vehicle[];
     trackedVehicle?: Vehicle;
-    gTargets: Target[];
+    targets: Target[];
     orbs: Orb[];
     gNumTargets: number;
     gNumVehicles: number;

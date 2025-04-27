@@ -231,7 +231,7 @@ function createWorld() {
     var stars = [];
     var vehicles = [];
     var asteroids = [];
-    var gTargets = [];
+    var targets = [];
     var orbs = [];
     var gNumTargets = 6;
     var gNumVehicles = 6;
@@ -249,7 +249,7 @@ function createWorld() {
         vehicles: vehicles,
         asteroids: asteroids,
         trackedVehicle: trackedVehicle,
-        gTargets: gTargets,
+        targets: targets,
         orbs: orbs,
         gNumTargets: gNumTargets,
         gNumVehicles: gNumVehicles,
@@ -692,10 +692,10 @@ function drawStarfield() {
     });
 }
 function addTarget(pos) {
-    world.gTargets.unshift(pos);
-    world.gTargets.splice(world.gNumTargets);
+    world.targets.unshift(pos);
+    world.targets.splice(world.gNumTargets);
     world.vehicles.forEach(function (v, ix) {
-        v.target = world.gTargets[ix % world.gTargets.length];
+        v.target = world.targets[ix % world.targets.length];
     });
 }
 function acquireTarget(vehicle) {

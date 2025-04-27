@@ -54,7 +54,7 @@ function createWorld() {
     const stars: Star[] = [];
     const vehicles: Vehicle[] = [];
     const asteroids: Asteroid[] = [];
-    const gTargets: Target[] = [];
+    const targets: Target[] = [];
     const orbs: Orb[] = [];
     const gNumTargets: number = 6;
     const gNumVehicles: number = 6;
@@ -74,7 +74,7 @@ function createWorld() {
         vehicles,
         asteroids,
         trackedVehicle,
-        gTargets,
+        targets,
         orbs,
         gNumTargets,
         gNumVehicles,
