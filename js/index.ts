@@ -4,15 +4,17 @@
 // @ts-expect-error
 p5.disableFriendlyErrors = true;
 
-const shouldDrawTrails = true;
-const shouldDrawStars = true;
-let shouldPlaySound = false;
-let soundNotYetEnabledByGesture = true;
-
+/** almost all game state (asteroids, ship, bullets, etc) */
 let world: World;
+
+/** contains user config like stars, trails, sound on/off */
+let config;
+
+let soundNotYetEnabledByGesture = true;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
+    config = createConfig();
     world = createWorld();
     world.cameraPos = createVector(0, 0);
     frameRate(60);
@@ -35,6 +37,14 @@ function draw() {
     background(15);
     drawAll();
     updateAll();
+}
+function createConfig() {
+    const config = {
+        shouldDrawTrails: true,
+        shouldDrawStars: true,
+        shouldPlaySound: false,
+    };
+    return config;
 }
 
 function createWorld() {
