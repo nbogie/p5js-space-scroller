@@ -140,7 +140,7 @@ function translateForScreenCoords(pos, labelled) {
     if (labelled) {
         fill("white");
         textSize(10);
-        text(Math.round(screenCoords.x) + "," + Math.round(screenCoords.y), 20, 0);
+        text("".concat(Math.round(screenCoords.x), ",").concat(Math.round(screenCoords.y)), 20, 0);
     }
 }
 function getTranslationForScreenCoords(pos) {
@@ -698,7 +698,7 @@ function repeat(n, fn) {
     }
 }
 function posToString(p) {
-    return Math.round(p.x) + ", " + Math.round(p.y);
+    return "".concat(Math.round(p.x), ", ").concat(Math.round(p.y));
 }
 function randomPos() {
     return createVector(random(width), random(height));
