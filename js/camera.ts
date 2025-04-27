@@ -31,11 +31,10 @@ function trackVehicleWithCamera(v: Vehicle) {
     cameraPos.y = v.pos.y - height / 2 + velExtra.y;
 }
 
-
 function distFromCamera(p: p5.Vector) {
     return p5.Vector.dist(
         cameraPos.copy().add(createVector(width / 2, height / 2)),
-        p
+        p,
     );
 }
 function nearCamera(pos: p5.Vector) {
@@ -49,23 +48,24 @@ function screenShake(amt: number) {
     }
 }
 
-
 function translateForScreenCoords(pos: p5.Vector, labelled = false) {
     const screenCoords = pos.copy().sub(cameraPos);
     const translation = getTranslationForScreenCoords(pos);
-    translate((translation.x), (translation.y));
+    translate(translation.x, translation.y);
     if (labelled) {
         fill("white");
         textSize(10);
-        text(`${Math.round(screenCoords.x)},${Math.round(screenCoords.y)}`, 20, 0);
+        text(
+            `${Math.round(screenCoords.x)},${Math.round(screenCoords.y)}`,
+            20,
+            0,
+        );
     }
 }
 
 function getTranslationForScreenCoords(pos: p5.Vector): p5.Vector {
     return createVector(round(pos.x - cameraPos.x), round(pos.y - cameraPos.y));
 }
-
-
 
 function isOnScreen(pos: p5.Vector, radius: number) {
     return (
@@ -76,10 +76,8 @@ function isOnScreen(pos: p5.Vector, radius: number) {
     );
 }
 
-
 function drawGridLines() {
-
-    push()
+    push();
     const numCols = floor((8 * worldWidth) / width);
     const numRows = floor((8 * worldHeight) / width);
 
@@ -88,7 +86,7 @@ function drawGridLines() {
         for (let row = 0; row < numRows; row++) {
             const pos = createVector(
                 (col * width) / 2 - worldWidth / 2,
-                (row * width) / 2 - worldHeight / 2
+                (row * width) / 2 - worldHeight / 2,
             );
             push();
             const translation = getTranslationForScreenCoords(pos);
@@ -103,7 +101,7 @@ function drawGridLines() {
             pop();
         }
     }
-    pop()
+    pop();
 }
 
 function numberOfWorldPages() {

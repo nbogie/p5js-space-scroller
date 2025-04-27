@@ -12,16 +12,15 @@ let engineWhistleFilterWidth: number;
 
 function setupSound() {
     setupEngineWhistleSound();
-    setupShootSound()
+    setupShootSound();
     setupAsteroidHitSound();
 }
 
 function toggleMute() {
     shouldPlaySound = !shouldPlaySound;
-
 }
 function setupAsteroidHitSound() {
-    asteroidHitNoise = new p5.Noise('white'); // other types include 'brown' and 'pink'
+    asteroidHitNoise = new p5.Noise("white"); // other types include 'brown' and 'pink'
     asteroidHitNoise.start();
 
     // multiply asteroidHitNoise volume by 0
@@ -30,7 +29,6 @@ function setupAsteroidHitSound() {
 }
 
 function setupShootSound() {
-
     var attackLevel = 1.0;
     var releaseLevel = 0;
 
@@ -47,23 +45,16 @@ function setupShootSound() {
     shootOsc.amp(shootEnv);
     shootOsc.start();
     shootOsc.freq(880);
-
 }
 
-
-
-
-
 function setupEngineWhistleSound() {
-
     engineWhistleFilter = new p5.BandPass();
 
-    engineWhistleNoise = new p5.Noise('white');
+    engineWhistleNoise = new p5.Noise("white");
 
     engineWhistleNoise.disconnect(); // Disconnect soundfile from master output...
     engineWhistleFilter.process(engineWhistleNoise); // ...and connect to whistleFilter so we'll only hear BandPass.
     engineWhistleNoise.start();
-
 }
 function playSoundAsteroidDestroyed(level: AsteroidSize) {
     if (!shouldPlaySound || soundNotYetEnabledByGesture) {
@@ -74,12 +65,16 @@ function playSoundAsteroidDestroyed(level: AsteroidSize) {
 
     const env = new p5.Envelope();
     // set attackTime, decayTime, sustainRatio, releaseTime
-    const releaseTime: Record<AsteroidSize, number> = { 1: 0.05, 2: 0.05, 3: 0.1, 4: 1 }
+    const releaseTime: Record<AsteroidSize, number> = {
+        1: 0.05,
+        2: 0.05,
+        3: 0.1,
+        4: 1,
+    };
     env.setADSR(random(0.001, 0.002), 0.1, 0.2, releaseTime[level]);
     // set attackLevel, releaseLevel
     env.setRange(1, 0);
     env.play(asteroidHitNoise);
-
 }
 
 function playSoundShot() {
@@ -89,9 +84,6 @@ function playSoundShot() {
     shootOsc.freq(random([110, 220, 330, 260]));
     shootEnv.play(shootOsc);
 }
-
-
-
 
 function updateEngineWhistleSound() {
     if (!shouldPlaySound || soundNotYetEnabledByGesture) {

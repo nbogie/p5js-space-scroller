@@ -1,4 +1,3 @@
-
 function createShot(opts: ShotOptions): Shot {
     push();
     colorMode(HSB, 100);
@@ -18,9 +17,9 @@ function createShot(opts: ShotOptions): Shot {
         radius: Math.pow(sz, 2),
         damage: sz,
         color: color(random(50, 70), 100, 100, 100),
-        life: 1
+        life: 1,
     };
-    pop()
+    pop();
     return shot;
 }
 
@@ -29,7 +28,7 @@ function addShot(opts: ShotOptions) {
     gShots.unshift(shot);
     gShots.splice(100);
     if (nearCamera(shot.pos)) {
-        playSoundShot()
+        playSoundShot();
     }
 }
 function drawShot(s: Shot) {
@@ -49,8 +48,8 @@ function updateShot(p: Shot) {
         p.pos.x += p.vel.x;
         p.pos.y += p.vel.y;
         asteroids
-            .filter(a => a.live)
-            .forEach(a => {
+            .filter((a) => a.live)
+            .forEach((a) => {
                 if (isColliding(a, p)) {
                     a.hp -= p.damage;
                     a.tookDamage = true;
@@ -65,22 +64,16 @@ function updateShot(p: Shot) {
     }
 }
 
-
 function shootIfTime(p: Vehicle) {
     const ms = millis();
     if (ms - p.lastShot > p.shotDelay) {
         addShot({
             pos: p.pos,
-            vel: p.vel
-                .copy()
-                .normalize()
-                .mult(40)
-                .add(p.vel)
+            vel: p.vel.copy().normalize().mult(40).add(p.vel),
         });
         p.lastShot = ms;
     }
 }
-
 
 function updateShooting(p: Vehicle) {
     const angleOff = p.desiredVector.angleBetween(p.vel);

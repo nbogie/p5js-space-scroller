@@ -1,4 +1,3 @@
-
 function drawVehicle(p: Vehicle) {
     if (shouldDrawTrails) {
         drawTrail(p.trail);
@@ -11,8 +10,8 @@ function drawVehicle(p: Vehicle) {
         p.tookDamage
             ? color("white")
             : p.canShoot
-                ? color(p.hue, 40, 100)
-                : color("gray")
+              ? color(p.hue, 40, 100)
+              : color("gray"),
     );
     noStroke();
     const sz = 10;
@@ -51,7 +50,6 @@ function drawVehicle(p: Vehicle) {
     pop();
 }
 
-
 function updateVehicle(v: Vehicle) {
     v.pos.add(v.vel);
 
@@ -67,10 +65,7 @@ function updateVehicle(v: Vehicle) {
         desired.normalize();
         desired.mult(v.maxSpeed);
         v.desiredVector = desired.copy().normalize();
-        v.facing = v.desiredVector
-            .copy()
-            .normalize()
-            .heading();
+        v.facing = v.desiredVector.copy().normalize().heading();
 
         //steering = desired minus velocity
         const steer = p5.Vector.sub(desired, vel);
@@ -100,7 +95,6 @@ function updateVehicle(v: Vehicle) {
     v.tookDamage = false;
 }
 
-
 function createVehicles(n: number) {
     repeat(n, (ix: number) => vehicles.push(createVehicle()));
 }
@@ -129,6 +123,6 @@ function createVehicle(): Vehicle {
         shotDelay: 100,
         trail: createTrail(),
         tookDamage: false,
-        life: 1
+        life: 1,
     };
 }

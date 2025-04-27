@@ -1,4 +1,3 @@
-
 function mouseWorldPos(): p5.Vector {
     return cameraPos.copy().add(mousePos());
 }

@@ -24,12 +24,11 @@ function addOrb(opts: OrbOptions) {
         live: true,
         life: 1,
         radius: 30,
-        exploding: false
+        exploding: false,
     };
     orbs.unshift(orb);
     orbs.splice(10);
 }
-
 
 function drawOrb(o: Orb) {
     if (o.live) {

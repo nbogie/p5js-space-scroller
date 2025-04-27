@@ -1,6 +1,5 @@
-
 let gPalette: Palette;
-type ColourName = 'white' | 'black'
+type ColourName = "white" | "black";
 let stdColours: Record<ColourName, p5.Color>;
 
 const FaveColors = {
@@ -23,7 +22,7 @@ const FaveColors = {
         "#00A0B0,#6A4A3C,#CC333F,#EB6841,#EDC951|Ocean Five by DESIGNJUNKEE|http://www.colourlovers.com/palette/1473/Ocean_Five",
         "#B9D7D9,#668284,#2A2829,#493736,#7B3B3B|Entrapped InAPalette by annajak|",
         "#D1F2A5,#EFFAB4,#FFC48C,#FF9F80,#F56991|mellon ball surprise by Skyblue2u|",
-        "#00A8C6,#40C0CB,#F9F2E7,#AEE239,#8FBE00|fresh cut day by electrikmonk|"
+        "#00A8C6,#40C0CB,#F9F2E7,#AEE239,#8FBE00|fresh cut day by electrikmonk|",
     ],
     createPalettes: function () {
         const makePalette = (str: string) => {
@@ -31,7 +30,7 @@ const FaveColors = {
             return {
                 colors: colorsStr.split(",").map((n: string) => color(n)),
                 name: name,
-                url: url
+                url: url,
             };
         };
 
@@ -44,18 +43,20 @@ const FaveColors = {
 
     randomBigPalette: function (minSize: number) {
         return random(
-            FaveColors.createPalettes().filter(p => p.colors.length >= minSize)
+            FaveColors.createPalettes().filter(
+                (p) => p.colors.length >= minSize,
+            ),
         );
     },
     randomMonoPalette: function () {
         const pal = Object.assign({}, FaveColors.randomPalette());
         pal.colors = _.sampleSize(pal.colors, 2);
         return pal;
-    }
+    },
 };
 
 function setupStandardColours() {
-    stdColours = { white: color('white'), black: color('black') }
+    stdColours = { white: color("white"), black: color("black") };
 }
 
 function randomizePalette() {
@@ -78,14 +79,12 @@ function randomColorOrTransparent() {
     return random([randomColor(), createEmptyColor()]);
 }
 
-
 function setPaletteForResources() {
     randomizeBigPalette();
     resTypes.forEach((rt, ix) => {
         rt.color = gPalette.colors[ix];
     });
 }
-
 
 function getColorForShipHP(hp: number) {
     return lerpColor(color("red"), color("green"), (max(hp, 20) - 20) / 100);

@@ -1,4 +1,3 @@
-
 type AsteroidSize = 4 | 3 | 2 | 1;
 interface Asteroid {
     live: boolean;
@@ -105,4 +104,4 @@ interface Vehicle {
     tookDamage: boolean;
 }
 
-type BoomEventSize = 'small' | 'med' | 'big'
+type BoomEventSize = "small" | "med" | "big";

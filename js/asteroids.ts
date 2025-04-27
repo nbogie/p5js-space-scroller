@@ -1,5 +1,4 @@
 function shatterAsteroid(a: Asteroid) {
-
     playSoundAsteroidDestroyed(a.sizeCategory);
     if (a.sizeCategory >= 2) {
         addAsteroid({ pos: a.pos.copy(), sizeCategory: a.sizeCategory - 1 });
@@ -11,7 +10,6 @@ function shatterAsteroid(a: Asteroid) {
 }
 
 function drawAsteroid(a: Asteroid) {
-
     if (a.live) {
         push();
         translateForScreenCoords(a.pos);
@@ -23,7 +21,7 @@ function drawAsteroid(a: Asteroid) {
         noStroke();
         square(0, 0, a.radius * 2.7, 6, 6);
         pop();
-        fill('white')
+        fill("white");
         textSize(14);
         textAlign(CENTER, CENTER);
         stroke("black");
@@ -54,15 +52,13 @@ function createAsteroidAt(opts: AsteroidOpts) {
         hp: sz * 20,
         rotation: random(TWO_PI),
         rotationSpeed: random(-0.1, 0.1),
-        tookDamage: false
+        tookDamage: false,
     };
 }
 
 function createAsteroids(n: number) {
     repeat(n, (ix: number) => asteroids.push(createAsteroid()));
 }
-
-
 
 function updateAsteroid(p: Asteroid) {
     if (p.live) {
@@ -84,8 +80,8 @@ function updateAsteroid(p: Asteroid) {
         p.rotation += p.rotationSpeed;
 
         vehicles
-            .filter(v => true || v.live)
-            .forEach(v => {
+            .filter((v) => true || v.live)
+            .forEach((v) => {
                 if (isColliding(p, v)) {
                     p.hp -= v.rammingDamage;
                     p.tookDamage = true;

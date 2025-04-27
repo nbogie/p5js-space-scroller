@@ -9,7 +9,7 @@ function createParticleAt(pos: p5.Vector) {
         hue: random(10),
         radius: random(0.5, 3),
         color: randomColor(),
-        life: 1
+        life: 1,
     };
 }
 function drawParticle(p: Particle) {
@@ -36,7 +36,6 @@ function addParticle(p: Particle, ps: Particle[]) {
     ps.unshift(p);
     ps.splice(100);
 }
-
 
 function createTrail() {
     const ps: Particle[] = [];

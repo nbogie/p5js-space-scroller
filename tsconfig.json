@@ -1,14 +1,14 @@
 {
-  "compilerOptions": {
-    "lib": ["es2015", "es2017", "dom"],
-    "module": "none",
-    "moduleResolution": "node",
-    "noImplicitAny": true,
-    "outFile": "./build/build.js",
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "rootDir": "./js/",
-    "sourceMap": true,
-    "target": "es5"
-  }
+    "compilerOptions": {
+        "lib": ["es2015", "es2017", "dom"],
+        "module": "none",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "outFile": "./build/build.js",
+        "preserveConstEnums": true,
+        "removeComments": true,
+        "rootDir": "./js/",
+        "sourceMap": true,
+        "target": "es5"
+    }
 }

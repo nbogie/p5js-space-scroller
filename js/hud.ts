@@ -1,4 +1,3 @@
-
 function drawHUD() {
     push();
     fill("white");
@@ -11,12 +10,12 @@ function drawHUD() {
 
     text(
         "Camera: " +
-        JSON.stringify({
-            x: Math.round(cameraPos.x),
-            y: Math.round(cameraPos.y)
-        }),
+            JSON.stringify({
+                x: Math.round(cameraPos.x),
+                y: Math.round(cameraPos.y),
+            }),
         50,
-        600
+        600,
     );
-    pop()
+    pop();
 }

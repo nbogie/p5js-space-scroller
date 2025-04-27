@@ -1,4 +1,3 @@
-
 function addTarget(pos: Target) {
     gTargets.unshift(pos);
     gTargets.splice(gNumTargets);
@@ -9,12 +8,10 @@ function addTarget(pos: Target) {
 
 function acquireTarget(vehicle: Vehicle) {
     const closeAsteroids = asteroids.filter(
-        a => a.pos.dist(vehicle.pos) < height
+        (a) => a.pos.dist(vehicle.pos) < height,
     );
     return random(closeAsteroids.length > 0 ? closeAsteroids : asteroids);
 }
-
-
 
 function drawTarget(t: Target) {
     push();

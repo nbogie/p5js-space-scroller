@@ -20,7 +20,7 @@ function drawAsteroid(a) {
         noStroke();
         square(0, 0, a.radius * 2.7, 6, 6);
         pop();
-        fill('white');
+        fill("white");
         textSize(14);
         textAlign(CENTER, CENTER);
         stroke("black");
@@ -48,7 +48,7 @@ function createAsteroidAt(opts) {
         hp: sz * 20,
         rotation: random(TWO_PI),
         rotationSpeed: random(-0.1, 0.1),
-        tookDamage: false
+        tookDamage: false,
     };
 }
 function createAsteroids(n) {
@@ -136,7 +136,7 @@ function translateForScreenCoords(pos, labelled) {
     if (labelled === void 0) { labelled = false; }
     var screenCoords = pos.copy().sub(cameraPos);
     var translation = getTranslationForScreenCoords(pos);
-    translate((translation.x), (translation.y));
+    translate(translation.x, translation.y);
     if (labelled) {
         fill("white");
         textSize(10);
@@ -188,7 +188,7 @@ function drawHUD() {
     text("Camera: " +
         JSON.stringify({
             x: Math.round(cameraPos.x),
-            y: Math.round(cameraPos.y)
+            y: Math.round(cameraPos.y),
         }), 50, 600);
     pop();
 }
@@ -290,7 +290,7 @@ var resTypes = [
     { label: "fuel", hue: 55, color: null },
     { label: "laser", hue: 30, color: null },
     { label: "explosive", hue: 0, color: null },
-    { label: "magic", hue: 80, color: null }
+    { label: "magic", hue: 80, color: null },
 ];
 function mouseWorldPos() {
     return cameraPos.copy().add(mousePos());
@@ -324,7 +324,7 @@ function addOrb(opts) {
         live: true,
         life: 1,
         radius: 30,
-        exploding: false
+        exploding: false,
     };
     orbs.unshift(orb);
     orbs.splice(10);
@@ -361,7 +361,7 @@ var FaveColors = {
         "#00A0B0,#6A4A3C,#CC333F,#EB6841,#EDC951|Ocean Five by DESIGNJUNKEE|http://www.colourlovers.com/palette/1473/Ocean_Five",
         "#B9D7D9,#668284,#2A2829,#493736,#7B3B3B|Entrapped InAPalette by annajak|",
         "#D1F2A5,#EFFAB4,#FFC48C,#FF9F80,#F56991|mellon ball surprise by Skyblue2u|",
-        "#00A8C6,#40C0CB,#F9F2E7,#AEE239,#8FBE00|fresh cut day by electrikmonk|"
+        "#00A8C6,#40C0CB,#F9F2E7,#AEE239,#8FBE00|fresh cut day by electrikmonk|",
     ],
     createPalettes: function () {
         var makePalette = function (str) {
@@ -369,7 +369,7 @@ var FaveColors = {
             return {
                 colors: colorsStr.split(",").map(function (n) { return color(n); }),
                 name: name,
-                url: url
+                url: url,
             };
         };
         var palettes = FaveColors.paletteStrs.map(makePalette);
@@ -385,10 +385,10 @@ var FaveColors = {
         var pal = Object.assign({}, FaveColors.randomPalette());
         pal.colors = _.sampleSize(pal.colors, 2);
         return pal;
-    }
+    },
 };
 function setupStandardColours() {
-    stdColours = { white: color('white'), black: color('black') };
+    stdColours = { white: color("white"), black: color("black") };
 }
 function randomizePalette() {
     gPalette = FaveColors.randomPalette();
@@ -427,7 +427,7 @@ function createParticleAt(pos) {
         hue: random(10),
         radius: random(0.5, 3),
         color: randomColor(),
-        life: 1
+        life: 1,
     };
 }
 function drawParticle(p) {
@@ -484,7 +484,7 @@ function createShot(opts) {
         radius: Math.pow(sz, 2),
         damage: sz,
         color: color(random(50, 70), 100, 100, 100),
-        life: 1
+        life: 1,
     };
     pop();
     return shot;
@@ -533,11 +533,7 @@ function shootIfTime(p) {
     if (ms - p.lastShot > p.shotDelay) {
         addShot({
             pos: p.pos,
-            vel: p.vel
-                .copy()
-                .normalize()
-                .mult(40)
-                .add(p.vel)
+            vel: p.vel.copy().normalize().mult(40).add(p.vel),
         });
         p.lastShot = ms;
     }
@@ -565,7 +561,7 @@ function toggleMute() {
     shouldPlaySound = !shouldPlaySound;
 }
 function setupAsteroidHitSound() {
-    asteroidHitNoise = new p5.Noise('white');
+    asteroidHitNoise = new p5.Noise("white");
     asteroidHitNoise.start();
     asteroidHitNoise.amp(0);
 }
@@ -586,7 +582,7 @@ function setupShootSound() {
 }
 function setupEngineWhistleSound() {
     engineWhistleFilter = new p5.BandPass();
-    engineWhistleNoise = new p5.Noise('white');
+    engineWhistleNoise = new p5.Noise("white");
     engineWhistleNoise.disconnect();
     engineWhistleFilter.process(engineWhistleNoise);
     engineWhistleNoise.start();
@@ -596,7 +592,12 @@ function playSoundAsteroidDestroyed(level) {
         return;
     }
     var env = new p5.Envelope();
-    var releaseTime = { 1: 0.05, 2: 0.05, 3: 0.1, 4: 1 };
+    var releaseTime = {
+        1: 0.05,
+        2: 0.05,
+        3: 0.1,
+        4: 1,
+    };
     env.setADSR(random(0.001, 0.002), 0.1, 0.2, releaseTime[level]);
     env.setRange(1, 0);
     env.play(asteroidHitNoise);
@@ -626,7 +627,7 @@ function createStarfield() {
         return stars.push({
             pos: randomWorldPos(),
             radius: random(0.5, random(0.5, 3)),
-            strength: random(100)
+            strength: random(100),
         });
     });
 }
@@ -774,10 +775,7 @@ function updateVehicle(v) {
         desired.normalize();
         desired.mult(v.maxSpeed);
         v.desiredVector = desired.copy().normalize();
-        v.facing = v.desiredVector
-            .copy()
-            .normalize()
-            .heading();
+        v.facing = v.desiredVector.copy().normalize().heading();
         var steer = p5.Vector.sub(desired, vel);
         steer.limit(v.maxSteeringForce);
         v.steer = steer.copy();
@@ -827,7 +825,7 @@ function createVehicle() {
         shotDelay: 100,
         trail: createTrail(),
         tookDamage: false,
-        life: 1
+        life: 1,
     };
 }
 //# sourceMappingURL=build.js.map
