@@ -96,7 +96,7 @@ function updateEngineWhistleSound() {
     // engineWhistleFilterWidth = map(mouseY, 0, height, 0, 90);
     engineWhistleFilterWidth = 50;
     const maxVel = 5;
-    const vel = trackedVehicle?.vel?.mag();
+    const vel = world.trackedVehicle?.vel?.mag();
     if (vel) {
         engineWhistleFilterFreq = map(vel, 0, maxVel, 10, 8000);
     }

@@ -3,8 +3,8 @@ function drawHUD() {
     fill("white");
     textSize(12);
 
-    if (trackedVehicle) {
-        text("Health: " + trackedVehicle.hp, width - 100, 50);
+    if (world.trackedVehicle) {
+        text("Health: " + world.trackedVehicle.hp, width - 100, 50);
     }
     text(Math.round(frameRate()) + " fps", 50, 575);
 

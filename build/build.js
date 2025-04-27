@@ -181,8 +181,8 @@ function drawHUD() {
     push();
     fill("white");
     textSize(12);
-    if (trackedVehicle) {
-        text("Health: " + trackedVehicle.hp, width - 100, 50);
+    if (world.trackedVehicle) {
+        text("Health: " + world.trackedVehicle.hp, width - 100, 50);
     }
     text(Math.round(frameRate()) + " fps", 50, 575);
     text("Camera: " +
@@ -197,7 +197,6 @@ var shouldDrawTrails = true;
 var shouldDrawStars = true;
 var shouldPlaySound = false;
 var soundNotYetEnabledByGesture = true;
-var trackedVehicle;
 var world;
 function setup() {
     createCanvas(windowWidth, windowHeight);
@@ -235,10 +234,12 @@ function createWorld() {
     var cameraMoveSpeed = 5;
     var maxScreenShakeAmount = 10;
     var screenShakeAmount = 0;
+    var trackedVehicle = undefined;
     var newWorld = {
         stars: stars,
         vehicles: vehicles,
         asteroids: asteroids,
+        trackedVehicle: trackedVehicle,
         gTargets: gTargets,
         orbs: orbs,
         gNumTargets: gNumTargets,
@@ -276,8 +277,8 @@ function updateAll() {
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);
-    updateCamera(world.cameraPos, trackedVehicle);
-    trackedVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
+    updateCamera(world.cameraPos, world.trackedVehicle);
+    world.trackedVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
     updateEngineWhistleSound();
 }
 function keyPressed() {
@@ -289,8 +290,8 @@ function keyPressed() {
             randomizePalette();
             break;
         case "o":
-            if (trackedVehicle) {
-                addOrb(trackedVehicle);
+            if (world.trackedVehicle) {
+                addOrb(world.trackedVehicle);
             }
             break;
         case "b":
@@ -642,13 +643,13 @@ function playSoundShot() {
     shootEnv.play(shootOsc);
 }
 function updateEngineWhistleSound() {
-    var _a;
+    var _a, _b;
     if (!shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
     engineWhistleFilterWidth = 50;
     var maxVel = 5;
-    var vel = (_a = trackedVehicle === null || trackedVehicle === void 0 ? void 0 : trackedVehicle.vel) === null || _a === void 0 ? void 0 : _a.mag();
+    var vel = (_b = (_a = world.trackedVehicle) === null || _a === void 0 ? void 0 : _a.vel) === null || _b === void 0 ? void 0 : _b.mag();
     if (vel) {
         engineWhistleFilterFreq = map(vel, 0, maxVel, 10, 8000);
     }

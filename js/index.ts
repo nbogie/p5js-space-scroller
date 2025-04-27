@@ -9,8 +9,6 @@ const shouldDrawStars = true;
 let shouldPlaySound = false;
 let soundNotYetEnabledByGesture = true;
 
-let trackedVehicle: Vehicle;
-
 let world: World;
 
 function setup() {
@@ -57,11 +55,12 @@ function createWorld() {
     let cameraMoveSpeed: number = 5;
     const maxScreenShakeAmount: number = 10;
     let screenShakeAmount = 0;
-
+    const trackedVehicle: Vehicle = undefined;
     const newWorld = {
         stars,
         vehicles,
         asteroids,
+        trackedVehicle,
         gTargets,
         orbs,
         gNumTargets,
@@ -109,9 +108,9 @@ function updateAll() {
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);
-    updateCamera(world.cameraPos, trackedVehicle);
+    updateCamera(world.cameraPos, world.trackedVehicle);
 
-    trackedVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
+    world.trackedVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
     updateEngineWhistleSound();
 }
 
@@ -124,8 +123,8 @@ function keyPressed() {
             randomizePalette();
             break;
         case "o":
-            if (trackedVehicle) {
-                addOrb(trackedVehicle);
+            if (world.trackedVehicle) {
+                addOrb(world.trackedVehicle);
             }
             break;
         case "b":

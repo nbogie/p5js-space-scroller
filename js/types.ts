@@ -1,11 +1,13 @@
 interface World {
     stars: Star[];
-    vehicles: Vehicle[];
     asteroids: Asteroid[];
+    vehicles: Vehicle[];
+    trackedVehicle?: Vehicle;
     gTargets: Target[];
     orbs: Orb[];
     gNumTargets: number;
     gNumVehicles: number;
+
     gAsteroids: Asteroid[];
     gShots: Shot[];
     worldWidth: number;
