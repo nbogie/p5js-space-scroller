@@ -205,7 +205,7 @@ function setup() {
     setupStandardColours();
     randomizeBigPalette();
     setPaletteForResources();
-    createVehicles(world.gNumVehicles);
+    createVehicles(world.MAX_NUM_VEHICLES);
     createAsteroids(30);
     createStarfield();
     ellipseMode(CENTER);
@@ -234,7 +234,7 @@ function createWorld() {
     var targets = [];
     var orbs = [];
     var MAX_NUM_TARGETS = 6;
-    var gNumVehicles = 6;
+    var MAX_NUM_VEHICLES = 6;
     var gShots = [];
     var worldWidth = 6000;
     var worldHeight = 5000;
@@ -251,7 +251,7 @@ function createWorld() {
         targets: targets,
         orbs: orbs,
         MAX_NUM_TARGETS: MAX_NUM_TARGETS,
-        gNumVehicles: gNumVehicles,
+        MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
         gShots: gShots,
         worldWidth: worldWidth,
         worldHeight: worldHeight,
