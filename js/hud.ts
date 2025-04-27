@@ -11,8 +11,8 @@ function drawHUD() {
     text(
         "Camera: " +
             JSON.stringify({
-                x: Math.round(cameraPos.x),
-                y: Math.round(cameraPos.y),
+                x: Math.round(world.cameraPos.x),
+                y: Math.round(world.cameraPos.y),
             }),
         50,
         600,

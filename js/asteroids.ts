@@ -33,7 +33,7 @@ function drawAsteroid(a: Asteroid) {
 }
 
 function addAsteroid(opts: AsteroidOpts) {
-    asteroids.push(createAsteroidAt(opts));
+    world.asteroids.push(createAsteroidAt(opts));
 }
 function createAsteroid() {
     return createAsteroidAt({ pos: randomWorldPos() });
@@ -57,29 +57,29 @@ function createAsteroidAt(opts: AsteroidOpts) {
 }
 
 function createAsteroids(n: number) {
-    repeat(n, (ix: number) => asteroids.push(createAsteroid()));
+    repeat(n, (ix: number) => world.asteroids.push(createAsteroid()));
 }
 
 function updateAsteroid(p: Asteroid) {
     if (p.live) {
         p.pos.x += p.vel.x;
         p.pos.y += p.vel.y;
-        if (p.pos.x < -worldWidth / 2) {
-            p.pos.x += worldWidth / 2;
+        if (p.pos.x < -world.worldWidth / 2) {
+            p.pos.x += world.worldWidth / 2;
         }
-        if (p.pos.x > worldWidth / 2) {
-            p.pos.x -= worldWidth / 2;
+        if (p.pos.x > world.worldWidth / 2) {
+            p.pos.x -= world.worldWidth / 2;
         }
 
-        if (p.pos.y < -worldHeight / 2) {
-            p.pos.y += worldHeight / 2;
+        if (p.pos.y < -world.worldHeight / 2) {
+            p.pos.y += world.worldHeight / 2;
         }
-        if (p.pos.y > worldHeight / 2) {
-            p.pos.y -= worldHeight / 2;
+        if (p.pos.y > world.worldHeight / 2) {
+            p.pos.y -= world.worldHeight / 2;
         }
         p.rotation += p.rotationSpeed;
 
-        vehicles
+        world.vehicles
             .filter((v) => true || v.live)
             .forEach((v) => {
                 if (isColliding(p, v)) {

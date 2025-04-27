@@ -25,8 +25,8 @@ function createShot(opts: ShotOptions): Shot {
 
 function addShot(opts: ShotOptions) {
     const shot = createShot(opts);
-    gShots.unshift(shot);
-    gShots.splice(100);
+    world.gShots.unshift(shot);
+    world.gShots.splice(100);
     if (nearCamera(shot.pos)) {
         playSoundShot();
     }
@@ -47,7 +47,7 @@ function updateShot(p: Shot) {
     if (p.live) {
         p.pos.x += p.vel.x;
         p.pos.y += p.vel.y;
-        asteroids
+        world.asteroids
             .filter((a) => a.live)
             .forEach((a) => {
                 if (isColliding(a, p)) {

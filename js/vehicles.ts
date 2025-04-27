@@ -96,7 +96,7 @@ function updateVehicle(v: Vehicle) {
 }
 
 function createVehicles(n: number) {
-    repeat(n, (ix: number) => vehicles.push(createVehicle()));
+    repeat(n, (ix: number) => world.vehicles.push(createVehicle()));
 }
 
 function createVehicle(): Vehicle {

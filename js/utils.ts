@@ -22,8 +22,8 @@ function randomPos(): p5.Vector {
 }
 function randomWorldPos(): p5.Vector {
     return createVector(
-        random(-worldWidth / 2, worldWidth / 2),
-        random(-worldHeight / 2, worldHeight / 2),
+        random(-world.worldWidth / 2, world.worldWidth / 2),
+        random(-world.worldHeight / 2, world.worldHeight / 2),
     );
 }
 

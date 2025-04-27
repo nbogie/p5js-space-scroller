@@ -26,8 +26,8 @@ function addOrb(opts: OrbOptions) {
         radius: 30,
         exploding: false,
     };
-    orbs.unshift(orb);
-    orbs.splice(10);
+    world.orbs.unshift(orb);
+    world.orbs.splice(10);
 }
 
 function drawOrb(o: Orb) {

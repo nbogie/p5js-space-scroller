@@ -11,28 +11,12 @@ let soundNotYetEnabledByGesture = true;
 
 let trackedVehicle: Vehicle;
 
-const stars: Star[] = [];
-const vehicles: Vehicle[] = [];
-const asteroids: Asteroid[] = [];
-const gTargets: Target[] = [];
-const orbs: Orb[] = [];
-const gNumTargets: number = 6;
-const gNumVehicles: number = 6;
-const gAsteroids = [];
-const gShots: Shot[] = [];
-const worldWidth: number = 6000;
-const worldHeight: number = 5000;
-
-let cameraPos: p5.Vector;
-let cameraMoveSpeed: number = 5;
-const maxScreenShakeAmount: number = 10;
-
-let screenShakeAmount = 0;
+let world: World;
 
 function setup() {
     createCanvas(windowWidth, windowHeight);
-
-    cameraPos = createVector(0, 0);
+    world = createWorld();
+    world.cameraPos = createVector(0, 0);
     frameRate(60);
     angleMode(RADIANS);
 
@@ -42,7 +26,7 @@ function setup() {
 
     setPaletteForResources();
     //vehicles.push(createVehicle());
-    createVehicles(gNumVehicles);
+    createVehicles(world.gNumVehicles);
     createAsteroids(10 * numberOfWorldPages());
     createStarfield();
     ellipseMode(CENTER);
@@ -55,6 +39,45 @@ function draw() {
     updateAll();
 }
 
+function createWorld() {
+    const stars: Star[] = [];
+    const vehicles: Vehicle[] = [];
+    const asteroids: Asteroid[] = [];
+    const gTargets: Target[] = [];
+    const orbs: Orb[] = [];
+    const gNumTargets: number = 6;
+    const gNumVehicles: number = 6;
+    const gAsteroids: Asteroid[] = [];
+    const gShots: Shot[] = [];
+    const worldWidth: number = 6000;
+    const worldHeight: number = 5000;
+
+    //camera stuff
+    let cameraPos: p5.Vector;
+    let cameraMoveSpeed: number = 5;
+    const maxScreenShakeAmount: number = 10;
+    let screenShakeAmount = 0;
+
+    const newWorld = {
+        stars,
+        vehicles,
+        asteroids,
+        gTargets,
+        orbs,
+        gNumTargets,
+        gNumVehicles,
+        gAsteroids,
+        gShots,
+        worldWidth,
+        worldHeight,
+        cameraPos,
+        cameraMoveSpeed,
+        maxScreenShakeAmount,
+        screenShakeAmount,
+    };
+    return newWorld;
+}
+
 function drawAll() {
     push();
     if (shouldDrawStars) {
@@ -62,18 +85,18 @@ function drawAll() {
     }
 
     drawGridLines();
-    orbs.forEach((o) => drawOrb(o));
+    world.orbs.forEach((o) => drawOrb(o));
 
-    const shotsToDraw = gShots.filter(
+    const shotsToDraw = world.gShots.filter(
         (s) => s.live && distFromCamera(s.pos) < width,
     );
 
     shotsToDraw.forEach(drawShot);
-    asteroids.forEach(drawAsteroid);
-    vehicles.forEach(drawVehicle);
+    world.asteroids.forEach(drawAsteroid);
+    world.vehicles.forEach(drawVehicle);
 
     //Draw targets of vehicles
-    vehicles
+    world.vehicles
         .filter((v) => v.target && v.target.live)
         .forEach((v) => drawTarget(v.target));
 
@@ -82,13 +105,13 @@ function drawAll() {
     drawHUD();
 }
 function updateAll() {
-    gShots.forEach(updateShot);
-    vehicles.forEach(updateVehicle);
-    asteroids.forEach(updateAsteroid);
-    orbs.forEach(updateOrb);
-    updateCamera(cameraPos, trackedVehicle);
+    world.gShots.forEach(updateShot);
+    world.vehicles.forEach(updateVehicle);
+    world.asteroids.forEach(updateAsteroid);
+    world.orbs.forEach(updateOrb);
+    updateCamera(world.cameraPos, trackedVehicle);
 
-    trackedVehicle = vehicles.find((v: Vehicle) => v.hp > 0);
+    trackedVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
     updateEngineWhistleSound();
 }
 

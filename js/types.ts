@@ -1,3 +1,23 @@
+interface World {
+    stars: Star[];
+    vehicles: Vehicle[];
+    asteroids: Asteroid[];
+    gTargets: Target[];
+    orbs: Orb[];
+    gNumTargets: number;
+    gNumVehicles: number;
+    gAsteroids: Asteroid[];
+    gShots: Shot[];
+    worldWidth: number;
+    worldHeight: number;
+
+    //camera stuff
+    cameraPos: p5.Vector;
+    cameraMoveSpeed: number;
+    maxScreenShakeAmount: number;
+    screenShakeAmount: number;
+}
+
 type AsteroidSize = 4 | 3 | 2 | 1;
 interface Asteroid {
     live: boolean;

@@ -1,16 +1,16 @@
 function addTarget(pos: Target) {
-    gTargets.unshift(pos);
-    gTargets.splice(gNumTargets);
-    vehicles.forEach((v, ix) => {
-        v.target = gTargets[ix % gTargets.length];
+    world.gTargets.unshift(pos);
+    world.gTargets.splice(world.gNumTargets);
+    world.vehicles.forEach((v, ix) => {
+        v.target = world.gTargets[ix % world.gTargets.length];
     });
 }
 
 function acquireTarget(vehicle: Vehicle) {
-    const closeAsteroids = asteroids.filter(
+    const closeAsteroids = world.asteroids.filter(
         (a) => a.pos.dist(vehicle.pos) < height,
     );
-    return random(closeAsteroids.length > 0 ? closeAsteroids : asteroids);
+    return random(closeAsteroids.length > 0 ? closeAsteroids : world.asteroids);
 }
 
 function drawTarget(t: Target) {
