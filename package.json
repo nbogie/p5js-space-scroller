@@ -1,7 +1,7 @@
 {
     "name": "p5-space-scroller-auto",
     "version": "1.0.0",
-    "description": "Project to quickly get something working in [p5.js](https://p5js.org/) and [typescript](https://www.typescriptlang.org/)",
+    "description": "auto-playing asteroids-like space-shooter (typescript, p5.js)",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "run-p start-compile start-run",
