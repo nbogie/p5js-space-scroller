@@ -91,18 +91,18 @@ function updateAsteroid(p) {
     }
     p.tookDamage = false;
 }
-function updateCamera(posToChange, trackedVehicle) {
+function updateCamera(camPosToChange, trackedVehicle) {
     if (keyIsDown(LEFT_ARROW)) {
-        posToChange.x += world.camera.moveSpeed;
+        camPosToChange.x += world.camera.moveSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        posToChange.x -= world.camera.moveSpeed;
+        camPosToChange.x -= world.camera.moveSpeed;
     }
     if (keyIsDown(UP_ARROW)) {
-        posToChange.y += world.camera.moveSpeed;
+        camPosToChange.y += world.camera.moveSpeed;
     }
     if (keyIsDown(DOWN_ARROW)) {
-        posToChange.y -= world.camera.moveSpeed;
+        camPosToChange.y -= world.camera.moveSpeed;
     }
     if (trackedVehicle) {
         trackVehicleWithCamera(trackedVehicle);
