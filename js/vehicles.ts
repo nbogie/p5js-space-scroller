@@ -102,17 +102,25 @@ function steerVehicleAutonomously(v: Vehicle) {
 
     updateShooting(v);
 }
+function updateVehicleWeaponsWithUserInput(v: Vehicle) {
+    if (keyIsDown(32)) {
+        shootIfTime(v);
+    }
+}
 
 function updateVehicle(v: Vehicle) {
     v.pos.add(v.vel);
     if (v.isUnderPlayerControl) {
         steerVehicleWithUserInput(v);
+        updateVehicleWeaponsWithUserInput(v);
     } else {
         steerVehicleAutonomously(v);
     }
     v.vel.add(v.accel);
 
     v.trail.particles.forEach(updateParticle);
+
+    //update shooting
 
     //reset accel for next time
 

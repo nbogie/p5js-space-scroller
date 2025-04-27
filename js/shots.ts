@@ -64,14 +64,16 @@ function updateShot(p: Shot) {
     }
 }
 
-function shootIfTime(p: Vehicle) {
+function shootIfTime(srcVehicle: Vehicle) {
     const ms = millis();
-    if (ms - p.lastShot > p.shotDelay) {
+    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
         addShot({
-            pos: p.pos,
-            vel: p.vel.copy().normalize().mult(40).add(p.vel),
+            pos: srcVehicle.pos,
+            vel: p5.Vector.fromAngle(srcVehicle.facing)
+                .mult(40)
+                .add(srcVehicle.vel),
         });
-        p.lastShot = ms;
+        srcVehicle.lastShot = ms;
     }
 }
 

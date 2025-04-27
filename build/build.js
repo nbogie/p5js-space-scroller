@@ -655,14 +655,16 @@ function updateShot(p) {
         p.life -= random(0.001, 0.01);
     }
 }
-function shootIfTime(p) {
+function shootIfTime(srcVehicle) {
     var ms = millis();
-    if (ms - p.lastShot > p.shotDelay) {
+    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
         addShot({
-            pos: p.pos,
-            vel: p.vel.copy().normalize().mult(40).add(p.vel),
+            pos: srcVehicle.pos,
+            vel: p5.Vector.fromAngle(srcVehicle.facing)
+                .mult(40)
+                .add(srcVehicle.vel),
         });
-        p.lastShot = ms;
+        srcVehicle.lastShot = ms;
     }
 }
 function updateShooting(p) {
@@ -929,10 +931,16 @@ function steerVehicleAutonomously(v) {
     }
     updateShooting(v);
 }
+function updateVehicleWeaponsWithUserInput(v) {
+    if (keyIsDown(32)) {
+        shootIfTime(v);
+    }
+}
 function updateVehicle(v) {
     v.pos.add(v.vel);
     if (v.isUnderPlayerControl) {
         steerVehicleWithUserInput(v);
+        updateVehicleWeaponsWithUserInput(v);
     }
     else {
         steerVehicleAutonomously(v);
