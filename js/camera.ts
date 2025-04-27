@@ -1,15 +1,15 @@
-function updateCamera(posToChange: p5.Vector, trackedVehicle: Vehicle) {
+function updateCamera(camPosToChange: p5.Vector, trackedVehicle: Vehicle) {
     if (keyIsDown(LEFT_ARROW)) {
-        posToChange.x += world.camera.moveSpeed;
+        camPosToChange.x += world.camera.moveSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        posToChange.x -= world.camera.moveSpeed;
+        camPosToChange.x -= world.camera.moveSpeed;
     }
     if (keyIsDown(UP_ARROW)) {
-        posToChange.y += world.camera.moveSpeed;
+        camPosToChange.y += world.camera.moveSpeed;
     }
     if (keyIsDown(DOWN_ARROW)) {
-        posToChange.y -= world.camera.moveSpeed;
+        camPosToChange.y -= world.camera.moveSpeed;
     }
 
     if (trackedVehicle) {
