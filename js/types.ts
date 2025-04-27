@@ -20,6 +20,7 @@ interface GameCamera {
     maxScreenShakeAmount: number;
     screenShakeAmount: number;
 }
+
 interface Config {
     shouldDrawTrails: boolean;
     shouldDrawStars: boolean;

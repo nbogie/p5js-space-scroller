@@ -26,3 +26,7 @@ function drawStarfield() {
             pop();
         });
 }
+
+function toggleShouldDrawStars() {
+    toggleConfigBooleanProperty("shouldDrawStars");
+}

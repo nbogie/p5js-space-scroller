@@ -41,15 +41,6 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
-function createConfig() {
-    const newConfig = {
-        shouldDrawTrails: true,
-        shouldDrawStars: true,
-        shouldPlaySound: false,
-    };
-    return newConfig;
-}
-
 function createWorld() {
     const stars: Star[] = [];
     const vehicles: Vehicle[] = [];

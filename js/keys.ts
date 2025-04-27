@@ -15,6 +15,9 @@ function keyPressed() {
             randomizeMonoPalette();
             redraw();
             break;
+        case "s":
+            toggleShouldDrawStars();
+            break;
         case "p":
             togglePause();
             break;

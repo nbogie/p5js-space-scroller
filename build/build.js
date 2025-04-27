@@ -177,6 +177,17 @@ function drawGridLines() {
 function numberOfWorldPages() {
     return Math.pow(world.worldWidth / width, 2);
 }
+function createConfig() {
+    var newConfig = {
+        shouldDrawTrails: true,
+        shouldDrawStars: true,
+        shouldPlaySound: false,
+    };
+    return newConfig;
+}
+function toggleConfigBooleanProperty(key) {
+    return (config[key] = !config[key]);
+}
 function drawHUD() {
     push();
     fill("white");
@@ -218,14 +229,6 @@ function draw() {
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
-}
-function createConfig() {
-    var newConfig = {
-        shouldDrawTrails: true,
-        shouldDrawStars: true,
-        shouldPlaySound: false,
-    };
-    return newConfig;
 }
 function createWorld() {
     var stars = [];
@@ -317,6 +320,9 @@ function keyPressed() {
         case "b":
             randomizeMonoPalette();
             redraw();
+            break;
+        case "s":
+            toggleShouldDrawStars();
             break;
         case "p":
             togglePause();
@@ -597,7 +603,7 @@ function setupSound() {
     setupAsteroidHitSound();
 }
 function toggleMute() {
-    config.shouldPlaySound = !config.shouldPlaySound;
+    toggleConfigBooleanProperty("shouldPlaySound");
 }
 function setupAsteroidHitSound() {
     asteroidHitNoise = new p5.Noise("white");
@@ -687,6 +693,9 @@ function drawStarfield() {
         line(0, -r, 0, r);
         pop();
     });
+}
+function toggleShouldDrawStars() {
+    toggleConfigBooleanProperty("shouldDrawStars");
 }
 function addTarget(pos) {
     world.targets.unshift(pos);

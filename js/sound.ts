@@ -17,8 +17,10 @@ function setupSound() {
 }
 
 function toggleMute() {
-    config.shouldPlaySound = !config.shouldPlaySound;
+    toggleConfigBooleanProperty("shouldPlaySound");
+    //todo: if we've just muted, kill any long-running sounds / oscs
 }
+
 function setupAsteroidHitSound() {
     asteroidHitNoise = new p5.Noise("white"); // other types include 'brown' and 'pink'
     asteroidHitNoise.start();
