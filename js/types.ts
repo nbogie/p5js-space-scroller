@@ -2,16 +2,15 @@ interface World {
     stars: Star[];
     asteroids: Asteroid[];
     vehicles: Vehicle[];
+    MAX_NUM_VEHICLES: number;
     trackedVehicle?: Vehicle;
     targets: Target[];
-    orbs: Orb[];
     MAX_NUM_TARGETS: number;
-    MAX_NUM_VEHICLES: number;
-
+    orbs: Orb[];
     shots: Shot[];
+
     worldWidth: number;
     worldHeight: number;
-
     camera: GameCamera;
 }
 
