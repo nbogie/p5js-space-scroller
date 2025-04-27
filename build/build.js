@@ -211,14 +211,14 @@ function setup() {
     createCanvas(windowWidth, windowHeight);
     config = createConfig();
     world = createWorld();
-    frameRate(60);
-    angleMode(RADIANS);
     setupStandardColours();
     randomizeBigPalette();
     setPaletteForResources();
     createVehicles(world.MAX_NUM_VEHICLES);
     createAsteroids(30);
     createStarfield();
+    frameRate(60);
+    angleMode(RADIANS);
     ellipseMode(CENTER);
     rectMode(CENTER);
 }

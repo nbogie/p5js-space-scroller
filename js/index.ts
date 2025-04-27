@@ -18,9 +18,6 @@ function setup() {
 
     world = createWorld();
 
-    frameRate(60);
-    angleMode(RADIANS);
-
     setupStandardColours();
     randomizeBigPalette();
     setPaletteForResources();
@@ -28,6 +25,9 @@ function setup() {
     createVehicles(world.MAX_NUM_VEHICLES);
     createAsteroids(30);
     createStarfield();
+
+    frameRate(60);
+    angleMode(RADIANS);
     ellipseMode(CENTER);
     rectMode(CENTER);
 }
@@ -37,6 +37,7 @@ function draw() {
     drawAll();
     updateAll();
 }
+
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
