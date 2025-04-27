@@ -230,40 +230,6 @@ function draw() {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
-function createWorld() {
-    var stars = [];
-    var vehicles = [];
-    var asteroids = [];
-    var targets = [];
-    var orbs = [];
-    var MAX_NUM_TARGETS = 6;
-    var MAX_NUM_VEHICLES = 6;
-    var shots = [];
-    var worldWidth = 6000;
-    var worldHeight = 5000;
-    var trackedVehicle = undefined;
-    var camera = {
-        pos: createVector(0, 0),
-        moveSpeed: 5,
-        maxScreenShakeAmount: 10,
-        screenShakeAmount: 0,
-    };
-    var newWorld = {
-        stars: stars,
-        vehicles: vehicles,
-        asteroids: asteroids,
-        trackedVehicle: trackedVehicle,
-        targets: targets,
-        orbs: orbs,
-        MAX_NUM_TARGETS: MAX_NUM_TARGETS,
-        MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
-        shots: shots,
-        worldWidth: worldWidth,
-        worldHeight: worldHeight,
-        camera: camera,
-    };
-    return newWorld;
-}
 function drawAll() {
     push();
     if (config.shouldDrawStars) {
@@ -875,5 +841,39 @@ function createVehicle() {
         tookDamage: false,
         life: 1,
     };
+}
+function createWorld() {
+    var stars = [];
+    var vehicles = [];
+    var asteroids = [];
+    var targets = [];
+    var orbs = [];
+    var MAX_NUM_TARGETS = 6;
+    var MAX_NUM_VEHICLES = 6;
+    var shots = [];
+    var worldWidth = 6000;
+    var worldHeight = 5000;
+    var trackedVehicle = undefined;
+    var camera = {
+        pos: createVector(0, 0),
+        moveSpeed: 5,
+        maxScreenShakeAmount: 10,
+        screenShakeAmount: 0,
+    };
+    var newWorld = {
+        stars: stars,
+        vehicles: vehicles,
+        asteroids: asteroids,
+        trackedVehicle: trackedVehicle,
+        targets: targets,
+        orbs: orbs,
+        MAX_NUM_TARGETS: MAX_NUM_TARGETS,
+        MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
+        shots: shots,
+        worldWidth: worldWidth,
+        worldHeight: worldHeight,
+        camera: camera,
+    };
+    return newWorld;
 }
 //# sourceMappingURL=build.js.map
