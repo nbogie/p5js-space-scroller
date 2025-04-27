@@ -173,9 +173,6 @@ function steerVehicleWithUserInput(v: Vehicle) {
         const thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust);
         v.accel.add(thrust);
     }
-    if (keyIsDown(DOWN_ARROW)) {
-        v.accel.add(v.desiredVector.copy().mult(-v.traction));
-    }
     if (keyIsDown(LEFT_ARROW)) {
         v.facing -= 0.05;
     }
