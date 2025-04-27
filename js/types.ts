@@ -8,7 +8,6 @@ interface World {
     gNumTargets: number;
     gNumVehicles: number;
 
-    gAsteroids: Asteroid[];
     gShots: Shot[];
     worldWidth: number;
     worldHeight: number;

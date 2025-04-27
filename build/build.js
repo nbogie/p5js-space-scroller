@@ -235,7 +235,6 @@ function createWorld() {
     var orbs = [];
     var gNumTargets = 6;
     var gNumVehicles = 6;
-    var gAsteroids = [];
     var gShots = [];
     var worldWidth = 6000;
     var worldHeight = 5000;
@@ -253,7 +252,6 @@ function createWorld() {
         orbs: orbs,
         gNumTargets: gNumTargets,
         gNumVehicles: gNumVehicles,
-        gAsteroids: gAsteroids,
         gShots: gShots,
         worldWidth: worldWidth,
         worldHeight: worldHeight,

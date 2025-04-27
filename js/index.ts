@@ -58,7 +58,6 @@ function createWorld() {
     const orbs: Orb[] = [];
     const gNumTargets: number = 6;
     const gNumVehicles: number = 6;
-    const gAsteroids: Asteroid[] = [];
     const gShots: Shot[] = [];
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
@@ -78,7 +77,6 @@ function createWorld() {
         orbs,
         gNumTargets,
         gNumVehicles,
-        gAsteroids,
         gShots,
         worldWidth,
         worldHeight,
