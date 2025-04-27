@@ -58,7 +58,7 @@ function createWorld() {
     const orbs: Orb[] = [];
     const MAX_NUM_TARGETS: number = 6;
     const MAX_NUM_VEHICLES: number = 6;
-    const gShots: Shot[] = [];
+    const shots: Shot[] = [];
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
 
@@ -77,7 +77,7 @@ function createWorld() {
         orbs,
         MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES,
-        gShots,
+        shots,
         worldWidth,
         worldHeight,
         cameraPos,
@@ -97,7 +97,7 @@ function drawAll() {
     drawGridLines();
     world.orbs.forEach((o) => drawOrb(o));
 
-    const shotsToDraw = world.gShots.filter(
+    const shotsToDraw = world.shots.filter(
         (s) => s.live && distFromCamera(s.pos) < width,
     );
 
@@ -115,7 +115,7 @@ function drawAll() {
     drawHUD();
 }
 function updateAll() {
-    world.gShots.forEach(updateShot);
+    world.shots.forEach(updateShot);
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);

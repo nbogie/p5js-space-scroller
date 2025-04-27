@@ -25,8 +25,8 @@ function createShot(opts: ShotOptions): Shot {
 
 function addShot(opts: ShotOptions) {
     const shot = createShot(opts);
-    world.gShots.unshift(shot);
-    world.gShots.splice(100);
+    world.shots.unshift(shot);
+    world.shots.splice(100);
     if (nearCamera(shot.pos)) {
         playSoundShot();
     }

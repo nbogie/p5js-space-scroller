@@ -8,7 +8,7 @@ interface World {
     MAX_NUM_TARGETS: number;
     MAX_NUM_VEHICLES: number;
 
-    gShots: Shot[];
+    shots: Shot[];
     worldWidth: number;
     worldHeight: number;
 

@@ -235,7 +235,7 @@ function createWorld() {
     var orbs = [];
     var MAX_NUM_TARGETS = 6;
     var MAX_NUM_VEHICLES = 6;
-    var gShots = [];
+    var shots = [];
     var worldWidth = 6000;
     var worldHeight = 5000;
     var cameraPos = createVector(0, 0);
@@ -252,7 +252,7 @@ function createWorld() {
         orbs: orbs,
         MAX_NUM_TARGETS: MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
-        gShots: gShots,
+        shots: shots,
         worldWidth: worldWidth,
         worldHeight: worldHeight,
         cameraPos: cameraPos,
@@ -269,7 +269,7 @@ function drawAll() {
     }
     drawGridLines();
     world.orbs.forEach(function (o) { return drawOrb(o); });
-    var shotsToDraw = world.gShots.filter(function (s) { return s.live && distFromCamera(s.pos) < width; });
+    var shotsToDraw = world.shots.filter(function (s) { return s.live && distFromCamera(s.pos) < width; });
     shotsToDraw.forEach(drawShot);
     world.asteroids.forEach(drawAsteroid);
     world.vehicles.forEach(drawVehicle);
@@ -280,7 +280,7 @@ function drawAll() {
     drawHUD();
 }
 function updateAll() {
-    world.gShots.forEach(updateShot);
+    world.shots.forEach(updateShot);
     world.vehicles.forEach(updateVehicle);
     world.asteroids.forEach(updateAsteroid);
     world.orbs.forEach(updateOrb);
@@ -531,8 +531,8 @@ function createShot(opts) {
 }
 function addShot(opts) {
     var shot = createShot(opts);
-    world.gShots.unshift(shot);
-    world.gShots.splice(100);
+    world.shots.unshift(shot);
+    world.shots.splice(100);
     if (nearCamera(shot.pos)) {
         playSoundShot();
     }
