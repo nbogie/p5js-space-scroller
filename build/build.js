@@ -948,12 +948,6 @@ function updateVehicle(v) {
     v.vel.add(v.accel);
     v.trail.particles.forEach(updateParticle);
     v.life -= random(0.001, 0.01);
-    var trailParticle = createParticleAt(v.pos);
-    trailParticle.vel = v.accel
-        .copy()
-        .mult(20)
-        .rotate(180 + random(-1, 1));
-    addParticle(trailParticle, v.trail.particles);
     v.accel.mult(0);
     v.tookDamage = false;
 }
@@ -993,6 +987,7 @@ function steerVehicleWithUserInput(v) {
     if (keyIsDown(UP_ARROW)) {
         var thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust);
         v.accel.add(thrust);
+        addTrailParticle(v);
     }
     if (keyIsDown(LEFT_ARROW)) {
         v.facing -= 0.05;
@@ -1014,6 +1009,14 @@ function toggleAutopilot() {
             world.trackedVehicle.isUnderPlayerControl = true;
         }
     }
+}
+function addTrailParticle(v) {
+    var trailParticle = createParticleAt(v.pos);
+    trailParticle.vel = v.accel
+        .copy()
+        .mult(20)
+        .rotate(180 + random(-1, 1));
+    addParticle(trailParticle, v.trail.particles);
 }
 function createWorld() {
     var stars = [];
