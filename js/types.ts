@@ -20,6 +20,7 @@ interface Asteroid {
     sizeCategory: AsteroidSize;
     radius: number;
     damage: number;
+    mineral: Mineral | null;
     hp: number;
     tookDamage: boolean;
     rotation: number;
@@ -28,6 +29,7 @@ interface Asteroid {
 }
 interface AsteroidOpts {
     sizeCategory?: number;
+    mineral?: Mineral | null;
     pos: p5.Vector;
 }
 interface Collidable {

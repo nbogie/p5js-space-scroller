@@ -18,8 +18,15 @@ function drawAsteroid(a: Asteroid) {
         push();
         rotate(a.rotation);
         fill(a.tookDamage ? stdColours.white : a.resType.color);
-        noStroke();
+        if (a.mineral) {
+            stroke("lime");
+            const t = map(sin(frameCount / 10), -1, 1, 0, 1);
+            strokeWeight((t * a.radius) / 6);
+        } else {
+            noStroke();
+        }
         square(0, 0, a.radius * 2.7, 6, 6);
+
         pop();
         fill("white");
         textSize(14);
@@ -35,6 +42,7 @@ function drawAsteroid(a: Asteroid) {
 function addAsteroid(opts: AsteroidOpts) {
     world.asteroids.push(createAsteroidAt(opts));
 }
+
 function createAsteroid() {
     return createAsteroidAt({ pos: randomWorldPos() });
 }
@@ -49,6 +57,7 @@ function createAsteroidAt(opts: AsteroidOpts) {
         sizeCategory: sz,
         radius: sz * 7,
         damage: sz,
+        mineral: random() < 0.2 ? randomMineral() : null,
         hp: sz * 20,
         rotation: random(TWO_PI),
         rotationSpeed: random(-0.1, 0.1),
@@ -99,4 +108,8 @@ function updateAsteroid(p: Asteroid) {
             });
     }
     p.tookDamage = false;
+}
+
+function randomMineral(): Mineral {
+    return random([...allMineralNames]);
 }

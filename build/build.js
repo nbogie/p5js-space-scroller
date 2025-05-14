@@ -1,4 +1,13 @@
 "use strict";
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 function shatterAsteroid(a) {
     playSoundAsteroidDestroyed(a.sizeCategory);
     if (a.sizeCategory >= 2) {
@@ -17,7 +26,14 @@ function drawAsteroid(a) {
         push();
         rotate(a.rotation);
         fill(a.tookDamage ? stdColours.white : a.resType.color);
-        noStroke();
+        if (a.mineral) {
+            stroke("lime");
+            var t = map(sin(frameCount / 10), -1, 1, 0, 1);
+            strokeWeight((t * a.radius) / 6);
+        }
+        else {
+            noStroke();
+        }
         square(0, 0, a.radius * 2.7, 6, 6);
         pop();
         fill("white");
@@ -45,6 +61,7 @@ function createAsteroidAt(opts) {
         sizeCategory: sz,
         radius: sz * 7,
         damage: sz,
+        mineral: random() < 0.2 ? randomMineral() : null,
         hp: sz * 20,
         rotation: random(TWO_PI),
         rotationSpeed: random(-0.1, 0.1),
@@ -91,6 +108,9 @@ function updateAsteroid(p) {
         });
     }
     p.tookDamage = false;
+}
+function randomMineral() {
+    return random(__spreadArray([], allMineralNames, true));
 }
 function updateCamera(posToChange, trackedVehicle) {
     if (keyIsDown(LEFT_ARROW)) {
@@ -349,6 +369,41 @@ function keyPressed() {
             break;
     }
 }
+var allMineralNames = [
+    "copper",
+    "iron",
+    "gold",
+    "diamond",
+    "uranium",
+    "plutonium",
+    "unobtanium",
+    "crazium",
+    "titanium",
+    "silicon",
+    "lithium",
+    "carbon",
+    "sodium",
+    "potassium",
+    "calcium",
+    "tungsten",
+    "nickel",
+    "zinc",
+    "lead",
+    "aluminium",
+    "mercury",
+    "bismuth",
+    "arsenic",
+    "antimony",
+    "tellurium",
+    "selenium",
+    "cadmium",
+    "beryllium",
+    "rhodium",
+    "iridium",
+    "osmium",
+    "ruthenium",
+    "palladium",
+];
 function setupMobs(n) {
     world.mobs = collect(n, function (ix) { return createRandomMob(); });
 }
