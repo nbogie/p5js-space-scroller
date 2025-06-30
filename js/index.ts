@@ -124,6 +124,9 @@ function updateAll() {
     updateCamera(world.camera.pos, world.trackedVehicle);
 
     updateEngineWhistleSound();
+
+    //cull entities marked for deletion
+    world.entities = world.entities.filter((e) => e.live);
 }
 
 function OLD_updateAll() {

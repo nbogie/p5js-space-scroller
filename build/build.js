@@ -332,6 +332,7 @@ function updateAll() {
     });
     updateCamera(world.camera.pos, world.trackedVehicle);
     updateEngineWhistleSound();
+    world.entities = world.entities.filter(function (e) { return e.live; });
 }
 function OLD_updateAll() {
 }
