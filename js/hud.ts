@@ -47,9 +47,9 @@ function drawHUD() {
         nearestTeleporterMob &&
             plotEntityOnRadar(nearestTeleporterMob, world.trackedVehicle.pos);
 
-        world.asteroids
-            .filter((a) => a.live)
-            .forEach((ast) => plotEntityOnRadar(ast, world.trackedVehicle.pos));
+        getLiveAsteroids().forEach((ast) =>
+            plotEntityOnRadar(ast, world.trackedVehicle.pos),
+        );
     }
 }
 

@@ -1,6 +1,6 @@
 interface World {
+    entities: Entity[];
     stars: Star[];
-    asteroids: Asteroid[];
     vehicles: Vehicle[];
     MAX_NUM_VEHICLES: number;
     trackedVehicle?: Vehicle;
@@ -15,9 +15,9 @@ interface World {
 }
 
 function createWorld(): World {
+    const entities: Entity[] = [];
     const stars: Star[] = [];
     const vehicles: Vehicle[] = [];
-    const asteroids: Asteroid[] = [];
     const targets: Target[] = [];
     const orbs: Orb[] = [];
     const MAX_NUM_TARGETS: number = 6;
@@ -36,9 +36,9 @@ function createWorld(): World {
     };
 
     const newWorld = {
+        entities,
         stars,
         vehicles,
-        asteroids,
         trackedVehicle,
         targets,
         orbs,

@@ -44,6 +44,7 @@ function draw() {
     // }
 
     background(15);
+
     drawAll();
     updateAll();
 }
@@ -52,13 +53,46 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 
+function prepareEntitiesForDrawing() {
+    //TODO: remove anything not near the screen
+
+    //sort by zIndex
+    return [...world.entities].sort((a, b) => {
+        return a.zIndex - b.zIndex;
+    });
+}
+function prepareEntitiesForUpdate() {
+    //sort by update priority
+    return [...world.entities].sort((a, b) => {
+        return a.updatePriority - b.updatePriority;
+    });
+}
+
 function drawAll() {
+    const preparedEntities = prepareEntitiesForDrawing();
+
     push();
     if (config.shouldDrawStars) {
         drawStarfield();
     }
 
     drawGridLines();
+
+    preparedEntities.forEach((ent) => {
+        if (ent.live) {
+            ent.drawFn(ent);
+        }
+    });
+
+    pop();
+
+    drawHUD();
+}
+
+function OLD_draw() {
+    /**
+     * 
+     
     world.orbs.forEach((o) => drawOrb(o));
     world.mobs.forEach((ent) => ent.drawFn(ent));
 
@@ -67,7 +101,7 @@ function drawAll() {
     );
 
     shotsToDraw.forEach(drawShot);
-    world.asteroids.forEach(drawAsteroid);
+    world.entities.forEach(drawAsteroid);
     world.vehicles.forEach(drawVehicle);
 
     //Draw targets of vehicles
@@ -75,21 +109,31 @@ function drawAll() {
         .filter((v) => v.target && v.target.live)
         .forEach((v) => drawTarget(v.target));
 
-    pop();
-
-    drawHUD();
+    */
 }
 function updateAll() {
-    world.shots.forEach(updateShot);
-    world.vehicles.forEach(updateVehicle);
-    world.asteroids.forEach(updateAsteroid);
-    world.orbs.forEach(updateOrb);
-    world.mobs.forEach((ent) => ent.updateFn(ent));
+    const preparedEntities = prepareEntitiesForUpdate();
+    preparedEntities.forEach((ent) => {
+        if (ent.live) {
+            ent.updateFn(ent);
+        }
+    });
 
     updateCamera(world.camera.pos, world.trackedVehicle);
 
     updateEngineWhistleSound();
 }
+
+function OLD_updateAll() {
+    /**
+    world.shots.forEach(updateShot);
+    world.vehicles.forEach(updateVehicle);
+    world.asteroids.forEach(updateAsteroid);
+    world.orbs.forEach(updateOrb);
+    world.mobs.forEach((ent) => ent.updateFn(ent));
+     */
+}
+
 function switchPlayerControlToVehicle(v?: Vehicle) {
     if (v) {
         const prevTrackedVehicle = world.trackedVehicle;

@@ -7,10 +7,11 @@ function addTarget(pos: Target) {
 }
 
 function acquireTarget(vehicle: Vehicle) {
-    const closeAsteroids = world.asteroids.filter(
+    const allAsteroids = getLiveAsteroids();
+    const closeAsteroids = getLiveAsteroids().filter(
         (a) => a.pos.dist(vehicle.pos) < height,
     );
-    return random(closeAsteroids.length > 0 ? closeAsteroids : world.asteroids);
+    return random(closeAsteroids.length > 0 ? closeAsteroids : allAsteroids);
 }
 
 function drawTarget(t: Target) {

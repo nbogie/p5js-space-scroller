@@ -44,10 +44,11 @@ function drawShot(s: Shot) {
 }
 
 function updateShot(p: Shot) {
+    const asteroids = getLiveAsteroids();
     if (p.live) {
         p.pos.x += p.vel.x;
         p.pos.y += p.vel.y;
-        world.asteroids
+        asteroids
             .filter((a) => a.live)
             .forEach((a) => {
                 if (isColliding(a, p)) {

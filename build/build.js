@@ -46,7 +46,7 @@ function drawAsteroid(a) {
     }
 }
 function addAsteroid(opts) {
-    world.asteroids.push(createAsteroidAt(opts));
+    world.entities.push(createAsteroidAt(opts));
 }
 function createAsteroid() {
     return createAsteroidAt({ pos: randomWorldPos() });
@@ -54,6 +54,7 @@ function createAsteroid() {
 function createAsteroidAt(opts) {
     var sz = opts.sizeCategory || random([1, 2, 3, 4]);
     return {
+        tag: "asteroid",
         live: true,
         pos: opts.pos.copy(),
         vel: p5.Vector.random2D().mult(random(1, 5)),
@@ -67,10 +68,15 @@ function createAsteroidAt(opts) {
         rotationSpeed: random(-0.1, 0.1),
         tookDamage: false,
         minimapColour: color(0, 200, 200, 100),
+        updatePriority: 0,
+        zIndex: 0,
+        drawFn: drawAsteroid,
+        updateFn: updateAsteroid,
     };
 }
 function setupAsteroids(n) {
-    world.asteroids = collect(n, createAsteroid);
+    var _a;
+    (_a = world.entities).push.apply(_a, collect(n, createAsteroid));
 }
 function updateAsteroid(p) {
     if (p.live) {
@@ -111,6 +117,12 @@ function updateAsteroid(p) {
 }
 function randomMineral() {
     return random(__spreadArray([], allMineralNames, true));
+}
+function getAsteroids() {
+    return world.entities.filter(function (e) { return e.tag === "asteroid"; });
+}
+function getLiveAsteroids() {
+    return getAsteroids().filter(function (a) { return a.live; });
 }
 function updateCamera(posToChange, trackedVehicle) {
     if (keyIsDown(LEFT_ARROW)) {
@@ -237,9 +249,9 @@ function drawHUD() {
             plotEntityOnRadar(nearestExploderMob, world.trackedVehicle.pos);
         nearestTeleporterMob &&
             plotEntityOnRadar(nearestTeleporterMob, world.trackedVehicle.pos);
-        world.asteroids
-            .filter(function (a) { return a.live; })
-            .forEach(function (ast) { return plotEntityOnRadar(ast, world.trackedVehicle.pos); });
+        getLiveAsteroids().forEach(function (ast) {
+            return plotEntityOnRadar(ast, world.trackedVehicle.pos);
+        });
     }
 }
 function plotEntityOnRadar(entity, referencePos) {
@@ -286,32 +298,44 @@ function draw() {
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
+function prepareEntitiesForDrawing() {
+    return __spreadArray([], world.entities, true).sort(function (a, b) {
+        return a.zIndex - b.zIndex;
+    });
+}
+function prepareEntitiesForUpdate() {
+    return __spreadArray([], world.entities, true).sort(function (a, b) {
+        return a.updatePriority - b.updatePriority;
+    });
+}
 function drawAll() {
+    var preparedEntities = prepareEntitiesForDrawing();
     push();
     if (config.shouldDrawStars) {
         drawStarfield();
     }
     drawGridLines();
-    world.orbs.forEach(function (o) { return drawOrb(o); });
-    world.mobs.forEach(function (ent) { return ent.drawFn(ent); });
-    var shotsToDraw = world.shots.filter(function (s) { return s.live && distFromCamera(s.pos) < width; });
-    shotsToDraw.forEach(drawShot);
-    world.asteroids.forEach(drawAsteroid);
-    world.vehicles.forEach(drawVehicle);
-    world.vehicles
-        .filter(function (v) { return v.target && v.target.live; })
-        .forEach(function (v) { return drawTarget(v.target); });
+    preparedEntities.forEach(function (ent) {
+        if (ent.live) {
+            ent.drawFn(ent);
+        }
+    });
     pop();
     drawHUD();
 }
+function OLD_draw() {
+}
 function updateAll() {
-    world.shots.forEach(updateShot);
-    world.vehicles.forEach(updateVehicle);
-    world.asteroids.forEach(updateAsteroid);
-    world.orbs.forEach(updateOrb);
-    world.mobs.forEach(function (ent) { return ent.updateFn(ent); });
+    var preparedEntities = prepareEntitiesForUpdate();
+    preparedEntities.forEach(function (ent) {
+        if (ent.live) {
+            ent.updateFn(ent);
+        }
+    });
     updateCamera(world.camera.pos, world.trackedVehicle);
     updateEngineWhistleSound();
+}
+function OLD_updateAll() {
 }
 function switchPlayerControlToVehicle(v) {
     if (v) {
@@ -691,10 +715,11 @@ function drawShot(s) {
     }
 }
 function updateShot(p) {
+    var asteroids = getLiveAsteroids();
     if (p.live) {
         p.pos.x += p.vel.x;
         p.pos.y += p.vel.y;
-        world.asteroids
+        asteroids
             .filter(function (a) { return a.live; })
             .forEach(function (a) {
             if (isColliding(a, p)) {
@@ -842,8 +867,9 @@ function addTarget(pos) {
     });
 }
 function acquireTarget(vehicle) {
-    var closeAsteroids = world.asteroids.filter(function (a) { return a.pos.dist(vehicle.pos) < height; });
-    return random(closeAsteroids.length > 0 ? closeAsteroids : world.asteroids);
+    var allAsteroids = getLiveAsteroids();
+    var closeAsteroids = getLiveAsteroids().filter(function (a) { return a.pos.dist(vehicle.pos) < height; });
+    return random(closeAsteroids.length > 0 ? closeAsteroids : allAsteroids);
 }
 function drawTarget(t) {
     push();
@@ -1074,9 +1100,9 @@ function addTrailParticle(v) {
     addParticle(trailParticle, v.trail.particles);
 }
 function createWorld() {
+    var entities = [];
     var stars = [];
     var vehicles = [];
-    var asteroids = [];
     var targets = [];
     var orbs = [];
     var MAX_NUM_TARGETS = 6;
@@ -1093,9 +1119,9 @@ function createWorld() {
         screenShakeAmount: 0,
     };
     var newWorld = {
+        entities: entities,
         stars: stars,
         vehicles: vehicles,
-        asteroids: asteroids,
         trackedVehicle: trackedVehicle,
         targets: targets,
         orbs: orbs,
