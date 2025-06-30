@@ -79,6 +79,10 @@ function drawVehicle(p: Vehicle) {
     pop();
 
     pop();
+
+    if (p.target && p.target.live) {
+        drawTarget(p.target);
+    }
 }
 function steerVehicleAutonomously(v: Vehicle) {
     const currPos = createVector(v.pos.x, v.pos.y);

@@ -74,10 +74,6 @@ interface Star {
     radius: number;
     strength: number;
 }
-interface Target {
-    pos: p5.Vector;
-    live: boolean;
-}
 interface Trail {
     particles: Particle[];
 }

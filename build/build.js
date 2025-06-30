@@ -320,8 +320,6 @@ function drawAll() {
     pop();
     drawHUD();
 }
-function OLD_draw() {
-}
 function updateAll() {
     var preparedEntities = prepareEntitiesForUpdate();
     preparedEntities.forEach(function (ent) {
@@ -332,8 +330,6 @@ function updateAll() {
     updateCamera(world.camera.pos, world.trackedVehicle);
     updateEngineWhistleSound();
     world.entities = world.entities.filter(function (e) { return e.live; });
-}
-function OLD_updateAll() {
 }
 function switchPlayerControlToVehicle(v) {
     if (v) {
@@ -1017,6 +1013,9 @@ function drawVehicle(p) {
     }
     pop();
     pop();
+    if (p.target && p.target.live) {
+        drawTarget(p.target);
+    }
 }
 function steerVehicleAutonomously(v) {
     var currPos = createVector(v.pos.x, v.pos.y);

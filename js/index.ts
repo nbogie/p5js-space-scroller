@@ -91,28 +91,6 @@ function drawAll() {
     drawHUD();
 }
 
-function OLD_draw() {
-    /**
-     * 
-     
-    world.orbs.forEach((o) => drawOrb(o));
-    world.mobs.forEach((ent) => ent.drawFn(ent));
-
-    const shotsToDraw = world.shots.filter(
-        (s) => s.live && distFromCamera(s.pos) < width,
-    );
-
-    shotsToDraw.forEach(drawShot);
-    world.entities.forEach(drawAsteroid);
-    world.vehicles.forEach(drawVehicle);
-
-    //Draw targets of vehicles
-    world.vehicles
-        .filter((v) => v.target && v.target.live)
-        .forEach((v) => drawTarget(v.target));
-
-    */
-}
 function updateAll() {
     const preparedEntities = prepareEntitiesForUpdate();
     preparedEntities.forEach((ent) => {
@@ -127,16 +105,6 @@ function updateAll() {
 
     //cull entities marked for deletion
     world.entities = world.entities.filter((e) => e.live);
-}
-
-function OLD_updateAll() {
-    /**
-    world.shots.forEach(updateShot);
-    world.vehicles.forEach(updateVehicle);
-    world.asteroids.forEach(updateAsteroid);
-    world.orbs.forEach(updateOrb);
-    world.mobs.forEach((ent) => ent.updateFn(ent));
-     */
 }
 
 function switchPlayerControlToVehicle(v?: Vehicle) {
