@@ -39,19 +39,6 @@ interface Collidable {
     radius: number;
 }
 
-interface Orb {
-    pos: p5.Vector;
-    vel: p5.Vector;
-    live: boolean;
-    life: number;
-    radius: number;
-    exploding: boolean;
-}
-
-interface OrbOptions {
-    pos: p5.Vector;
-    vel: p5.Vector;
-}
 interface Palette {
     colors: p5.Color[];
     name: string;

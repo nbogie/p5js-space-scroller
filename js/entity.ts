@@ -1,7 +1,14 @@
 type DrawFunction = (self: Entity) => void;
 type UpdateFunction = (self: Entity) => void;
 
-type EntityTag = "asteroid" | "vehicle" | "orb" | "shot" | "mob" | "target";
+type EntityTag =
+    | "asteroid"
+    | "vehicle"
+    | "orb"
+    | "shot"
+    | "mob-teleporter"
+    | "mob-exploder"
+    | "target";
 interface Entity {
     tag: EntityTag;
     pos: p5.Vector;

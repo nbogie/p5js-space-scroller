@@ -228,7 +228,6 @@ function drawHUD() {
         text("Health: " + world.trackedVehicle.hp, width - 100, 50);
     }
     text(Math.round(frameRate()) + " fps", 50, 575);
-    text(world.mobs.length + " mob(s)", 50, 475);
     text("Camera: " +
         JSON.stringify({
             x: Math.round(world.camera.pos.x),
@@ -236,8 +235,8 @@ function drawHUD() {
         }), 50, 600);
     push();
     if (world.trackedVehicle !== undefined) {
-        var nearestExploderMob = calcNearestEntity(world.trackedVehicle, world.mobs.filter(function (m) { return m.type === "exploder"; }));
-        var nearestTeleporterMob = calcNearestEntity(world.trackedVehicle, world.mobs.filter(function (m) { return m.type === "teleporter"; }));
+        var nearestExploderMob = calcNearestEntity(world.trackedVehicle, getExploderMobs());
+        var nearestTeleporterMob = calcNearestEntity(world.trackedVehicle, getTeleporterMobs());
         translateForScreenCoords(world.trackedVehicle.pos);
         noFill();
         stroke(255, 50);
@@ -428,7 +427,8 @@ var allMineralNames = [
     "palladium",
 ];
 function setupMobs(n) {
-    world.mobs = collect(n, function (ix) { return createRandomMob(); });
+    var _a;
+    (_a = world.entities).push.apply(_a, collect(n, function (ix) { return createRandomMob(); }));
 }
 function createRandomMob() {
     var fn = random([createExploderMob, createTeleporterMob]);
@@ -467,6 +467,10 @@ function updateTeleporterMob(mob) {
 }
 function createExploderMob() {
     return {
+        tag: "mob-exploder",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
         state: "dormant",
@@ -479,6 +483,10 @@ function createExploderMob() {
 }
 function createTeleporterMob() {
     return {
+        tag: "mob-teleporter",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
         type: "teleporter",
@@ -488,6 +496,12 @@ function createTeleporterMob() {
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     };
+}
+function getTeleporterMobs() {
+    return world.entities.filter(function (e) { return e.tag === "mob-teleporter"; });
+}
+function getExploderMobs() {
+    return world.entities.filter(function (e) { return e.tag === "mob-exploder"; });
 }
 function mouseMoved() { }
 function mousePressed() {
@@ -524,6 +538,11 @@ function updateOrb(p) {
 }
 function addOrb(opts) {
     var orb = {
+        tag: "orb",
+        zIndex: 0,
+        updatePriority: 0,
+        drawFn: drawOrb,
+        updateFn: updateOrb,
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
         live: true,
@@ -531,8 +550,7 @@ function addOrb(opts) {
         radius: 30,
         exploding: false,
     };
-    world.orbs.unshift(orb);
-    world.orbs.splice(10);
+    world.entities.push(orb);
 }
 function drawOrb(o) {
     if (o.live) {
@@ -1125,14 +1143,11 @@ function createWorld() {
     var entities = [];
     var stars = [];
     var targets = [];
-    var orbs = [];
     var MAX_NUM_TARGETS = 6;
     var MAX_NUM_VEHICLES = 6;
-    var shots = [];
     var worldWidth = 6000;
     var worldHeight = 5000;
     var trackedVehicle = undefined;
-    var mobs = [];
     var camera = {
         pos: createVector(0, 0),
         moveSpeed: 5,
@@ -1144,13 +1159,11 @@ function createWorld() {
         stars: stars,
         trackedVehicle: trackedVehicle,
         targets: targets,
-        orbs: orbs,
         MAX_NUM_TARGETS: MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
         worldWidth: worldWidth,
         worldHeight: worldHeight,
         camera: camera,
-        mobs: mobs,
     };
     return newWorld;
 }

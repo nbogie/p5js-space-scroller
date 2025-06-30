@@ -1,3 +1,14 @@
+interface Orb extends Entity {
+    life: number;
+    radius: number;
+    exploding: boolean;
+}
+
+interface OrbOptions {
+    pos: p5.Vector;
+    vel: p5.Vector;
+}
+
 function updateOrb(p: Orb) {
     if (p.live) {
         p.pos.add(p.vel);
@@ -19,15 +30,19 @@ function updateOrb(p: Orb) {
 
 function addOrb(opts: OrbOptions) {
     const orb = {
+        tag: "orb",
+        zIndex: 0,
+        updatePriority: 0,
+        drawFn: drawOrb,
+        updateFn: updateOrb,
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
         live: true,
         life: 1,
         radius: 30,
         exploding: false,
-    };
-    world.orbs.unshift(orb);
-    world.orbs.splice(10);
+    } satisfies Orb;
+    world.entities.push(orb);
 }
 
 function drawOrb(o: Orb) {

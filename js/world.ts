@@ -5,8 +5,6 @@ interface World {
     trackedVehicle?: Vehicle;
     targets: Target[];
     MAX_NUM_TARGETS: number;
-    orbs: Orb[];
-    mobs: Mob[];
     worldWidth: number;
     worldHeight: number;
     camera: GameCamera;
@@ -16,14 +14,11 @@ function createWorld(): World {
     const entities: Entity[] = [];
     const stars: Star[] = [];
     const targets: Target[] = [];
-    const orbs: Orb[] = [];
     const MAX_NUM_TARGETS: number = 6;
     const MAX_NUM_VEHICLES: number = 6;
-    const shots: Shot[] = [];
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
     const trackedVehicle: Vehicle = undefined;
-    const mobs: Mob[] = [];
 
     const camera: GameCamera = {
         pos: createVector(0, 0),
@@ -37,14 +32,11 @@ function createWorld(): World {
         stars,
         trackedVehicle,
         targets,
-        orbs,
         MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES,
-
         worldWidth,
         worldHeight,
         camera,
-        mobs,
     } satisfies World;
     return newWorld;
 }

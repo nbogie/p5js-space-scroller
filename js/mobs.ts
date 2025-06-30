@@ -1,10 +1,8 @@
 type Mob = ExploderMob | TeleporterMob;
 
-interface BaseMob {
+interface BaseMob extends Entity {
     colour: p5.Color;
     minimapColour: p5.Color;
-    pos: p5.Vector;
-    vel: p5.Vector;
 }
 
 interface DrawableMob {
@@ -15,18 +13,18 @@ interface UpdatableMob {
     updateFn: (mob: Mob) => void;
 }
 
-interface ExploderMob extends BaseMob, DrawableMob, UpdatableMob {
+interface ExploderMob extends BaseMob {
     state: "dormant" | "exploding";
     type: "exploder";
 }
 
-interface TeleporterMob extends BaseMob, DrawableMob, UpdatableMob {
+interface TeleporterMob extends BaseMob {
     type: "teleporter";
     timeOfLastTeleport: number | null;
 }
 
 function setupMobs(n: number): void {
-    world.mobs = collect(n, (ix: number) => createRandomMob());
+    world.entities.push(...collect(n, (ix: number) => createRandomMob()));
 }
 
 function createRandomMob() {
@@ -73,6 +71,11 @@ function updateTeleporterMob(mob: TeleporterMob): void {
 
 function createExploderMob() {
     return {
+        tag: "mob-exploder",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
+
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
         state: "dormant",
@@ -86,6 +89,11 @@ function createExploderMob() {
 
 function createTeleporterMob() {
     return {
+        tag: "mob-teleporter",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
+
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
         type: "teleporter",
@@ -95,4 +103,16 @@ function createTeleporterMob() {
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     } satisfies TeleporterMob;
+}
+
+function getTeleporterMobs(): TeleporterMob[] {
+    return world.entities.filter(
+        (e) => e.tag === "mob-teleporter",
+    ) as TeleporterMob[];
+}
+
+function getExploderMobs(): ExploderMob[] {
+    return world.entities.filter(
+        (e) => e.tag === "mob-exploder",
+    ) as ExploderMob[];
 }

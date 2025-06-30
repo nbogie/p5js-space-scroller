@@ -9,7 +9,6 @@ function drawHUD() {
         text("Health: " + world.trackedVehicle.hp, width - 100, 50);
     }
     text(Math.round(frameRate()) + " fps", 50, 575);
-    text(world.mobs.length + " mob(s)", 50, 475);
 
     text(
         "Camera: " +
@@ -26,12 +25,12 @@ function drawHUD() {
         //plot nearby mobs on radar
         const nearestExploderMob = calcNearestEntity(
             world.trackedVehicle,
-            world.mobs.filter((m) => m.type === "exploder"),
+            getExploderMobs(),
         );
 
         const nearestTeleporterMob = calcNearestEntity(
             world.trackedVehicle,
-            world.mobs.filter((m) => m.type === "teleporter"),
+            getTeleporterMobs(),
         );
 
         translateForScreenCoords(world.trackedVehicle.pos);
