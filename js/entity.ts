@@ -7,8 +7,7 @@ type EntityTag =
     | "orb"
     | "shot"
     | "mob-teleporter"
-    | "mob-exploder"
-    | "target";
+    | "mob-exploder";
 interface Entity {
     tag: EntityTag;
     pos: p5.Vector;

@@ -80,6 +80,8 @@ function drawVehicle(p: Vehicle) {
 
     pop();
 
+    //an issue here is that the target will be drawn with the same zindex as all vehicles, like it or not.
+    //We could add the targets to the world entity list, but are they really entities?
     if (p.target && p.target.live) {
         drawTarget(p.target);
     }
