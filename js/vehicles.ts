@@ -1,8 +1,10 @@
 interface Vehicle extends Entity {
-    pos: p5.Vector;
-    vel: p5.Vector;
+    // from Entity
+    //   pos: p5.Vector;
+    //   vel: p5.Vector;
+    //   live: boolean;
+
     accel: p5.Vector;
-    live: boolean;
     life: number;
     radius: number;
     hp: number;

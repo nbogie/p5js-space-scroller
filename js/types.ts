@@ -13,9 +13,11 @@ interface Config {
 
 type AsteroidSize = 4 | 3 | 2 | 1;
 interface Asteroid extends Entity {
-    live: boolean;
-    pos: p5.Vector;
-    vel: p5.Vector;
+    // from Entity
+    //   pos: p5.Vector;
+    //   vel: p5.Vector;
+    //   live: boolean;
+
     resType: ResourceType;
     sizeCategory: AsteroidSize;
     radius: number;
@@ -68,11 +70,9 @@ interface ResourceType {
     hue: number;
     color: p5.Color;
 }
-interface Shot {
-    live: boolean;
-    pos: p5.Vector;
+interface Shot extends Entity {
+    //pos and vel from Entity
     rotation: number;
-    vel: p5.Vector;
     radius: number;
     damage: number;
     color: p5.Color;

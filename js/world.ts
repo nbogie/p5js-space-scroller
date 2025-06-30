@@ -6,7 +6,6 @@ interface World {
     targets: Target[];
     MAX_NUM_TARGETS: number;
     orbs: Orb[];
-    shots: Shot[];
     mobs: Mob[];
     worldWidth: number;
     worldHeight: number;
@@ -41,7 +40,7 @@ function createWorld(): World {
         orbs,
         MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES,
-        shots,
+
         worldWidth,
         worldHeight,
         camera,

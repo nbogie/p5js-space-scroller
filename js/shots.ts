@@ -11,6 +11,11 @@ function createShot(opts: ShotOptions): Shot {
 
     const shot = {
         live: true,
+        tag: "shot",
+        zIndex: 0,
+        updatePriority: 0,
+        drawFn: drawShot,
+        updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
         rotation: vel.heading(),
         vel: vel,
@@ -18,15 +23,14 @@ function createShot(opts: ShotOptions): Shot {
         damage: sz,
         color: color(random(50, 70), 100, 100, 100),
         life: 1,
-    };
+    } satisfies Shot;
     pop();
     return shot;
 }
 
 function addShot(opts: ShotOptions) {
     const shot = createShot(opts);
-    world.shots.unshift(shot);
-    world.shots.splice(100);
+    world.entities.push(shot);
     if (nearCamera(shot.pos)) {
         playSoundShot();
     }

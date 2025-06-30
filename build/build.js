@@ -682,6 +682,11 @@ function createShot(opts) {
         .rotate(random(-shotSpread, shotSpread));
     var shot = {
         live: true,
+        tag: "shot",
+        zIndex: 0,
+        updatePriority: 0,
+        drawFn: drawShot,
+        updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
         rotation: vel.heading(),
         vel: vel,
@@ -695,8 +700,7 @@ function createShot(opts) {
 }
 function addShot(opts) {
     var shot = createShot(opts);
-    world.shots.unshift(shot);
-    world.shots.splice(100);
+    world.entities.push(shot);
     if (nearCamera(shot.pos)) {
         playSoundShot();
     }
@@ -1135,7 +1139,6 @@ function createWorld() {
         orbs: orbs,
         MAX_NUM_TARGETS: MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
-        shots: shots,
         worldWidth: worldWidth,
         worldHeight: worldHeight,
         camera: camera,

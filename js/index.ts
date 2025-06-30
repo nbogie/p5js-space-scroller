@@ -1,5 +1,7 @@
 "use strict";
 
+//TODO: remove all but most recent n shots from entity list
+
 // This property only exists in non-minified p5
 // @ts-expect-error
 p5.disableFriendlyErrors = true;
