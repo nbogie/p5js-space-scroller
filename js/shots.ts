@@ -48,6 +48,15 @@ function drawShot(s: Shot) {
 }
 
 function updateShot(p: Shot) {
+    if (p.life <= 0) {
+        p.live = false;
+        return;
+    }
+
+    if (!p.live) {
+        return;
+    }
+
     const asteroids = getLiveAsteroids();
     if (p.live) {
         p.pos.x += p.vel.x;

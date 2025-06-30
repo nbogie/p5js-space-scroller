@@ -717,6 +717,13 @@ function drawShot(s) {
     }
 }
 function updateShot(p) {
+    if (p.life <= 0) {
+        p.live = false;
+        return;
+    }
+    if (!p.live) {
+        return;
+    }
     var asteroids = getLiveAsteroids();
     if (p.live) {
         p.pos.x += p.vel.x;
