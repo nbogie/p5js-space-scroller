@@ -1109,10 +1109,8 @@ function toggleAutopilot() {
         debugger;
         if (world.trackedVehicle.isUnderPlayerControl) {
             world.trackedVehicle.isUnderPlayerControl = false;
-            console.log("relinquishing control of vehicle: ", world.trackedVehicle.isUnderPlayerControl);
         }
         else {
-            console.log("user now has control of vehicle");
             world.trackedVehicle.isUnderPlayerControl = true;
         }
     }
