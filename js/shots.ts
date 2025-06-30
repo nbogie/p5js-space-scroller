@@ -49,7 +49,7 @@ function drawShot(s: Shot) {
 
 function updateShot(p: Shot) {
     if (p.life <= 0) {
-        p.live = false;
+        destroy(p);
         return;
     }
 
@@ -67,9 +67,9 @@ function updateShot(p: Shot) {
                 if (isColliding(a, p)) {
                     a.hp -= p.damage;
                     a.tookDamage = true;
-                    p.live = false;
+                    destroy(p);
                     if (a.hp <= 0) {
-                        a.live = false;
+                        destroy(a);
                         shatterAsteroid(a);
                     }
                 }

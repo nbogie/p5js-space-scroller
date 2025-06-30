@@ -101,11 +101,11 @@ function updateAsteroid(p) {
                 p.tookDamage = true;
                 v.hp -= p.damage;
                 if (v.hp <= 0) {
-                    v.live = false;
+                    destroy(v);
                 }
                 v.tookDamage = true;
                 if (p.hp <= 0) {
-                    p.live = false;
+                    destroy(p);
                     shatterAsteroid(p);
                 }
             }
@@ -218,6 +218,9 @@ function createConfig() {
 }
 function toggleConfigBooleanProperty(key) {
     return (config[key] = !config[key]);
+}
+function destroy(entity) {
+    entity.live = false;
 }
 function drawHUD() {
     push();
@@ -733,7 +736,7 @@ function drawShot(s) {
 }
 function updateShot(p) {
     if (p.life <= 0) {
-        p.live = false;
+        destroy(p);
         return;
     }
     if (!p.live) {
@@ -749,9 +752,9 @@ function updateShot(p) {
             if (isColliding(a, p)) {
                 a.hp -= p.damage;
                 a.tookDamage = true;
-                p.live = false;
+                destroy(p);
                 if (a.hp <= 0) {
-                    a.live = false;
+                    destroy(a);
                     shatterAsteroid(a);
                 }
             }

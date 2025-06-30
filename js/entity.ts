@@ -18,3 +18,9 @@ interface Entity {
     drawFn: DrawFunction;
     updateFn: UpdateFunction;
 }
+
+//Note: some uses of destroy will expect to be able to further manipulate the entity
+// after destroying it but before the end of the current frame.
+function destroy(entity: Entity) {
+    entity.live = false;
+}

@@ -100,11 +100,11 @@ function updateAsteroid(p: Asteroid) {
                 p.tookDamage = true;
                 v.hp -= p.damage;
                 if (v.hp <= 0) {
-                    v.live = false;
+                    destroy(v);
                 }
                 v.tookDamage = true;
                 if (p.hp <= 0) {
-                    p.live = false;
+                    destroy(p);
                     shatterAsteroid(p);
                 }
             }
