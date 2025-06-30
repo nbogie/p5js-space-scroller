@@ -59,8 +59,8 @@ function updateShot(p: Shot) {
 
     const asteroids = getLiveAsteroids();
     if (p.live) {
-        p.pos.x += p.vel.x;
-        p.pos.y += p.vel.y;
+        p.pos.x += p.vel.x * world.timeSpeed;
+        p.pos.y += p.vel.y * world.timeSpeed;
         asteroids
             .filter((a) => a.live)
             .forEach((a) => {
@@ -74,10 +74,10 @@ function updateShot(p: Shot) {
                     }
                 }
             });
-        p.life -= random(0.001, 0.01);
+        p.life -= random(0.001, 0.01) * world.timeSpeed;
     }
 }
-
+//todo: needs to consider world.timeSpeed or you'll be able to spawn much faster during pause/unpause, for example.
 function shootIfTime(srcVehicle: Vehicle) {
     const ms = millis();
     if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {

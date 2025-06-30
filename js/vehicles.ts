@@ -101,7 +101,7 @@ function steerVehicleAutonomously(v: Vehicle) {
         //steering = desired minus velocity
         const steer = p5.Vector.sub(desired, v.vel);
         steer.limit(v.maxSteeringForce);
-        v.steer = steer.copy();
+        v.steer = steer.copy().mult(world.timeSpeed);
         v.accel.add(steer);
         v.fuel -= v.accel.mag();
     } else {
@@ -117,7 +117,7 @@ function updateVehicleWeaponsWithUserInput(v: Vehicle) {
 }
 
 function updateVehicle(v: Vehicle) {
-    v.pos.add(v.vel);
+    v.pos.add(v.vel.copy().mult(world.timeSpeed));
     if (v.isUnderPlayerControl) {
         steerVehicleWithUserInput(v);
         updateVehicleWeaponsWithUserInput(v);
@@ -129,7 +129,7 @@ function updateVehicle(v: Vehicle) {
     v.trail.particles.forEach(updateParticle);
 
     //reset accel for next time
-    v.life -= random(0.001, 0.01);
+    v.life -= random(0.001, 0.01) * world.timeSpeed;
 
     v.accel.mult(0);
     v.tookDamage = false;
@@ -175,15 +175,17 @@ function createVehicle(): Vehicle {
 }
 function steerVehicleWithUserInput(v: Vehicle) {
     if (keyIsDown(UP_ARROW)) {
-        const thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust);
+        const thrust = p5.Vector.fromAngle(v.facing).mult(
+            v.maxThrust * world.timeSpeed,
+        );
         v.accel.add(thrust);
-        addTrailParticle(v);
+        addTrailParticle(v); //TODO: consider world.timeSpeed for emission rate
     }
     if (keyIsDown(LEFT_ARROW)) {
-        v.facing -= 0.05;
+        v.facing -= 0.05 * world.timeSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        v.facing += 0.05;
+        v.facing += 0.05 * world.timeSpeed;
     }
 }
 

@@ -27,9 +27,9 @@ function drawParticle(p: Particle) {
 }
 
 function updateParticle(p: Particle) {
-    p.pos.x += p.vel.x;
-    p.pos.y += p.vel.y;
-    p.life -= random(0.001, 0.01);
+    p.pos.x += p.vel.x * world.timeSpeed;
+    p.pos.y += p.vel.y * world.timeSpeed;
+    p.life -= random(0.001, 0.01) * world.timeSpeed;
 }
 
 function addParticle(p: Particle, ps: Particle[]) {

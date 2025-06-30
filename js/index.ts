@@ -9,6 +9,8 @@ p5.disableFriendlyErrors = true;
 /** almost all game state (asteroids, ship, bullets, etc) */
 let world: World;
 
+let pauseState: PauseState = { type: "unpaused", simplified: "unpaused" };
+
 /** contains user config like stars, trails, sound on/off */
 let config: Config;
 
@@ -46,9 +48,14 @@ function draw() {
     // }
 
     background(15);
-
+    world.timeSpeed = processAnyTimeDistortion();
+    text("timeSpeed: " + world.timeSpeed, 10, 10);
+    text("state: " + pauseState.type, 10, 40);
     drawAll();
-    updateAll();
+    drawPauseDialogIfNeeded();
+    if (pauseState.type !== "paused") {
+        updateAll();
+    }
 }
 
 function windowResized() {
@@ -128,11 +135,3 @@ const resTypes: ResourceType[] = [
     { label: "explosive", hue: 0, color: null },
     { label: "magic", hue: 80, color: null },
 ];
-
-function togglePause() {
-    if (isLooping()) {
-        noLoop();
-    } else {
-        loop();
-    }
-}

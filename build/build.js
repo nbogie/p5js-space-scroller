@@ -270,6 +270,7 @@ function plotEntityOnRadar(entity, referencePos) {
 }
 p5.disableFriendlyErrors = true;
 var world;
+var pauseState = { type: "unpaused", simplified: "unpaused" };
 var config;
 var soundNotYetEnabledByGesture = true;
 function setup() {
@@ -292,8 +293,14 @@ function setup() {
 }
 function draw() {
     background(15);
+    world.timeSpeed = processAnyTimeDistortion();
+    text("timeSpeed: " + world.timeSpeed, 10, 10);
+    text("state: " + pauseState.type, 10, 40);
     drawAll();
-    updateAll();
+    drawPauseDialogIfNeeded();
+    if (pauseState.type !== "paused") {
+        updateAll();
+    }
 }
 function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
@@ -354,14 +361,6 @@ var resTypes = [
     { label: "explosive", hue: 0, color: null },
     { label: "magic", hue: 80, color: null },
 ];
-function togglePause() {
-    if (isLooping()) {
-        noLoop();
-    }
-    else {
-        loop();
-    }
-}
 function keyPressed() {
     switch (key) {
         case "m":
@@ -666,9 +665,9 @@ function drawParticle(p) {
     pop();
 }
 function updateParticle(p) {
-    p.pos.x += p.vel.x;
-    p.pos.y += p.vel.y;
-    p.life -= random(0.001, 0.01);
+    p.pos.x += p.vel.x * world.timeSpeed;
+    p.pos.y += p.vel.y * world.timeSpeed;
+    p.life -= random(0.001, 0.01) * world.timeSpeed;
 }
 function addParticle(p, ps) {
     ps.unshift(p);
@@ -687,6 +686,60 @@ function drawTrail(trail) {
         square(0, 0, p.radius * 2);
         pop();
     });
+}
+function togglePause() {
+    if (pauseState.simplified === "unpaused") {
+        pauseState = { type: "pausing", framesLeft: 10, simplified: "paused" };
+    }
+    else {
+        pauseState = {
+            type: "unpausing",
+            simplified: "unpaused",
+            framesLeft: 10,
+        };
+    }
+}
+function processAnyTimeDistortion() {
+    switch (pauseState.type) {
+        case "unpaused":
+            return 1;
+        case "paused":
+            return 0;
+        case "pausing": {
+            pauseState.framesLeft = max(0, pauseState.framesLeft - 1);
+            var t = pauseState.framesLeft / 10;
+            if (pauseState.framesLeft <= 0) {
+                pauseState = { type: "paused", simplified: "paused" };
+            }
+            return t;
+        }
+        case "unpausing": {
+            pauseState.framesLeft = max(0, pauseState.framesLeft - 1);
+            var t = 1 - pauseState.framesLeft / 10;
+            if (pauseState.framesLeft <= 0) {
+                pauseState = { type: "unpaused", simplified: "unpaused" };
+            }
+            return t;
+        }
+        default:
+            throw new Error("unknown pause state: " + JSON.stringify(pauseState));
+    }
+}
+function drawPauseDialogIfNeeded() {
+    if (pauseState.simplified === "paused" || pauseState.type === "unpausing") {
+        push();
+        var overlayOpacityFraction = 1 - constrain(world.timeSpeed, 0, 1);
+        fill(0, 150 * overlayOpacityFraction);
+        rect(width / 2, height / 2, width, height);
+        fill(255);
+        textAlign(CENTER, CENTER);
+        var sz = 36 * overlayOpacityFraction;
+        textSize(sz);
+        text("Paused", width / 2, height / 2 - 20);
+        textSize(sz * 0.5);
+        text("Press P to unpause", width / 2, height / 2 + 20);
+        pop();
+    }
 }
 function createShot(opts) {
     push();
@@ -744,8 +797,8 @@ function updateShot(p) {
     }
     var asteroids = getLiveAsteroids();
     if (p.live) {
-        p.pos.x += p.vel.x;
-        p.pos.y += p.vel.y;
+        p.pos.x += p.vel.x * world.timeSpeed;
+        p.pos.y += p.vel.y * world.timeSpeed;
         asteroids
             .filter(function (a) { return a.live; })
             .forEach(function (a) {
@@ -759,7 +812,7 @@ function updateShot(p) {
                 }
             }
         });
-        p.life -= random(0.001, 0.01);
+        p.life -= random(0.001, 0.01) * world.timeSpeed;
     }
 }
 function shootIfTime(srcVehicle) {
@@ -1026,7 +1079,7 @@ function steerVehicleAutonomously(v) {
         v.facing = v.desiredVector.copy().normalize().heading();
         var steer = p5.Vector.sub(desired, v.vel);
         steer.limit(v.maxSteeringForce);
-        v.steer = steer.copy();
+        v.steer = steer.copy().mult(world.timeSpeed);
         v.accel.add(steer);
         v.fuel -= v.accel.mag();
     }
@@ -1041,7 +1094,7 @@ function updateVehicleWeaponsWithUserInput(v) {
     }
 }
 function updateVehicle(v) {
-    v.pos.add(v.vel);
+    v.pos.add(v.vel.copy().mult(world.timeSpeed));
     if (v.isUnderPlayerControl) {
         steerVehicleWithUserInput(v);
         updateVehicleWeaponsWithUserInput(v);
@@ -1051,7 +1104,7 @@ function updateVehicle(v) {
     }
     v.vel.add(v.accel);
     v.trail.particles.forEach(updateParticle);
-    v.life -= random(0.001, 0.01);
+    v.life -= random(0.001, 0.01) * world.timeSpeed;
     v.accel.mult(0);
     v.tookDamage = false;
 }
@@ -1095,15 +1148,15 @@ function createVehicle() {
 }
 function steerVehicleWithUserInput(v) {
     if (keyIsDown(UP_ARROW)) {
-        var thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust);
+        var thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust * world.timeSpeed);
         v.accel.add(thrust);
         addTrailParticle(v);
     }
     if (keyIsDown(LEFT_ARROW)) {
-        v.facing -= 0.05;
+        v.facing -= 0.05 * world.timeSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        v.facing += 0.05;
+        v.facing += 0.05 * world.timeSpeed;
     }
 }
 function toggleAutopilot() {
@@ -1155,6 +1208,7 @@ function createWorld() {
         worldWidth: worldWidth,
         worldHeight: worldHeight,
         camera: camera,
+        timeSpeed: 1,
     };
     return newWorld;
 }

@@ -7,6 +7,7 @@ interface World {
     worldWidth: number;
     worldHeight: number;
     camera: GameCamera;
+    timeSpeed: number;
 }
 
 function createWorld(): World {
@@ -34,6 +35,7 @@ function createWorld(): World {
         worldWidth,
         worldHeight,
         camera,
+        timeSpeed: 1,
     } satisfies World;
     return newWorld;
 }
