@@ -95,9 +95,7 @@ function updateAsteroid(p) {
             p.pos.y -= world.worldHeight / 2;
         }
         p.rotation += p.rotationSpeed;
-        world.vehicles
-            .filter(function (v) { return true || v.live; })
-            .forEach(function (v) {
+        getLiveVehicles().forEach(function (v) {
             if (isColliding(p, v)) {
                 p.hp -= v.rammingDamage;
                 p.tookDamage = true;
@@ -283,7 +281,7 @@ function setup() {
     setupStarfield();
     setupVehicles(world.MAX_NUM_VEHICLES);
     setupMobs(10);
-    var firstLiveVehicle = world.vehicles.find(function (v) { return v.hp > 0; });
+    var firstLiveVehicle = getLiveVehicles().find(function (v) { return v.hp > 0; });
     switchPlayerControlToVehicle(firstLiveVehicle);
     frameRate(60);
     angleMode(RADIANS);
@@ -862,7 +860,7 @@ function toggleShouldDrawStars() {
 function addTarget(pos) {
     world.targets.unshift(pos);
     world.targets.splice(world.MAX_NUM_TARGETS);
-    world.vehicles.forEach(function (v, ix) {
+    getLiveVehicles().forEach(function (v, ix) {
         v.target = world.targets[ix % world.targets.length];
     });
 }
@@ -1033,10 +1031,16 @@ function updateVehicle(v) {
     v.tookDamage = false;
 }
 function setupVehicles(n) {
-    world.vehicles = collect(n, createVehicle);
+    var _a;
+    (_a = world.entities).push.apply(_a, collect(n, createVehicle));
 }
 function createVehicle() {
     return {
+        tag: "vehicle",
+        updateFn: updateVehicle,
+        drawFn: drawVehicle,
+        zIndex: 0,
+        updatePriority: 0,
         live: true,
         pos: randomWorldPos(),
         vel: createVector(0, 0),
@@ -1099,10 +1103,15 @@ function addTrailParticle(v) {
         .rotate(180 + random(-1, 1));
     addParticle(trailParticle, v.trail.particles);
 }
+function getVehicles() {
+    return world.entities.filter(function (e) { return e.tag === "vehicle"; });
+}
+function getLiveVehicles() {
+    return getVehicles().filter(function (a) { return a.live; });
+}
 function createWorld() {
     var entities = [];
     var stars = [];
-    var vehicles = [];
     var targets = [];
     var orbs = [];
     var MAX_NUM_TARGETS = 6;
@@ -1121,7 +1130,6 @@ function createWorld() {
     var newWorld = {
         entities: entities,
         stars: stars,
-        vehicles: vehicles,
         trackedVehicle: trackedVehicle,
         targets: targets,
         orbs: orbs,

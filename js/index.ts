@@ -27,7 +27,7 @@ function setup() {
     setupVehicles(world.MAX_NUM_VEHICLES);
     setupMobs(10);
 
-    const firstLiveVehicle = world.vehicles.find((v: Vehicle) => v.hp > 0);
+    const firstLiveVehicle = getLiveVehicles().find((v: Vehicle) => v.hp > 0);
     switchPlayerControlToVehicle(firstLiveVehicle);
 
     frameRate(60);

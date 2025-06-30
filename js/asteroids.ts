@@ -94,23 +94,21 @@ function updateAsteroid(p: Asteroid) {
         }
         p.rotation += p.rotationSpeed;
 
-        world.vehicles
-            .filter((v) => true || v.live)
-            .forEach((v) => {
-                if (isColliding(p, v)) {
-                    p.hp -= v.rammingDamage;
-                    p.tookDamage = true;
-                    v.hp -= p.damage;
-                    if (v.hp <= 0) {
-                        v.live = false;
-                    }
-                    v.tookDamage = true;
-                    if (p.hp <= 0) {
-                        p.live = false;
-                        shatterAsteroid(p);
-                    }
+        getLiveVehicles().forEach((v) => {
+            if (isColliding(p, v)) {
+                p.hp -= v.rammingDamage;
+                p.tookDamage = true;
+                v.hp -= p.damage;
+                if (v.hp <= 0) {
+                    v.live = false;
                 }
-            });
+                v.tookDamage = true;
+                if (p.hp <= 0) {
+                    p.live = false;
+                    shatterAsteroid(p);
+                }
+            }
+        });
     }
     p.tookDamage = false;
 }

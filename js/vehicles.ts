@@ -1,4 +1,4 @@
-interface Vehicle {
+interface Vehicle extends Entity {
     pos: p5.Vector;
     vel: p5.Vector;
     accel: p5.Vector;
@@ -128,11 +128,16 @@ function updateVehicle(v: Vehicle) {
 }
 
 function setupVehicles(n: number) {
-    world.vehicles = collect(n, createVehicle);
+    world.entities.push(...collect(n, createVehicle));
 }
 
 function createVehicle(): Vehicle {
     return {
+        tag: "vehicle",
+        updateFn: updateVehicle,
+        drawFn: drawVehicle,
+        zIndex: 0,
+        updatePriority: 0,
         live: true,
         pos: randomWorldPos(),
         vel: createVector(0, 0),
@@ -202,4 +207,12 @@ function addTrailParticle(v: Vehicle) {
         .mult(20)
         .rotate(180 + random(-1, 1));
     addParticle(trailParticle, v.trail.particles);
+}
+
+function getVehicles() {
+    return world.entities.filter((e) => e.tag === "vehicle") as Vehicle[];
+}
+
+function getLiveVehicles() {
+    return getVehicles().filter((a) => a.live);
 }
