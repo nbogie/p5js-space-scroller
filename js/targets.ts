@@ -3,14 +3,6 @@ interface Target {
     live: boolean;
 }
 
-function addTarget(pos: Target) {
-    world.targets.unshift(pos);
-    world.targets.splice(world.MAX_NUM_TARGETS);
-    getLiveVehicles().forEach((v, ix) => {
-        v.target = world.targets[ix % world.targets.length];
-    });
-}
-
 function acquireTarget(vehicle: Vehicle) {
     const allAsteroids = getLiveAsteroids();
     const closeAsteroids = getLiveAsteroids().filter(

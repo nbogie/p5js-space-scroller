@@ -3,7 +3,6 @@ interface World {
     stars: Star[];
     MAX_NUM_VEHICLES: number;
     trackedVehicle?: Vehicle;
-    targets: Target[];
     MAX_NUM_TARGETS: number;
     worldWidth: number;
     worldHeight: number;
@@ -13,7 +12,6 @@ interface World {
 function createWorld(): World {
     const entities: Entity[] = [];
     const stars: Star[] = [];
-    const targets: Target[] = [];
     const MAX_NUM_TARGETS: number = 6;
     const MAX_NUM_VEHICLES: number = 6;
     const worldWidth: number = 6000;
@@ -31,7 +29,6 @@ function createWorld(): World {
         entities,
         stars,
         trackedVehicle,
-        targets,
         MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES,
         worldWidth,

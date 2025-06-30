@@ -883,13 +883,6 @@ function drawStarfield() {
 function toggleShouldDrawStars() {
     toggleConfigBooleanProperty("shouldDrawStars");
 }
-function addTarget(pos) {
-    world.targets.unshift(pos);
-    world.targets.splice(world.MAX_NUM_TARGETS);
-    getLiveVehicles().forEach(function (v, ix) {
-        v.target = world.targets[ix % world.targets.length];
-    });
-}
 function acquireTarget(vehicle) {
     var allAsteroids = getLiveAsteroids();
     var closeAsteroids = getLiveAsteroids().filter(function (a) { return a.pos.dist(vehicle.pos) < height; });
@@ -1141,7 +1134,6 @@ function getLiveVehicles() {
 function createWorld() {
     var entities = [];
     var stars = [];
-    var targets = [];
     var MAX_NUM_TARGETS = 6;
     var MAX_NUM_VEHICLES = 6;
     var worldWidth = 6000;
@@ -1157,7 +1149,6 @@ function createWorld() {
         entities: entities,
         stars: stars,
         trackedVehicle: trackedVehicle,
-        targets: targets,
         MAX_NUM_TARGETS: MAX_NUM_TARGETS,
         MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
         worldWidth: worldWidth,
