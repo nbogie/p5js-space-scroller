@@ -9,6 +9,7 @@ interface Config {
     shouldDrawTrails: boolean;
     shouldDrawStars: boolean;
     shouldPlaySound: boolean;
+    steerSpeed: number;
 }
 
 type AsteroidSize = 4 | 3 | 2 | 1;

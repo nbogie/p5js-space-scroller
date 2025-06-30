@@ -182,10 +182,10 @@ function steerVehicleWithUserInput(v: Vehicle) {
         addTrailParticle(v); //TODO: consider world.timeSpeed for emission rate
     }
     if (keyIsDown(LEFT_ARROW)) {
-        v.facing -= 0.05 * world.timeSpeed;
+        v.facing -= config.steerSpeed * world.timeSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        v.facing += 0.05 * world.timeSpeed;
+        v.facing += config.steerSpeed * world.timeSpeed;
     }
 }
 

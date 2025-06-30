@@ -213,6 +213,7 @@ function createConfig() {
         shouldDrawTrails: true,
         shouldDrawStars: true,
         shouldPlaySound: false,
+        steerSpeed: 0.1,
     };
     return newConfig;
 }
@@ -1153,10 +1154,10 @@ function steerVehicleWithUserInput(v) {
         addTrailParticle(v);
     }
     if (keyIsDown(LEFT_ARROW)) {
-        v.facing -= 0.05 * world.timeSpeed;
+        v.facing -= config.steerSpeed * world.timeSpeed;
     }
     if (keyIsDown(RIGHT_ARROW)) {
-        v.facing += 0.05 * world.timeSpeed;
+        v.facing += config.steerSpeed * world.timeSpeed;
     }
 }
 function toggleAutopilot() {

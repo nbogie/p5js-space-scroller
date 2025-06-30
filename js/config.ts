@@ -3,6 +3,7 @@ function createConfig() {
         shouldDrawTrails: true,
         shouldDrawStars: true,
         shouldPlaySound: false,
+        steerSpeed: 0.1,
     };
     return newConfig;
 }
