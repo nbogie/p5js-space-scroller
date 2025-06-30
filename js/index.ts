@@ -1,5 +1,7 @@
 "use strict";
 
+//NOTE: dev-all-into-entity-list branch has work ahead of main branch.
+
 // This property only exists in non-minified p5
 // @ts-expect-error
 p5.disableFriendlyErrors = true;
