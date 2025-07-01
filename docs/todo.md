@@ -38,8 +38,7 @@ mindmap
       interact w<br/>environ
       collectable
       upgradable
-    Relics
-      from Slay <br/>the spire
+    Relics (from STS)
       run-changing<br/>behaviours
     Enemies
       Emergent<br/>Behaviours
@@ -47,13 +46,9 @@ mindmap
         Small chance<br/>to pirate 🏴‍☠️<br/>giant ship
       elemental<br/>weaknesses +<br/>resistances
       Harvestable 🌾
+      Rare drops: Relics
     Neutral mobs
       elemental<br/>traits
       emergent<br/>behaviours
       mining
 ```
-
-mermaid notes:
-
-- can force theme with `%%{init: {'theme': 'neutral|dark|forest|default|base'}}%%`
-- add icon with subsequent line of `::icon(fa fa-book)`
