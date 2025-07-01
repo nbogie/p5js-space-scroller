@@ -393,7 +393,37 @@ function keyPressed() {
         case "p":
             togglePause();
             break;
+        case "u":
+            world.trackedVehicle &&
+                addRandomUpgradeForTesting(world.trackedVehicle);
+            break;
     }
+}
+var messageQueue = [];
+function flashMessage(text, durationMillis) {
+    if (durationMillis === void 0) { durationMillis = 2000; }
+    messageQueue.push({ text: text, durationMillis: durationMillis, startTimeMillis: millis() });
+}
+function drawMessages() {
+    var msgsToShow = messageQueue.filter(function (m) {
+        return m.startTimeMillis < millis() &&
+            m.startTimeMillis + m.durationMillis > millis();
+    });
+    for (var _i = 0, msgsToShow_1 = msgsToShow; _i < msgsToShow_1.length; _i++) {
+        var msg = msgsToShow_1[_i];
+        push();
+        var alpha_1 = map(millis() - msg.startTimeMillis, 0, msg.durationMillis, 0, 255);
+        fill(255, alpha_1);
+        textAlign(CENTER);
+        textSize(24);
+        text(msg.text, width / 2, height - 50);
+        pop();
+    }
+}
+function updateMessages() {
+    messageQueue = messageQueue.filter(function (msg) {
+        return millis() - msg.startTimeMillis < msg.durationMillis;
+    });
 }
 var allMineralNames = [
     "copper",
@@ -1237,6 +1267,10 @@ function createDefaultWeaponSystem() {
         lastShot: -99999,
         shotDelay: 200,
         shotSpeed: 10,
+        shotDamage: 1,
+        processUpgrade: function (upgrade, system) {
+            upgrade.apply(system);
+        },
     };
 }
 function createSpreadWeaponSystem() {
@@ -1258,6 +1292,10 @@ function createSpreadWeaponSystem() {
         shotSpeed: 4,
         lastShot: -99999,
         shotDelay: 400,
+        shotDamage: 2,
+        processUpgrade: function (upgrade, system) {
+            upgrade.apply(system);
+        },
     };
 }
 function createSurroundWeaponSystem() {
@@ -1280,11 +1318,38 @@ function createSurroundWeaponSystem() {
         lastShot: -99999,
         shotDelay: 800,
         shotSpeed: 10,
+        shotDamage: 3,
+        processUpgrade: function (upgrade, system) {
+            upgrade.apply(system);
+        },
     };
 }
 var BLUE_HUE = 200;
 var MAGENTA_HUE = 300;
 var LIME_HUE = 100;
+function addRandomUpgradeForTesting(vehicle) {
+    var upgrades = [
+        {
+            type: "rate",
+            apply: function (system) {
+                return (system.shotDelay = Math.max(10, system.shotDelay - 70));
+            },
+        },
+        {
+            type: "speed",
+            apply: function (system) { return (system.shotSpeed += 10); },
+        },
+        {
+            type: "damage",
+            apply: function (system) {
+                system.shotDamage += 1;
+            },
+        },
+    ];
+    var randomUpgrade = random(upgrades);
+    vehicle.weaponSystem.processUpgrade(randomUpgrade, vehicle.weaponSystem);
+    flashMessage("Got upgrade: " + randomUpgrade.type, 2000);
+}
 function createWorld() {
     var entities = [];
     var stars = [];

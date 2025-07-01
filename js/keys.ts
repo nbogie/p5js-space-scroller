@@ -30,5 +30,9 @@ function keyPressed() {
         case "p":
             togglePause();
             break;
+        case "u":
+            world.trackedVehicle &&
+                addRandomUpgradeForTesting(world.trackedVehicle);
+            break;
     }
 }

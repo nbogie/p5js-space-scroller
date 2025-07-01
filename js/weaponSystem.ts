@@ -3,6 +3,8 @@ interface WeaponSystem {
     lastShot: number;
     shotDelay: number;
     shotSpeed: number;
+    shotDamage: number;
+    processUpgrade: (upgrade: WeaponUpgrade, system: WeaponSystem) => void;
 }
 
 function createDefaultWeaponSystem() {
@@ -24,6 +26,10 @@ function createDefaultWeaponSystem() {
         lastShot: -99999,
         shotDelay: 200,
         shotSpeed: 10,
+        shotDamage: 1,
+        processUpgrade: (upgrade: WeaponUpgrade, system: WeaponSystem) => {
+            upgrade.apply(system);
+        },
     } satisfies WeaponSystem;
 }
 
@@ -46,6 +52,11 @@ function createSpreadWeaponSystem() {
         shotSpeed: 4,
         lastShot: -99999,
         shotDelay: 400,
+        shotDamage: 2,
+
+        processUpgrade: (upgrade: WeaponUpgrade, system: WeaponSystem) => {
+            upgrade.apply(system);
+        },
     } satisfies WeaponSystem;
 }
 function createSurroundWeaponSystem() {
@@ -67,6 +78,10 @@ function createSurroundWeaponSystem() {
         lastShot: -99999,
         shotDelay: 800,
         shotSpeed: 10,
+        shotDamage: 3,
+        processUpgrade: (upgrade: WeaponUpgrade, system: WeaponSystem) => {
+            upgrade.apply(system);
+        },
     } satisfies WeaponSystem;
 }
 
