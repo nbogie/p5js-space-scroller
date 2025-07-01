@@ -227,8 +227,8 @@ function drawHUD() {
             y: Math.round(world.camera.pos.y),
         }), 50, 600);
     drawMessages();
-    push();
     if (world.trackedVehicle !== undefined) {
+        push();
         const nearestExploderMob = calcNearestEntity(world.trackedVehicle, getExploderMobs());
         const nearestTeleporterMob = calcNearestEntity(world.trackedVehicle, getTeleporterMobs());
         translateForScreenCoords(world.trackedVehicle.pos);

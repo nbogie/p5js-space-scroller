@@ -21,9 +21,8 @@ function drawHUD() {
     );
 
     drawMessages();
-    //TODO: this push() is not matched at this level of nesting.
-    push();
     if (world.trackedVehicle !== undefined) {
+        push();
         //plot nearby mobs on radar
         const nearestExploderMob = calcNearestEntity(
             world.trackedVehicle,
