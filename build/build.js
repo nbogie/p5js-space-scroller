@@ -807,6 +807,7 @@ function drawPauseDialogIfNeeded() {
     }
 }
 function createShot(opts) {
+    var _a;
     push();
     colorMode(HSB, 100);
     const sz = random([4, 5, 6, 7]);
@@ -815,13 +816,14 @@ function createShot(opts) {
     push();
     colorMode(HSB, 360, 100, 100);
     const shotColor = color(constrain(randomGaussian(opts.hue, 10), 0, 360), 100, 100, 100);
+    const drawFn = (_a = opts.drawFn) !== null && _a !== void 0 ? _a : drawDefaultShot;
     pop();
     const shot = {
         live: true,
         tag: "shot",
         zIndex: 0,
         updatePriority: 0,
-        drawFn: drawShot,
+        drawFn,
         updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
         rotation,
@@ -841,7 +843,7 @@ function addShot(opts) {
         playSoundShot();
     }
 }
-function drawShot(s) {
+function drawDefaultShot(s) {
     if (s.live) {
         push();
         translateForScreenCoords(s.pos);
@@ -1281,6 +1283,14 @@ function createWeaponSystemOfNumberOrNull(systemNumber) {
     return creatorFn();
 }
 function createDefaultWeaponSystem() {
+    const customShotDrawFn = (shot) => {
+        push();
+        noStroke();
+        fill(shot.color);
+        translateForScreenCoords(shot.pos);
+        circle(0, 0, random(20, 40));
+        pop();
+    };
     return {
         name: "default",
         shootFn: (srcVehicle) => {
@@ -1294,6 +1304,7 @@ function createDefaultWeaponSystem() {
                     .mult(speed)
                     .add(srcVehicle.vel),
                 hue: BLUE_HUE,
+                drawFn: customShotDrawFn,
             });
         },
         lastShot: -99999,
@@ -1333,6 +1344,24 @@ function createSpreadWeaponSystem() {
     };
 }
 function createSurroundWeaponSystem() {
+    const customShotDrawFn = (shot) => {
+        push();
+        noStroke();
+        stroke("lime");
+        fill(shot.color);
+        translateForScreenCoords(shot.pos);
+        rotate(shot.rotation);
+        const step = 20;
+        beginShape();
+        vertex(0, 0);
+        vertex(step * 1, step * 1);
+        vertex(step * 2, 0);
+        vertex(step * 3, -step * 1);
+        vertex(step * 4, 0);
+        noFill();
+        endShape();
+        pop();
+    };
     return {
         name: "360",
         shootFn: (srcVehicle) => {
@@ -1348,9 +1377,11 @@ function createSurroundWeaponSystem() {
                         .add(srcVehicle.vel),
                     facing,
                     hue: LIME_HUE,
+                    drawFn: customShotDrawFn,
                 });
             }
         },
+        drawShotFn: (shot) => { },
         lastShot: -99999,
         shotDelay: 800,
         shotSpeed: 10,

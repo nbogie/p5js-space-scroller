@@ -1,5 +1,6 @@
 interface WeaponSystem {
     shootFn: (srcVehicle: Vehicle) => void;
+    drawShotFn?: (shot: Shot) => void;
     lastShot: number;
     shotDelay: number;
     shotSpeed: number;
@@ -9,6 +10,15 @@ interface WeaponSystem {
 }
 
 function createDefaultWeaponSystem() {
+    const customShotDrawFn = (shot: Shot) => {
+        push();
+        noStroke();
+        fill(shot.color);
+        translateForScreenCoords(shot.pos);
+        circle(0, 0, random(20, 40));
+        pop();
+    };
+
     return {
         name: "default",
         shootFn: (srcVehicle: Vehicle) => {
@@ -24,6 +34,7 @@ function createDefaultWeaponSystem() {
                     .mult(speed)
                     .add(srcVehicle.vel),
                 hue: BLUE_HUE,
+                drawFn: customShotDrawFn,
             });
         },
         lastShot: -99999,
@@ -66,6 +77,26 @@ function createSpreadWeaponSystem() {
     } satisfies WeaponSystem;
 }
 function createSurroundWeaponSystem() {
+    const customShotDrawFn = (shot: Shot) => {
+        push();
+        noStroke();
+        stroke("lime");
+        fill(shot.color);
+        translateForScreenCoords(shot.pos);
+        rotate(shot.rotation);
+        const step = 20;
+        beginShape();
+        vertex(0, 0);
+        vertex(step * 1, step * 1);
+        vertex(step * 2, 0);
+        vertex(step * 3, -step * 1);
+        vertex(step * 4, 0);
+        noFill();
+
+        endShape();
+        pop();
+    };
+
     return {
         name: "360",
         shootFn: (srcVehicle: Vehicle) => {
@@ -81,9 +112,11 @@ function createSurroundWeaponSystem() {
                         .add(srcVehicle.vel),
                     facing,
                     hue: LIME_HUE,
+                    drawFn: customShotDrawFn,
                 });
             }
         },
+        drawShotFn: (shot: Shot) => {},
         lastShot: -99999,
         shotDelay: 800,
         shotSpeed: 10,

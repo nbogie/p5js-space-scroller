@@ -11,6 +11,7 @@ interface ShotOptions {
     vel: p5.Vector;
     pos: p5.Vector;
     hue: number;
+    drawFn?: (shot: Shot) => void;
 }
 
 function createShot(opts: ShotOptions): Shot {
@@ -27,13 +28,14 @@ function createShot(opts: ShotOptions): Shot {
         100,
         100,
     );
+    const drawFn = opts.drawFn ?? drawDefaultShot;
     pop();
     const shot = {
         live: true,
         tag: "shot",
         zIndex: 0,
         updatePriority: 0,
-        drawFn: drawShot,
+        drawFn,
         updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
         rotation, //NOT inferred from the velocity
@@ -54,7 +56,7 @@ function addShot(opts: ShotOptions) {
         playSoundShot();
     }
 }
-function drawShot(s: Shot) {
+function drawDefaultShot(s: Shot) {
     if (s.live) {
         push();
         translateForScreenCoords(s.pos);
