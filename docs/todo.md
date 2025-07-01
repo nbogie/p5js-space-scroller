@@ -16,3 +16,35 @@
 
 - A pause system that slows down time until stopped, and then speeds up until normal speed on resume
 - refactor: combine all into one entity list
+
+# Features Mindmap
+
+```mermaid
+mindmap
+  root((space shooter))
+    Playstyle
+      roguelike run
+      risk+reward
+      chaotic
+      brutish+short
+    Weapons
+      Composable
+      ::icon(fa fa-book)
+      varied
+        elemental<br/>damage
+        spacePlague
+        EMP
+      interact w<br/>environ
+      collectable
+      upgradable
+    Enemies
+      Emergent<br/>Behaviours
+      Risk&Reward
+        Small chance<br/>to pirate<br/>giant ship
+      elemental<br/>weaknesses+<br/>resistances
+      Harvestable
+    Neutral mobs
+      elemental<br/>traits
+      emergent<br/>behaviours
+      mining
+```
