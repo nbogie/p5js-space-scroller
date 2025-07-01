@@ -8,7 +8,15 @@ function createShot(opts: ShotOptions): Shot {
         .normalize()
         .mult(25)
         .rotate(random(-shotSpread, shotSpread));
-
+    push();
+    colorMode(HSB, 360, 100, 100);
+    const shotColor = color(
+        constrain(randomGaussian(opts.hue, 10), 0, 360),
+        100,
+        100,
+        100,
+    );
+    pop();
     const shot = {
         live: true,
         tag: "shot",
@@ -21,7 +29,7 @@ function createShot(opts: ShotOptions): Shot {
         vel: vel,
         radius: Math.pow(sz, 2),
         damage: sz,
-        color: color(random(50, 70), 100, 100, 100),
+        color: shotColor,
         life: 1,
     } satisfies Shot;
     pop();
@@ -75,27 +83,5 @@ function updateShot(p: Shot) {
                 }
             });
         p.life -= random(0.001, 0.01) * world.timeSpeed;
-    }
-}
-//todo: needs to consider world.timeSpeed or you'll be able to spawn much faster during pause/unpause, for example.
-function shootIfTime(srcVehicle: Vehicle) {
-    const ms = millis();
-    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
-        addShot({
-            pos: srcVehicle.pos,
-            vel: p5.Vector.fromAngle(srcVehicle.facing)
-                .mult(40)
-                .add(srcVehicle.vel),
-        });
-        srcVehicle.lastShot = ms;
-    }
-}
-
-function updateShooting(p: Vehicle) {
-    const angleOff = p.desiredVector.angleBetween(p.vel);
-
-    p.canShoot = angleOff < TWO_PI / 36;
-    if (p.canShoot) {
-        shootIfTime(p);
     }
 }

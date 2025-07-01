@@ -16,9 +16,9 @@ interface Vehicle extends Entity {
     hue: number;
     color: p5.Color;
     traction: 0.3;
-
+    weaponSystem: WeaponSystem;
     steer: p5.Vector;
-    canShoot: boolean;
+    isLinedUpToShoot: boolean;
     rammingDamage: number;
     lastShot: number;
     shotDelay: number;
@@ -40,7 +40,7 @@ function drawVehicle(p: Vehicle) {
     fill(
         p.tookDamage
             ? color("white")
-            : p.canShoot
+            : p.isLinedUpToShoot
               ? color(p.hue, 40, 100)
               : color("gray"),
     );
@@ -108,7 +108,7 @@ function steerVehicleAutonomously(v: Vehicle) {
         v.target = acquireTarget(v);
     }
 
-    updateShooting(v);
+    updateAutomatedShooting(v);
 }
 function updateVehicleWeaponsWithUserInput(v: Vehicle) {
     if (keyIsDown(32)) {
@@ -164,13 +164,18 @@ function createVehicle(): Vehicle {
         traction: 0.3,
         steer: createVector(0, 0),
         rammingDamage: 3,
-        canShoot: false,
+        isLinedUpToShoot: false,
         lastShot: -99999,
         shotDelay: 100,
         trail: createTrail(),
         tookDamage: false,
         life: 1,
         isUnderPlayerControl: false,
+        weaponSystem: random([
+            createDefaultWeaponSystem,
+            createSpreadWeaponSystem,
+            createSurroundWeaponSystem,
+        ])(),
     };
 }
 function steerVehicleWithUserInput(v: Vehicle) {
@@ -220,4 +225,28 @@ function getVehicles() {
 
 function getLiveVehicles() {
     return getVehicles().filter((a) => a.live);
+}
+
+//todo: needs to consider world.timeSpeed or you'll be able to spawn much faster during pause/unpause, for example.
+//todo: consider vehicle's weapon system
+function shootIfTime(srcVehicle: Vehicle) {
+    const ms = millis();
+    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
+        shootUsingWeaponSystem(srcVehicle);
+        srcVehicle.lastShot = ms;
+    }
+}
+
+function updateAutomatedShooting(p: Vehicle) {
+    const angleOff = p.desiredVector.angleBetween(p.vel);
+    // TODO: consider if distance to target
+    // (though this would mean they might fly into a non-target rock without shooting it.)
+    p.isLinedUpToShoot = angleOff < TWO_PI / 36;
+    if (p.isLinedUpToShoot) {
+        shootIfTime(p);
+    }
+}
+
+function shootUsingWeaponSystem(srcVehicle: Vehicle) {
+    srcVehicle.weaponSystem.shootFn(srcVehicle);
 }

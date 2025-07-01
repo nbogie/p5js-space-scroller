@@ -69,6 +69,7 @@ interface Shot extends Entity {
 interface ShotOptions {
     vel: p5.Vector;
     pos: p5.Vector;
+    hue: number;
 }
 interface Star {
     pos: p5.Vector;

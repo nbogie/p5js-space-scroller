@@ -752,6 +752,10 @@ function createShot(opts) {
         .normalize()
         .mult(25)
         .rotate(random(-shotSpread, shotSpread));
+    push();
+    colorMode(HSB, 360, 100, 100);
+    var shotColor = color(constrain(randomGaussian(opts.hue, 10), 0, 360), 100, 100, 100);
+    pop();
     var shot = {
         live: true,
         tag: "shot",
@@ -764,7 +768,7 @@ function createShot(opts) {
         vel: vel,
         radius: Math.pow(sz, 2),
         damage: sz,
-        color: color(random(50, 70), 100, 100, 100),
+        color: shotColor,
         life: 1,
     };
     pop();
@@ -814,25 +818,6 @@ function updateShot(p) {
             }
         });
         p.life -= random(0.001, 0.01) * world.timeSpeed;
-    }
-}
-function shootIfTime(srcVehicle) {
-    var ms = millis();
-    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
-        addShot({
-            pos: srcVehicle.pos,
-            vel: p5.Vector.fromAngle(srcVehicle.facing)
-                .mult(40)
-                .add(srcVehicle.vel),
-        });
-        srcVehicle.lastShot = ms;
-    }
-}
-function updateShooting(p) {
-    var angleOff = p.desiredVector.angleBetween(p.vel);
-    p.canShoot = angleOff < TWO_PI / 36;
-    if (p.canShoot) {
-        shootIfTime(p);
     }
 }
 var shootOsc;
@@ -1030,7 +1015,7 @@ function drawVehicle(p) {
     colorMode(HSB, 100);
     fill(p.tookDamage
         ? color("white")
-        : p.canShoot
+        : p.isLinedUpToShoot
             ? color(p.hue, 40, 100)
             : color("gray"));
     noStroke();
@@ -1087,7 +1072,7 @@ function steerVehicleAutonomously(v) {
     else {
         v.target = acquireTarget(v);
     }
-    updateShooting(v);
+    updateAutomatedShooting(v);
 }
 function updateVehicleWeaponsWithUserInput(v) {
     if (keyIsDown(32)) {
@@ -1138,13 +1123,18 @@ function createVehicle() {
         traction: 0.3,
         steer: createVector(0, 0),
         rammingDamage: 3,
-        canShoot: false,
+        isLinedUpToShoot: false,
         lastShot: -99999,
         shotDelay: 100,
         trail: createTrail(),
         tookDamage: false,
         life: 1,
         isUnderPlayerControl: false,
+        weaponSystem: random([
+            createDefaultWeaponSystem,
+            createSpreadWeaponSystem,
+            createSurroundWeaponSystem,
+        ])(),
     };
 }
 function steerVehicleWithUserInput(v) {
@@ -1186,6 +1176,74 @@ function getVehicles() {
 function getLiveVehicles() {
     return getVehicles().filter(function (a) { return a.live; });
 }
+function shootIfTime(srcVehicle) {
+    var ms = millis();
+    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
+        shootUsingWeaponSystem(srcVehicle);
+        srcVehicle.lastShot = ms;
+    }
+}
+function updateAutomatedShooting(p) {
+    var angleOff = p.desiredVector.angleBetween(p.vel);
+    p.isLinedUpToShoot = angleOff < TWO_PI / 36;
+    if (p.isLinedUpToShoot) {
+        shootIfTime(p);
+    }
+}
+function shootUsingWeaponSystem(srcVehicle) {
+    srcVehicle.weaponSystem.shootFn(srcVehicle);
+}
+function createDefaultWeaponSystem() {
+    return {
+        shootFn: function (srcVehicle) {
+            addShot({
+                pos: srcVehicle.pos,
+                vel: p5.Vector.fromAngle(srcVehicle.facing)
+                    .mult(40)
+                    .add(srcVehicle.vel),
+                hue: BLUE_HUE,
+            });
+        },
+    };
+}
+function createSpreadWeaponSystem() {
+    return {
+        shootFn: function (srcVehicle) {
+            var angles = [0, -1, 1].map(function (sgn) { return sgn * random(0.1, 0.3); });
+            for (var _i = 0, angles_1 = angles; _i < angles_1.length; _i++) {
+                var angle = angles_1[_i];
+                addShot({
+                    pos: srcVehicle.pos,
+                    vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
+                        .mult(40)
+                        .add(srcVehicle.vel),
+                    hue: MAGENTA_HUE,
+                });
+            }
+        },
+    };
+}
+function createSurroundWeaponSystem() {
+    return {
+        shootFn: function (srcVehicle) {
+            var numShots = 16;
+            var angles = collect(numShots, function (ix) { return (ix * TWO_PI) / numShots; });
+            for (var _i = 0, angles_2 = angles; _i < angles_2.length; _i++) {
+                var angle = angles_2[_i];
+                addShot({
+                    pos: srcVehicle.pos,
+                    vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
+                        .mult(40)
+                        .add(srcVehicle.vel),
+                    hue: LIME_HUE,
+                });
+            }
+        },
+    };
+}
+var BLUE_HUE = 200;
+var MAGENTA_HUE = 300;
+var LIME_HUE = 100;
 function createWorld() {
     var entities = [];
     var stars = [];
