@@ -27,27 +27,33 @@ mindmap
       roguelike run
       risk+reward
       chaotic
-      brutish+short
+      brutish +<br/>short ✄
     Weapons
       Composable
-      ::icon(fa fa-book)
       varied
-        elemental<br/>damage
+        elemental<br/>damage ❄️🔥
         spacePlague
         EMP
+        chain-lightning
       interact w<br/>environ
       collectable
       upgradable
+    Relics
+      from Slay <br/>the spire
+      run-changing<br/>behaviours
     Enemies
       Emergent<br/>Behaviours
       Risk&Reward
-        Small chance<br/>to pirate<br/>giant ship
-      elemental<br/>weaknesses+<br/>resistances
-      Harvestable
+        Small chance<br/>to pirate 🏴‍☠️<br/>giant ship
+      elemental<br/>weaknesses +<br/>resistances
+      Harvestable 🌾
     Neutral mobs
       elemental<br/>traits
       emergent<br/>behaviours
       mining
 ```
 
-note: can force theme with `%%{init: {'theme': 'neutral|dark|forest|default|base'}}%%`
+mermaid notes:
+
+- can force theme with `%%{init: {'theme': 'neutral|dark|forest|default|base'}}%%`
+- add icon with subsequent line of `::icon(fa fa-book)`
