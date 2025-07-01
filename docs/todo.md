@@ -2,8 +2,9 @@
 
 ## Feature ideas
 
-- various mobs with different emergent behaviours through interactions and desires
+- allow weapon systems to process (or ignore) standard upgrades: shot-speed, shot number, dmg, fire rate, electric-dmg, fire-dmg, ice-dmg, shot spread increase/decrease, chain lightning, explosive...
 - collectable power-ups
+- various mobs with different emergent behaviours through interactions and desires
 - A noita-like modular weapon construction system
 
 ## Refactoring ideas
