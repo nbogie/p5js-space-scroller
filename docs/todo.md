@@ -51,5 +51,7 @@ mindmap
     Neutral mobs
       elemental<br/>traits<br/>🔥❄️💨🍃
       emergent<br/>behaviours
-      mining ⛏️
+      manipulable
+        destroy enemies
+        mining ⛏️
 ```
