@@ -78,6 +78,6 @@ function updateShot(p: Shot) {
                     }
                 }
             });
-        p.life -= random(0.001, 0.01) * world.timeSpeed;
+        p.life -= random(0.03, 0.04) * world.timeSpeed;
     }
 }
