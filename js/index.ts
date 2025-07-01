@@ -124,8 +124,10 @@ function switchPlayerControlToVehicle(v?: Vehicle) {
         world.trackedVehicle = v;
         v.isUnderPlayerControl = true;
     } else {
-        world.trackedVehicle.isUnderPlayerControl = false;
-        world.trackedVehicle = undefined;
+        if (world.trackedVehicle) {
+            world.trackedVehicle.isUnderPlayerControl = false;
+            world.trackedVehicle = undefined;
+        }
     }
 }
 

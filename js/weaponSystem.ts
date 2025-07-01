@@ -4,11 +4,13 @@ interface WeaponSystem {
     shotDelay: number;
     shotSpeed: number;
     shotDamage: number;
+    name: string;
     processUpgrade: (upgrade: WeaponUpgrade, system: WeaponSystem) => void;
 }
 
 function createDefaultWeaponSystem() {
     return {
+        name: "default",
         shootFn: (srcVehicle: Vehicle) => {
             const speed = srcVehicle.weaponSystem.shotSpeed;
 
@@ -36,6 +38,7 @@ function createDefaultWeaponSystem() {
 
 function createSpreadWeaponSystem() {
     return {
+        name: "spreadshot",
         shootFn: (srcVehicle: Vehicle) => {
             const speed = srcVehicle.weaponSystem.shotSpeed;
 
@@ -64,6 +67,7 @@ function createSpreadWeaponSystem() {
 }
 function createSurroundWeaponSystem() {
     return {
+        name: "360",
         shootFn: (srcVehicle: Vehicle) => {
             const speed = srcVehicle.weaponSystem.shotSpeed;
             const numShots = 16;

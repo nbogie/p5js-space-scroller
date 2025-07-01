@@ -17,7 +17,7 @@ function createWorld(): World {
     const MAX_NUM_VEHICLES: number = 6;
     const worldWidth: number = 6000;
     const worldHeight: number = 5000;
-    const trackedVehicle: Vehicle = undefined;
+    const trackedVehicle: Vehicle | undefined = undefined;
 
     const camera: GameCamera = {
         pos: createVector(0, 0),

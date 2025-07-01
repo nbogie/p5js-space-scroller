@@ -227,20 +227,21 @@ function drawHUD() {
             y: Math.round(world.camera.pos.y),
         }), 50, 600);
     drawMessages();
-    if (world.trackedVehicle !== undefined) {
+    const vehicleToFocus = world.trackedVehicle;
+    if (vehicleToFocus !== undefined) {
         push();
-        const nearestExploderMob = calcNearestEntity(world.trackedVehicle, getExploderMobs());
-        const nearestTeleporterMob = calcNearestEntity(world.trackedVehicle, getTeleporterMobs());
-        translateForScreenCoords(world.trackedVehicle.pos);
+        const nearestExploderMob = calcNearestEntity(vehicleToFocus, getExploderMobs());
+        const nearestTeleporterMob = calcNearestEntity(vehicleToFocus, getTeleporterMobs());
+        translateForScreenCoords(vehicleToFocus.pos);
         noFill();
         stroke(255, 50);
         circle(0, 0, 100);
         pop();
         nearestExploderMob &&
-            plotEntityOnRadar(nearestExploderMob, world.trackedVehicle.pos);
+            plotEntityOnRadar(nearestExploderMob, vehicleToFocus.pos);
         nearestTeleporterMob &&
-            plotEntityOnRadar(nearestTeleporterMob, world.trackedVehicle.pos);
-        getLiveAsteroids().forEach((ast) => plotEntityOnRadar(ast, world.trackedVehicle.pos));
+            plotEntityOnRadar(nearestTeleporterMob, vehicleToFocus.pos);
+        getLiveAsteroids().forEach((ast) => plotEntityOnRadar(ast, vehicleToFocus.pos));
     }
 }
 function plotEntityOnRadar(entity, referencePos) {
@@ -340,8 +341,10 @@ function switchPlayerControlToVehicle(v) {
         v.isUnderPlayerControl = true;
     }
     else {
-        world.trackedVehicle.isUnderPlayerControl = false;
-        world.trackedVehicle = undefined;
+        if (world.trackedVehicle) {
+            world.trackedVehicle.isUnderPlayerControl = false;
+            world.trackedVehicle = undefined;
+        }
     }
 }
 const resTypes = [
@@ -1164,7 +1167,8 @@ function changeWeaponSystemForTrackedVehicle(systemNumber) {
     if (!world.trackedVehicle) {
         return;
     }
-    changeWeaponSystemForVehicle(systemNumber, world.trackedVehicle);
+    const name = changeWeaponSystemForVehicle(systemNumber, world.trackedVehicle);
+    name && flashMessage("Picked weapon: " + name, 2000);
 }
 function toggleAutopilot() {
     if (world.trackedVehicle) {
@@ -1216,9 +1220,10 @@ function updateAutomatedShooting(p) {
 function changeWeaponSystemForVehicle(systemNumber, vehicle) {
     const system = createWeaponSystemOfNumberOrNull(systemNumber);
     if (!system) {
-        return;
+        return null;
     }
     vehicle.weaponSystem = system;
+    return vehicle.weaponSystem.name;
 }
 function createWeaponSystemOfNumberOrNull(systemNumber) {
     const systemCreators = [
@@ -1234,6 +1239,7 @@ function createWeaponSystemOfNumberOrNull(systemNumber) {
 }
 function createDefaultWeaponSystem() {
     return {
+        name: "default",
         shootFn: (srcVehicle) => {
             const speed = srcVehicle.weaponSystem.shotSpeed;
             const shotSpread = PI / 32;
@@ -1258,6 +1264,7 @@ function createDefaultWeaponSystem() {
 }
 function createSpreadWeaponSystem() {
     return {
+        name: "spreadshot",
         shootFn: (srcVehicle) => {
             const speed = srcVehicle.weaponSystem.shotSpeed;
             const angles = [0, -1, 1].map((sgn) => sgn * random(0.1, 0.3));
@@ -1284,6 +1291,7 @@ function createSpreadWeaponSystem() {
 }
 function createSurroundWeaponSystem() {
     return {
+        name: "360",
         shootFn: (srcVehicle) => {
             const speed = srcVehicle.weaponSystem.shotSpeed;
             const numShots = 16;

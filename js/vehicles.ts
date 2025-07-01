@@ -21,7 +21,7 @@ interface Vehicle extends Entity {
     isLinedUpToShoot: boolean;
     rammingDamage: number;
     trail: Trail;
-    target: Target;
+    target?: Target;
     desiredVector: p5.Vector;
     tookDamage: boolean;
     isUnderPlayerControl: boolean;
@@ -194,7 +194,11 @@ function changeWeaponSystemForTrackedVehicle(systemNumber: number) {
     if (!world.trackedVehicle) {
         return;
     }
-    changeWeaponSystemForVehicle(systemNumber, world.trackedVehicle);
+    const name = changeWeaponSystemForVehicle(
+        systemNumber,
+        world.trackedVehicle,
+    );
+    name && flashMessage("Picked weapon: " + name, 2000);
 }
 
 function toggleAutopilot() {
@@ -261,14 +265,20 @@ function updateAutomatedShooting(p: Vehicle) {
     }
 }
 
-function changeWeaponSystemForVehicle(systemNumber: number, vehicle: Vehicle) {
+/** returns name of weapon system after change, or null if not applicable*/
+function changeWeaponSystemForVehicle(
+    systemNumber: number,
+    vehicle: Vehicle,
+): string | null {
     const system = createWeaponSystemOfNumberOrNull(systemNumber);
     if (!system) {
-        return;
+        return null;
     }
     vehicle.weaponSystem = system;
+    return vehicle.weaponSystem.name;
     //TODO: any clean-up needed?
 }
+
 function createWeaponSystemOfNumberOrNull(systemNumber: number) {
     const systemCreators = [
         createDefaultWeaponSystem,

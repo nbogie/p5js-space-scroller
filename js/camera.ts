@@ -1,4 +1,4 @@
-function updateCamera(posToChange: p5.Vector, trackedVehicle: Vehicle) {
+function updateCamera(posToChange: p5.Vector, trackedVehicle?: Vehicle) {
     if (keyIsDown(LEFT_ARROW)) {
         posToChange.x += world.camera.moveSpeed;
     }

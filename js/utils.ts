@@ -13,7 +13,7 @@ function repeat(n: number, fn: (i: number, n: number) => any) {
     }
 }
 
-function collect<T>(n: number, creatorFn: (n?: number) => T): T[] {
+function collect<T>(n: number, creatorFn: (ix: number) => T): T[] {
     const arr: T[] = [];
     repeat(n, (ix) => arr.push(creatorFn(ix)));
     return arr;

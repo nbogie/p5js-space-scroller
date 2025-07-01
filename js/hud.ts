@@ -21,20 +21,21 @@ function drawHUD() {
     );
 
     drawMessages();
-    if (world.trackedVehicle !== undefined) {
+    const vehicleToFocus = world.trackedVehicle;
+    if (vehicleToFocus !== undefined) {
         push();
         //plot nearby mobs on radar
         const nearestExploderMob = calcNearestEntity(
-            world.trackedVehicle,
+            vehicleToFocus,
             getExploderMobs(),
         );
 
         const nearestTeleporterMob = calcNearestEntity(
-            world.trackedVehicle,
+            vehicleToFocus,
             getTeleporterMobs(),
         );
 
-        translateForScreenCoords(world.trackedVehicle.pos);
+        translateForScreenCoords(vehicleToFocus.pos);
 
         //radar outline
         noFill();
@@ -43,12 +44,12 @@ function drawHUD() {
         pop();
 
         nearestExploderMob &&
-            plotEntityOnRadar(nearestExploderMob, world.trackedVehicle.pos);
+            plotEntityOnRadar(nearestExploderMob, vehicleToFocus.pos);
         nearestTeleporterMob &&
-            plotEntityOnRadar(nearestTeleporterMob, world.trackedVehicle.pos);
+            plotEntityOnRadar(nearestTeleporterMob, vehicleToFocus.pos);
 
         getLiveAsteroids().forEach((ast) =>
-            plotEntityOnRadar(ast, world.trackedVehicle.pos),
+            plotEntityOnRadar(ast, vehicleToFocus.pos),
         );
     }
 }

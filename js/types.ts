@@ -56,7 +56,7 @@ interface Particle {
 interface ResourceType {
     label: string;
     hue: number;
-    color: p5.Color;
+    color: p5.Color | null;
 }
 interface Star {
     pos: p5.Vector;
