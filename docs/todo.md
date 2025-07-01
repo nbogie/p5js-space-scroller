@@ -44,14 +44,24 @@ mindmap
     Enemies
       Emergent<br/>Behaviours
       Risk + Reward
-        Small chance<br/>to pirate 🏴‍☠️<br/>giant ship
+        commandeer 🏴‍☠️<br/>oversized enemy?
+        Steal a weapon +<br/>flee
+        leech resources
       elemental<br/>weaknesses +<br/>resistances
       Harvestable 🌾
       Rare drops: Relics 🏛️
     Neutral mobs
       elemental<br/>traits<br/>🔥❄️💨🍃
       emergent<br/>behaviours
+      varied character
+        hulking slow
+        nimble swarming
       manipulable
         destroy enemies
         mining ⛏️
+        aggro gone wrong
 ```
+
+Note:
+
+- [mermaid mindmap diagram documentation](https://mermaid.js.org/syntax/mindmap.html)
