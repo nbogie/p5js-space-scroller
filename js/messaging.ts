@@ -16,19 +16,19 @@ function drawMessages() {
             m.startTimeMillis < millis() &&
             m.startTimeMillis + m.durationMillis > millis(),
     );
-    for (const msg of msgsToShow) {
+    for (const [ix, msg] of msgsToShow.entries()) {
         push();
         const alpha = map(
             millis() - msg.startTimeMillis,
             0,
             msg.durationMillis,
-            0,
             255,
+            0,
         );
         fill(255, alpha);
         textAlign(CENTER);
         textSize(24);
-        text(msg.text, width / 2, height - 50);
+        text(msg.text, width / 2, height - 50 - ix * 30);
         pop();
     }
 }

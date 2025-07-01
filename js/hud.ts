@@ -20,6 +20,8 @@ function drawHUD() {
         600,
     );
 
+    drawMessages();
+    //TODO: this push() is not matched at this level of nesting.
     push();
     if (world.trackedVehicle !== undefined) {
         //plot nearby mobs on radar

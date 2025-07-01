@@ -1,13 +1,4 @@
 "use strict";
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 function shatterAsteroid(a) {
     playSoundAsteroidDestroyed(a.sizeCategory);
     if (a.sizeCategory >= 2) {
@@ -28,7 +19,7 @@ function drawAsteroid(a) {
         fill(a.tookDamage ? stdColours.white : a.resType.color);
         if (a.mineral) {
             stroke("lime");
-            var t = map(sin(frameCount / 10), -1, 1, 0, 1);
+            const t = map(sin(frameCount / 10), -1, 1, 0, 1);
             strokeWeight((t * a.radius) / 6);
         }
         else {
@@ -52,7 +43,7 @@ function createAsteroid() {
     return createAsteroidAt({ pos: randomWorldPos() });
 }
 function createAsteroidAt(opts) {
-    var sz = opts.sizeCategory || random([1, 2, 3, 4]);
+    const sz = opts.sizeCategory || random([1, 2, 3, 4]);
     return {
         tag: "asteroid",
         live: true,
@@ -75,8 +66,7 @@ function createAsteroidAt(opts) {
     };
 }
 function setupAsteroids(n) {
-    var _a;
-    (_a = world.entities).push.apply(_a, collect(n, createAsteroid));
+    world.entities.push(...collect(n, createAsteroid));
 }
 function updateAsteroid(p) {
     if (p.live) {
@@ -95,7 +85,7 @@ function updateAsteroid(p) {
             p.pos.y -= world.worldHeight / 2;
         }
         p.rotation += p.rotationSpeed;
-        getLiveVehicles().forEach(function (v) {
+        getLiveVehicles().forEach((v) => {
             if (isColliding(p, v)) {
                 p.hp -= v.rammingDamage;
                 p.tookDamage = true;
@@ -114,13 +104,13 @@ function updateAsteroid(p) {
     p.tookDamage = false;
 }
 function randomMineral() {
-    return random(__spreadArray([], allMineralNames, true));
+    return random([...allMineralNames]);
 }
 function getAsteroids() {
-    return world.entities.filter(function (e) { return e.tag === "asteroid"; });
+    return world.entities.filter((e) => e.tag === "asteroid");
 }
 function getLiveAsteroids() {
-    return getAsteroids().filter(function (a) { return a.live; });
+    return getAsteroids().filter((a) => a.live);
 }
 function updateCamera(posToChange, trackedVehicle) {
     if (keyIsDown(LEFT_ARROW)) {
@@ -147,7 +137,7 @@ function shakeCamera(amt) {
     world.camera.pos.add(p5.Vector.random2D().mult(amt));
 }
 function trackVehicleWithCamera(v) {
-    var velExtra = v.vel.copy().mult(20);
+    const velExtra = v.vel.copy().mult(20);
     world.camera.pos.x = v.pos.x - width / 2 + velExtra.x;
     world.camera.pos.y = v.pos.y - height / 2 + velExtra.y;
 }
@@ -163,15 +153,14 @@ function screenShake(amt) {
         world.camera.screenShakeAmount = world.camera.maxScreenShakeAmount;
     }
 }
-function translateForScreenCoords(pos, labelled) {
-    if (labelled === void 0) { labelled = false; }
-    var screenCoords = pos.copy().sub(world.camera.pos);
-    var translation = getTranslationForScreenCoords(pos);
+function translateForScreenCoords(pos, labelled = false) {
+    const screenCoords = pos.copy().sub(world.camera.pos);
+    const translation = getTranslationForScreenCoords(pos);
     translate(translation.x, translation.y);
     if (labelled) {
         fill("white");
         textSize(10);
-        text("".concat(Math.round(screenCoords.x), ",").concat(Math.round(screenCoords.y)), 20, 0);
+        text(`${Math.round(screenCoords.x)},${Math.round(screenCoords.y)}`, 20, 0);
     }
 }
 function getTranslationForScreenCoords(pos) {
@@ -185,13 +174,13 @@ function isOnScreen(pos, radius) {
 }
 function drawGridLines() {
     push();
-    var numCols = floor((8 * world.worldWidth) / width);
-    var numRows = floor((8 * world.worldHeight) / width);
-    for (var col = 0; col < numCols; col++) {
-        for (var row = 0; row < numRows; row++) {
-            var pos = createVector((col * width) / 2 - world.worldWidth / 2, (row * width) / 2 - world.worldHeight / 2);
+    const numCols = floor((8 * world.worldWidth) / width);
+    const numRows = floor((8 * world.worldHeight) / width);
+    for (let col = 0; col < numCols; col++) {
+        for (let row = 0; row < numRows; row++) {
+            const pos = createVector((col * width) / 2 - world.worldWidth / 2, (row * width) / 2 - world.worldHeight / 2);
             push();
-            var translation = getTranslationForScreenCoords(pos);
+            const translation = getTranslationForScreenCoords(pos);
             if (translation.mag() < width) {
                 translateForScreenCoords(pos);
                 strokeWeight(0.1);
@@ -209,7 +198,7 @@ function numberOfWorldPages() {
     return Math.pow(world.worldWidth / width, 2);
 }
 function createConfig() {
-    var newConfig = {
+    const newConfig = {
         shouldDrawTrails: true,
         shouldDrawStars: true,
         shouldPlaySound: false,
@@ -237,10 +226,11 @@ function drawHUD() {
             x: Math.round(world.camera.pos.x),
             y: Math.round(world.camera.pos.y),
         }), 50, 600);
+    drawMessages();
     push();
     if (world.trackedVehicle !== undefined) {
-        var nearestExploderMob = calcNearestEntity(world.trackedVehicle, getExploderMobs());
-        var nearestTeleporterMob = calcNearestEntity(world.trackedVehicle, getTeleporterMobs());
+        const nearestExploderMob = calcNearestEntity(world.trackedVehicle, getExploderMobs());
+        const nearestTeleporterMob = calcNearestEntity(world.trackedVehicle, getTeleporterMobs());
         translateForScreenCoords(world.trackedVehicle.pos);
         noFill();
         stroke(255, 50);
@@ -250,9 +240,7 @@ function drawHUD() {
             plotEntityOnRadar(nearestExploderMob, world.trackedVehicle.pos);
         nearestTeleporterMob &&
             plotEntityOnRadar(nearestTeleporterMob, world.trackedVehicle.pos);
-        getLiveAsteroids().forEach(function (ast) {
-            return plotEntityOnRadar(ast, world.trackedVehicle.pos);
-        });
+        getLiveAsteroids().forEach((ast) => plotEntityOnRadar(ast, world.trackedVehicle.pos));
     }
 }
 function plotEntityOnRadar(entity, referencePos) {
@@ -260,9 +248,9 @@ function plotEntityOnRadar(entity, referencePos) {
     translateForScreenCoords(referencePos);
     noFill();
     circle(0, 0, 100);
-    var vecToNearest = p5.Vector.sub(entity.pos, referencePos);
-    var radarDist = min(vecToNearest.mag() / 20, 50);
-    var offset = vecToNearest.copy().setMag(radarDist);
+    const vecToNearest = p5.Vector.sub(entity.pos, referencePos);
+    const radarDist = min(vecToNearest.mag() / 20, 50);
+    const offset = vecToNearest.copy().setMag(radarDist);
     translate(offset);
     stroke(entity.minimapColour);
     strokeWeight(5);
@@ -270,10 +258,10 @@ function plotEntityOnRadar(entity, referencePos) {
     pop();
 }
 p5.disableFriendlyErrors = true;
-var world;
-var pauseState = { type: "unpaused", simplified: "unpaused" };
-var config;
-var soundNotYetEnabledByGesture = true;
+let world;
+let pauseState = { type: "unpaused", simplified: "unpaused" };
+let config;
+let soundNotYetEnabledByGesture = true;
 function setup() {
     createCanvas(windowWidth, windowHeight);
     config = createConfig();
@@ -285,7 +273,7 @@ function setup() {
     setupStarfield();
     setupVehicles(world.MAX_NUM_VEHICLES);
     setupMobs(10);
-    var firstLiveVehicle = getLiveVehicles().find(function (v) { return v.hp > 0; });
+    const firstLiveVehicle = getLiveVehicles().find((v) => v.hp > 0);
     switchPlayerControlToVehicle(firstLiveVehicle);
     frameRate(60);
     angleMode(RADIANS);
@@ -307,23 +295,23 @@ function windowResized() {
     resizeCanvas(windowWidth, windowHeight);
 }
 function prepareEntitiesForDrawing() {
-    return __spreadArray([], world.entities, true).sort(function (a, b) {
+    return [...world.entities].sort((a, b) => {
         return a.zIndex - b.zIndex;
     });
 }
 function prepareEntitiesForUpdate() {
-    return __spreadArray([], world.entities, true).sort(function (a, b) {
+    return [...world.entities].sort((a, b) => {
         return a.updatePriority - b.updatePriority;
     });
 }
 function drawAll() {
-    var preparedEntities = prepareEntitiesForDrawing();
+    const preparedEntities = prepareEntitiesForDrawing();
     push();
     if (config.shouldDrawStars) {
         drawStarfield();
     }
     drawGridLines();
-    preparedEntities.forEach(function (ent) {
+    preparedEntities.forEach((ent) => {
         if (ent.live) {
             ent.drawFn(ent);
         }
@@ -332,19 +320,19 @@ function drawAll() {
     drawHUD();
 }
 function updateAll() {
-    var preparedEntities = prepareEntitiesForUpdate();
-    preparedEntities.forEach(function (ent) {
+    const preparedEntities = prepareEntitiesForUpdate();
+    preparedEntities.forEach((ent) => {
         if (ent.live) {
             ent.updateFn(ent);
         }
     });
     updateCamera(world.camera.pos, world.trackedVehicle);
     updateEngineWhistleSound();
-    world.entities = world.entities.filter(function (e) { return e.live; });
+    world.entities = world.entities.filter((e) => e.live);
 }
 function switchPlayerControlToVehicle(v) {
     if (v) {
-        var prevTrackedVehicle = world.trackedVehicle;
+        const prevTrackedVehicle = world.trackedVehicle;
         if (prevTrackedVehicle && prevTrackedVehicle.isUnderPlayerControl) {
             prevTrackedVehicle.isUnderPlayerControl = false;
         }
@@ -356,7 +344,7 @@ function switchPlayerControlToVehicle(v) {
         world.trackedVehicle = undefined;
     }
 }
-var resTypes = [
+const resTypes = [
     { label: "fuel", hue: 55, color: null },
     { label: "laser", hue: 30, color: null },
     { label: "explosive", hue: 0, color: null },
@@ -364,7 +352,7 @@ var resTypes = [
 ];
 function keyPressed() {
     if (key.length === 1 && key >= "1" && key <= "9") {
-        var num = parseInt(key, 10);
+        const num = parseInt(key, 10);
         changeWeaponSystemForTrackedVehicle(num);
         return;
     }
@@ -399,33 +387,29 @@ function keyPressed() {
             break;
     }
 }
-var messageQueue = [];
-function flashMessage(text, durationMillis) {
-    if (durationMillis === void 0) { durationMillis = 2000; }
-    messageQueue.push({ text: text, durationMillis: durationMillis, startTimeMillis: millis() });
+let messageQueue = [];
+function flashMessage(text, durationMillis = 2000) {
+    messageQueue.push({ text, durationMillis, startTimeMillis: millis() });
 }
 function drawMessages() {
-    var msgsToShow = messageQueue.filter(function (m) {
-        return m.startTimeMillis < millis() &&
-            m.startTimeMillis + m.durationMillis > millis();
-    });
-    for (var _i = 0, msgsToShow_1 = msgsToShow; _i < msgsToShow_1.length; _i++) {
-        var msg = msgsToShow_1[_i];
+    const msgsToShow = messageQueue.filter((m) => m.startTimeMillis < millis() &&
+        m.startTimeMillis + m.durationMillis > millis());
+    for (const [ix, msg] of msgsToShow.entries()) {
         push();
-        var alpha_1 = map(millis() - msg.startTimeMillis, 0, msg.durationMillis, 0, 255);
-        fill(255, alpha_1);
+        const alpha = map(millis() - msg.startTimeMillis, 0, msg.durationMillis, 255, 0);
+        fill(255, alpha);
         textAlign(CENTER);
         textSize(24);
-        text(msg.text, width / 2, height - 50);
+        text(msg.text, width / 2, height - 50 - ix * 30);
         pop();
     }
 }
 function updateMessages() {
-    messageQueue = messageQueue.filter(function (msg) {
+    messageQueue = messageQueue.filter((msg) => {
         return millis() - msg.startTimeMillis < msg.durationMillis;
     });
 }
-var allMineralNames = [
+const allMineralNames = [
     "copper",
     "iron",
     "gold",
@@ -461,12 +445,11 @@ var allMineralNames = [
     "palladium",
 ];
 function setupMobs(n) {
-    var _a;
-    (_a = world.entities).push.apply(_a, collect(n, function (ix) { return createRandomMob(); }));
+    world.entities.push(...collect(n, (ix) => createRandomMob()));
 }
 function createRandomMob() {
-    var fn = random([createExploderMob, createTeleporterMob]);
-    var mob = fn();
+    const fn = random([createExploderMob, createTeleporterMob]);
+    const mob = fn();
     return mob;
 }
 function drawExploderMob(mob) {
@@ -492,9 +475,9 @@ function drawTeleporterMob(mob) {
 function updateExploderMob() {
 }
 function updateTeleporterMob(mob) {
-    var shouldTeleport = millis() - mob.timeOfLastTeleport > 3000 && random() < 0.01;
+    const shouldTeleport = millis() - mob.timeOfLastTeleport > 3000 && random() < 0.01;
     if (shouldTeleport) {
-        var hopDist = random(400, 4000);
+        const hopDist = random(400, 4000);
         mob.pos.add(p5.Vector.random2D().mult(hopDist));
         mob.timeOfLastTeleport = millis();
     }
@@ -532,10 +515,10 @@ function createTeleporterMob() {
     };
 }
 function getTeleporterMobs() {
-    return world.entities.filter(function (e) { return e.tag === "mob-teleporter"; });
+    return world.entities.filter((e) => e.tag === "mob-teleporter");
 }
 function getExploderMobs() {
-    return world.entities.filter(function (e) { return e.tag === "mob-exploder"; });
+    return world.entities.filter((e) => e.tag === "mob-exploder");
 }
 function mouseMoved() { }
 function mousePressed() {
@@ -571,7 +554,7 @@ function updateOrb(p) {
     }
 }
 function addOrb(opts) {
-    var orb = {
+    const orb = {
         tag: "orb",
         zIndex: 0,
         updatePriority: 0,
@@ -596,9 +579,9 @@ function drawOrb(o) {
         pop();
     }
 }
-var gPalette;
-var stdColours;
-var FaveColors = {
+let gPalette;
+let stdColours;
+const FaveColors = {
     paletteStrs: [
         "#F8B195,#F67280,#C06C84,#6C5B7B,#355C7D,#F8B195,#F67280,#C06C84|1001 stories|http://www.colourlovers.com/palette/1811244/1001_Stories",
         "#5E412F,#FCEBB6,#78C0A8,#F07818,#F0A830,#5E412F,#FCEBB6,#78C0A8|papua new guinea|http://www.colourlovers.com/palette/919313/Papua_New_Guinea",
@@ -621,25 +604,25 @@ var FaveColors = {
         "#00A8C6,#40C0CB,#F9F2E7,#AEE239,#8FBE00|fresh cut day by electrikmonk|",
     ],
     createPalettes: function () {
-        var makePalette = function (str) {
-            var _a = str.split("|"), colorsStr = _a[0], name = _a[1], url = _a[2];
+        const makePalette = (str) => {
+            const [colorsStr, name, url] = str.split("|");
             return {
-                colors: colorsStr.split(",").map(function (n) { return color(n); }),
+                colors: colorsStr.split(",").map((n) => color(n)),
                 name: name,
                 url: url,
             };
         };
-        var palettes = FaveColors.paletteStrs.map(makePalette);
+        const palettes = FaveColors.paletteStrs.map(makePalette);
         return palettes;
     },
     randomPalette: function () {
         return random(FaveColors.createPalettes());
     },
     randomBigPalette: function (minSize) {
-        return random(FaveColors.createPalettes().filter(function (p) { return p.colors.length >= minSize; }));
+        return random(FaveColors.createPalettes().filter((p) => p.colors.length >= minSize));
     },
     randomMonoPalette: function () {
-        var pal = Object.assign({}, FaveColors.randomPalette());
+        const pal = Object.assign({}, FaveColors.randomPalette());
         pal.colors = _.sampleSize(pal.colors, 2);
         return pal;
     },
@@ -667,7 +650,7 @@ function randomColorOrTransparent() {
 }
 function setPaletteForResources() {
     randomizeBigPalette();
-    resTypes.forEach(function (rt, ix) {
+    resTypes.forEach((rt, ix) => {
         rt.color = gPalette.colors[ix];
     });
 }
@@ -696,7 +679,7 @@ function drawParticle(p) {
     colorMode(HSB, 100);
     fill(color(p.hue, 100, 100, map(p.life, 0.8, 1, 0, 100)));
     noStroke();
-    var sz = map(p.life, 0, 1, 0, 2);
+    const sz = map(p.life, 0, 1, 0, 2);
     circle(0, 0, sz);
     pop();
 }
@@ -710,11 +693,11 @@ function addParticle(p, ps) {
     ps.splice(100);
 }
 function createTrail() {
-    var ps = [];
+    const ps = [];
     return { particles: ps };
 }
 function drawTrail(trail) {
-    trail.particles.forEach(function (p) {
+    trail.particles.forEach((p) => {
         push();
         translateForScreenCoords(p.pos);
         noStroke();
@@ -743,7 +726,7 @@ function processAnyTimeDistortion() {
             return 0;
         case "pausing": {
             pauseState.framesLeft = max(0, pauseState.framesLeft - 1);
-            var t = pauseState.framesLeft / 10;
+            const t = pauseState.framesLeft / 10;
             if (pauseState.framesLeft <= 0) {
                 pauseState = { type: "paused", simplified: "paused" };
             }
@@ -751,7 +734,7 @@ function processAnyTimeDistortion() {
         }
         case "unpausing": {
             pauseState.framesLeft = max(0, pauseState.framesLeft - 1);
-            var t = 1 - pauseState.framesLeft / 10;
+            const t = 1 - pauseState.framesLeft / 10;
             if (pauseState.framesLeft <= 0) {
                 pauseState = { type: "unpaused", simplified: "unpaused" };
             }
@@ -764,12 +747,12 @@ function processAnyTimeDistortion() {
 function drawPauseDialogIfNeeded() {
     if (pauseState.simplified === "paused" || pauseState.type === "unpausing") {
         push();
-        var overlayOpacityFraction = 1 - constrain(world.timeSpeed, 0, 1);
+        const overlayOpacityFraction = 1 - constrain(world.timeSpeed, 0, 1);
         fill(0, 150 * overlayOpacityFraction);
         rect(width / 2, height / 2, width, height);
         fill(255);
         textAlign(CENTER, CENTER);
-        var sz = 36 * overlayOpacityFraction;
+        const sz = 36 * overlayOpacityFraction;
         textSize(sz);
         text("Paused", width / 2, height / 2 - 20);
         textSize(sz * 0.5);
@@ -780,14 +763,14 @@ function drawPauseDialogIfNeeded() {
 function createShot(opts) {
     push();
     colorMode(HSB, 100);
-    var sz = random([4, 5, 6, 7]);
-    var vel = opts.vel.copy();
-    var rotation = opts.facing;
+    const sz = random([4, 5, 6, 7]);
+    const vel = opts.vel.copy();
+    const rotation = opts.facing;
     push();
     colorMode(HSB, 360, 100, 100);
-    var shotColor = color(constrain(randomGaussian(opts.hue, 10), 0, 360), 100, 100, 100);
+    const shotColor = color(constrain(randomGaussian(opts.hue, 10), 0, 360), 100, 100, 100);
     pop();
-    var shot = {
+    const shot = {
         live: true,
         tag: "shot",
         zIndex: 0,
@@ -795,7 +778,7 @@ function createShot(opts) {
         drawFn: drawShot,
         updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
-        rotation: rotation,
+        rotation,
         vel: vel,
         radius: Math.pow(sz, 2),
         damage: sz,
@@ -806,7 +789,7 @@ function createShot(opts) {
     return shot;
 }
 function addShot(opts) {
-    var shot = createShot(opts);
+    const shot = createShot(opts);
     world.entities.push(shot);
     if (nearCamera(shot.pos)) {
         playSoundShot();
@@ -831,13 +814,13 @@ function updateShot(p) {
     if (!p.live) {
         return;
     }
-    var asteroids = getLiveAsteroids();
+    const asteroids = getLiveAsteroids();
     if (p.live) {
         p.pos.x += p.vel.x * world.timeSpeed;
         p.pos.y += p.vel.y * world.timeSpeed;
         asteroids
-            .filter(function (a) { return a.live; })
-            .forEach(function (a) {
+            .filter((a) => a.live)
+            .forEach((a) => {
             if (isColliding(a, p)) {
                 a.hp -= p.damage;
                 a.tookDamage = true;
@@ -851,13 +834,13 @@ function updateShot(p) {
         p.life -= random(0.03, 0.04) * world.timeSpeed;
     }
 }
-var shootOsc;
-var shootEnv;
-var asteroidHitNoise;
-var engineWhistleNoise;
-var engineWhistleFilter;
-var engineWhistleFilterFreq;
-var engineWhistleFilterWidth;
+let shootOsc;
+let shootEnv;
+let asteroidHitNoise;
+let engineWhistleNoise;
+let engineWhistleFilter;
+let engineWhistleFilterFreq;
+let engineWhistleFilterWidth;
 function setupSound() {
     setupEngineWhistleSound();
     setupShootSound();
@@ -897,8 +880,8 @@ function playSoundAsteroidDestroyed(level) {
     if (!config.shouldPlaySound || soundNotYetEnabledByGesture) {
         return;
     }
-    var env = new p5.Envelope();
-    var releaseTime = {
+    const env = new p5.Envelope();
+    const releaseTime = {
         1: 0.05,
         2: 0.05,
         3: 0.1,
@@ -921,28 +904,28 @@ function updateEngineWhistleSound() {
         return;
     }
     engineWhistleFilterWidth = 50;
-    var maxVel = 5;
-    var vel = (_b = (_a = world.trackedVehicle) === null || _a === void 0 ? void 0 : _a.vel) === null || _b === void 0 ? void 0 : _b.mag();
+    const maxVel = 5;
+    const vel = (_b = (_a = world.trackedVehicle) === null || _a === void 0 ? void 0 : _a.vel) === null || _b === void 0 ? void 0 : _b.mag();
     if (vel) {
         engineWhistleFilterFreq = map(vel, 0, maxVel, 10, 8000);
     }
     engineWhistleFilter.set(engineWhistleFilterFreq, engineWhistleFilterWidth);
 }
 function setupStarfield() {
-    world.stars = collect(1000 * numberOfWorldPages(), function (ix) { return ({
+    world.stars = collect(1000 * numberOfWorldPages(), (ix) => ({
         pos: randomWorldPos(),
         radius: random(0.5, random(0.5, 3)),
         strength: random(100),
-    }); });
+    }));
 }
 function drawStarfield() {
     world.stars
-        .filter(function (s) { return isOnScreen(s.pos, 5); })
-        .forEach(function (s) {
-        var r = Math.random() > 0.9 ? s.radius * 2 : 0;
+        .filter((s) => isOnScreen(s.pos, 5))
+        .forEach((s) => {
+        const r = Math.random() > 0.9 ? s.radius * 2 : 0;
         push();
         colorMode(HSB, 100);
-        var colr = color(0, 0, 100, s.strength);
+        const colr = color(0, 0, 100, s.strength);
         translateForScreenCoords(s.pos);
         fill(colr);
         noStroke();
@@ -957,8 +940,8 @@ function toggleShouldDrawStars() {
     toggleConfigBooleanProperty("shouldDrawStars");
 }
 function acquireTarget(vehicle) {
-    var allAsteroids = getLiveAsteroids();
-    var closeAsteroids = getLiveAsteroids().filter(function (a) { return a.pos.dist(vehicle.pos) < height; });
+    const allAsteroids = getLiveAsteroids();
+    const closeAsteroids = getLiveAsteroids().filter((a) => a.pos.dist(vehicle.pos) < height);
     return random(closeAsteroids.length > 0 ? closeAsteroids : allAsteroids);
 }
 function drawTarget(t) {
@@ -968,8 +951,8 @@ function drawTarget(t) {
     colorMode(HSB, 100);
     stroke(0, 100, 100);
     circle(0, 0, 25);
-    drawTargetPetals(4, function (ix) {
-        repeat(3, function (jx) {
+    drawTargetPetals(4, (ix) => {
+        repeat(3, (jx) => {
             push();
             translate(jx * 4 + 8, 0);
             line(0, -2 * jx, 0, 2 * jx);
@@ -979,9 +962,9 @@ function drawTarget(t) {
     pop();
 }
 function drawTargetPetals(numPetals, fn) {
-    var angle = TWO_PI / numPetals;
+    const angle = TWO_PI / numPetals;
     push();
-    repeat(numPetals, function (ix) {
+    repeat(numPetals, (ix) => {
         fn(ix);
         rotate(angle);
     });
@@ -991,21 +974,21 @@ function randInt(min, max) {
     return Math.floor(random(min, max + 1));
 }
 function atLeastTwoOf(fns) {
-    var pickedFns = _.sampleSize(fns, randInt(2, fns.length));
-    pickedFns.forEach(function (f) { return f(); });
+    const pickedFns = _.sampleSize(fns, randInt(2, fns.length));
+    pickedFns.forEach((f) => f());
 }
 function repeat(n, fn) {
-    for (var i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
         fn(i, n);
     }
 }
 function collect(n, creatorFn) {
-    var arr = [];
-    repeat(n, function (ix) { return arr.push(creatorFn(ix)); });
+    const arr = [];
+    repeat(n, (ix) => arr.push(creatorFn(ix)));
     return arr;
 }
 function posToString(p) {
-    return "".concat(Math.round(p.x), ", ").concat(Math.round(p.y));
+    return `${Math.round(p.x)}, ${Math.round(p.y)}`;
 }
 function randomPos() {
     return createVector(random(width), random(height));
@@ -1013,8 +996,7 @@ function randomPos() {
 function randomWorldPos() {
     return createVector(random(-world.worldWidth / 2, world.worldWidth / 2), random(-world.worldHeight / 2, world.worldHeight / 2));
 }
-function drawVec(vec, len, minMag, maxMag, c, lineWidth) {
-    if (lineWidth === void 0) { lineWidth = 1; }
+function drawVec(vec, len, minMag, maxMag, c, lineWidth = 1) {
     push();
     rotate(vec.heading());
     stroke(c);
@@ -1026,10 +1008,10 @@ function isColliding(a, s) {
     return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
 }
 function calcNearestEntity(ship, entities) {
-    var recordDist = Number.MAX_SAFE_INTEGER;
-    var recordEnt = null;
-    entities.forEach(function (ent) {
-        var dst = ent.pos.dist(ship.pos);
+    let recordDist = Number.MAX_SAFE_INTEGER;
+    let recordEnt = null;
+    entities.forEach((ent) => {
+        const dst = ent.pos.dist(ship.pos);
         if (dst < recordDist) {
             recordDist = dst;
             recordEnt = ent;
@@ -1050,7 +1032,7 @@ function drawVehicle(p) {
             ? color(p.hue, 40, 100)
             : color("gray"));
     noStroke();
-    var sz = 10;
+    const sz = 10;
     push();
     rotate(p.facing);
     beginShape();
@@ -1084,17 +1066,17 @@ function drawVehicle(p) {
     }
 }
 function steerVehicleAutonomously(v) {
-    var currPos = createVector(v.pos.x, v.pos.y);
+    const currPos = createVector(v.pos.x, v.pos.y);
     if (!v.live) {
         return;
     }
     if (v.target && v.target.live) {
-        var targetPos = createVector(v.target.pos.x, v.target.pos.y);
-        var desired = p5.Vector.sub(targetPos, currPos);
+        const targetPos = createVector(v.target.pos.x, v.target.pos.y);
+        const desired = p5.Vector.sub(targetPos, currPos);
         desired.setMag(v.maxSpeed);
         v.desiredVector = desired.copy().normalize();
         v.facing = v.desiredVector.copy().normalize().heading();
-        var steer = p5.Vector.sub(desired, v.vel);
+        const steer = p5.Vector.sub(desired, v.vel);
         steer.limit(v.maxSteeringForce);
         v.steer = steer.copy().mult(world.timeSpeed);
         v.accel.add(steer);
@@ -1126,8 +1108,7 @@ function updateVehicle(v) {
     v.tookDamage = false;
 }
 function setupVehicles(n) {
-    var _a;
-    (_a = world.entities).push.apply(_a, collect(n, createVehicle));
+    world.entities.push(...collect(n, createVehicle));
 }
 function createVehicle() {
     return {
@@ -1168,7 +1149,7 @@ function createVehicle() {
 }
 function steerVehicleWithUserInput(v) {
     if (keyIsDown(UP_ARROW)) {
-        var thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust * world.timeSpeed);
+        const thrust = p5.Vector.fromAngle(v.facing).mult(v.maxThrust * world.timeSpeed);
         v.accel.add(thrust);
         addTrailParticle(v);
     }
@@ -1198,7 +1179,7 @@ function toggleAutopilot() {
     }
 }
 function addTrailParticle(v) {
-    var trailParticle = createParticleAt(v.pos);
+    const trailParticle = createParticleAt(v.pos);
     trailParticle.vel = v.accel
         .copy()
         .mult(20)
@@ -1206,16 +1187,16 @@ function addTrailParticle(v) {
     addParticle(trailParticle, v.trail.particles);
 }
 function getVehicles() {
-    return world.entities.filter(function (e) { return e.tag === "vehicle"; });
+    return world.entities.filter((e) => e.tag === "vehicle");
 }
 function getLiveVehicles() {
-    return getVehicles().filter(function (a) { return a.live; });
+    return getVehicles().filter((a) => a.live);
 }
 function shootIfTime(srcVehicle) {
     tryToShootUsingWeaponSystem(srcVehicle);
 }
 function tryToShootUsingWeaponSystem(srcVehicle) {
-    var ms = millis();
+    const ms = millis();
     if (ms - srcVehicle.weaponSystem.lastShot >
         srcVehicle.weaponSystem.shotDelay) {
         shootUsingWeaponSystem(srcVehicle);
@@ -1226,26 +1207,26 @@ function shootUsingWeaponSystem(srcVehicle) {
     srcVehicle.weaponSystem.shootFn(srcVehicle);
 }
 function updateAutomatedShooting(p) {
-    var angleOff = p.desiredVector.angleBetween(p.vel);
+    const angleOff = p.desiredVector.angleBetween(p.vel);
     p.isLinedUpToShoot = angleOff < TWO_PI / 36;
     if (p.isLinedUpToShoot) {
         shootIfTime(p);
     }
 }
 function changeWeaponSystemForVehicle(systemNumber, vehicle) {
-    var system = createWeaponSystemOfNumberOrNull(systemNumber);
+    const system = createWeaponSystemOfNumberOrNull(systemNumber);
     if (!system) {
         return;
     }
     vehicle.weaponSystem = system;
 }
 function createWeaponSystemOfNumberOrNull(systemNumber) {
-    var systemCreators = [
+    const systemCreators = [
         createDefaultWeaponSystem,
         createSpreadWeaponSystem,
         createSurroundWeaponSystem,
     ];
-    var creatorFn = systemCreators[systemNumber - 1];
+    const creatorFn = systemCreators[systemNumber - 1];
     if (!creatorFn) {
         return null;
     }
@@ -1253,10 +1234,10 @@ function createWeaponSystemOfNumberOrNull(systemNumber) {
 }
 function createDefaultWeaponSystem() {
     return {
-        shootFn: function (srcVehicle) {
-            var speed = srcVehicle.weaponSystem.shotSpeed;
-            var shotSpread = PI / 32;
-            var randomAngleOffset = random(-shotSpread, shotSpread);
+        shootFn: (srcVehicle) => {
+            const speed = srcVehicle.weaponSystem.shotSpeed;
+            const shotSpread = PI / 32;
+            const randomAngleOffset = random(-shotSpread, shotSpread);
             addShot({
                 pos: srcVehicle.pos,
                 facing: srcVehicle.facing,
@@ -1270,19 +1251,18 @@ function createDefaultWeaponSystem() {
         shotDelay: 200,
         shotSpeed: 10,
         shotDamage: 1,
-        processUpgrade: function (upgrade, system) {
+        processUpgrade: (upgrade, system) => {
             upgrade.apply(system);
         },
     };
 }
 function createSpreadWeaponSystem() {
     return {
-        shootFn: function (srcVehicle) {
-            var speed = srcVehicle.weaponSystem.shotSpeed;
-            var angles = [0, -1, 1].map(function (sgn) { return sgn * random(0.1, 0.3); });
-            for (var _i = 0, angles_1 = angles; _i < angles_1.length; _i++) {
-                var angle = angles_1[_i];
-                var heading = srcVehicle.facing + angle;
+        shootFn: (srcVehicle) => {
+            const speed = srcVehicle.weaponSystem.shotSpeed;
+            const angles = [0, -1, 1].map((sgn) => sgn * random(0.1, 0.3));
+            for (const angle of angles) {
+                const heading = srcVehicle.facing + angle;
                 addShot({
                     pos: srcVehicle.pos,
                     facing: heading,
@@ -1297,26 +1277,25 @@ function createSpreadWeaponSystem() {
         lastShot: -99999,
         shotDelay: 400,
         shotDamage: 2,
-        processUpgrade: function (upgrade, system) {
+        processUpgrade: (upgrade, system) => {
             upgrade.apply(system);
         },
     };
 }
 function createSurroundWeaponSystem() {
     return {
-        shootFn: function (srcVehicle) {
-            var speed = srcVehicle.weaponSystem.shotSpeed;
-            var numShots = 16;
-            var angles = collect(numShots, function (ix) { return (ix * TWO_PI) / numShots; });
-            for (var _i = 0, angles_2 = angles; _i < angles_2.length; _i++) {
-                var angle = angles_2[_i];
-                var facing = srcVehicle.facing + angle;
+        shootFn: (srcVehicle) => {
+            const speed = srcVehicle.weaponSystem.shotSpeed;
+            const numShots = 16;
+            const angles = collect(numShots, (ix) => (ix * TWO_PI) / numShots);
+            for (const angle of angles) {
+                const facing = srcVehicle.facing + angle;
                 addShot({
                     pos: srcVehicle.pos,
                     vel: p5.Vector.fromAngle(facing)
                         .mult(speed)
                         .add(srcVehicle.vel),
-                    facing: facing,
+                    facing,
                     hue: LIME_HUE,
                 });
             }
@@ -1325,60 +1304,58 @@ function createSurroundWeaponSystem() {
         shotDelay: 800,
         shotSpeed: 10,
         shotDamage: 3,
-        processUpgrade: function (upgrade, system) {
+        processUpgrade: (upgrade, system) => {
             upgrade.apply(system);
         },
     };
 }
-var BLUE_HUE = 200;
-var MAGENTA_HUE = 300;
-var LIME_HUE = 100;
+const BLUE_HUE = 200;
+const MAGENTA_HUE = 300;
+const LIME_HUE = 100;
 function addRandomUpgradeForTesting(vehicle) {
-    var upgrades = [
+    const upgrades = [
         {
             type: "rate",
-            apply: function (system) {
-                return (system.shotDelay = Math.max(10, system.shotDelay - 70));
-            },
+            apply: (system) => (system.shotDelay = Math.max(10, system.shotDelay - 70)),
         },
         {
             type: "speed",
-            apply: function (system) { return (system.shotSpeed += 10); },
+            apply: (system) => (system.shotSpeed += 10),
         },
         {
             type: "damage",
-            apply: function (system) {
+            apply: (system) => {
                 system.shotDamage += 1;
             },
         },
     ];
-    var randomUpgrade = random(upgrades);
+    const randomUpgrade = random(upgrades);
     vehicle.weaponSystem.processUpgrade(randomUpgrade, vehicle.weaponSystem);
     flashMessage("Got upgrade: " + randomUpgrade.type, 2000);
 }
 function createWorld() {
-    var entities = [];
-    var stars = [];
-    var MAX_NUM_TARGETS = 6;
-    var MAX_NUM_VEHICLES = 6;
-    var worldWidth = 6000;
-    var worldHeight = 5000;
-    var trackedVehicle = undefined;
-    var camera = {
+    const entities = [];
+    const stars = [];
+    const MAX_NUM_TARGETS = 6;
+    const MAX_NUM_VEHICLES = 6;
+    const worldWidth = 6000;
+    const worldHeight = 5000;
+    const trackedVehicle = undefined;
+    const camera = {
         pos: createVector(0, 0),
         moveSpeed: 5,
         maxScreenShakeAmount: 10,
         screenShakeAmount: 0,
     };
-    var newWorld = {
-        entities: entities,
-        stars: stars,
-        trackedVehicle: trackedVehicle,
-        MAX_NUM_TARGETS: MAX_NUM_TARGETS,
-        MAX_NUM_VEHICLES: MAX_NUM_VEHICLES,
-        worldWidth: worldWidth,
-        worldHeight: worldHeight,
-        camera: camera,
+    const newWorld = {
+        entities,
+        stars,
+        trackedVehicle,
+        MAX_NUM_TARGETS,
+        MAX_NUM_VEHICLES,
+        worldWidth,
+        worldHeight,
+        camera,
         timeSpeed: 1,
     };
     return newWorld;

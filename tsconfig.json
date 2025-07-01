@@ -9,6 +9,6 @@
         "removeComments": true,
         "rootDir": "./js/",
         "sourceMap": true,
-        "target": "es5"
+        "target": "es2015"
     }
 }
