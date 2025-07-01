@@ -52,7 +52,7 @@ function drawVehicle(p: Vehicle) {
     beginShape();
     vertex(-sz, -sz);
     vertex(-sz, sz);
-    vertex(sz, 0);
+    vertex(sz * 2, 0);
     endShape();
 
     pop();

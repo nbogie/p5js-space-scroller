@@ -1040,7 +1040,7 @@ function drawVehicle(p) {
     beginShape();
     vertex(-sz, -sz);
     vertex(-sz, sz);
-    vertex(sz, 0);
+    vertex(sz * 2, 0);
     endShape();
     pop();
     drawVec(p.desiredVector, 100, 0, 1, color(0, 0, 100, 20), 1);
