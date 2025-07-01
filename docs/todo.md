@@ -25,30 +25,31 @@ mindmap
   root((space shooter))
     Playstyle
       roguelike run
-      risk+reward
-      chaotic
-      brutish +<br/>short ✄
+      risk+reward💰
+      chaotic ⚛🃏
+      brutish +<br/>short 🗡️
     Weapons
-      Composable
+      Composable ➕
       varied
         elemental<br/>damage ❄️🔥
-        spacePlague
-        EMP
-        chain-lightning
+        spacePlague 🦠
+        EMP 🍳
+        chain-lightning ⚡️
+        poison ☠️🧪
       interact w<br/>environ
-      collectable
-      upgradable
+      collectable 🛒
+      upgradable 🔨
     Relics (from STS)
       run-changing<br/>behaviours
     Enemies
       Emergent<br/>Behaviours
-      Risk&Reward
+      Risk + Reward
         Small chance<br/>to pirate 🏴‍☠️<br/>giant ship
       elemental<br/>weaknesses +<br/>resistances
       Harvestable 🌾
-      Rare drops: Relics
+      Rare drops: Relics 🏛️
     Neutral mobs
-      elemental<br/>traits
+      elemental<br/>traits<br/>🔥❄️💨🍃
       emergent<br/>behaviours
-      mining
+      mining ⛏️
 ```
