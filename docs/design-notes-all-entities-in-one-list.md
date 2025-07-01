@@ -1,21 +1,29 @@
 ## Design notes on "all into one entity list"
 
 additionally, entities will have to declare:
-_ their z-index
-_ what they collide with
-_ what they can collide with
-_ their draw function
-_ their update function
-_ their collision function
+
+- their z-index
+- what they collide with
+- what they can collide with
+- their draw function
+- their update function
+- their collision function
 
 a common entity interface should include:
-_ position
-_ velocity
-_ a z-index
-_ a draw function
-_ an update function
-_ a collision function
-_ a tag (entity name)
-_ colour on minimap
+
+- position
+- velocity
+- a z-index
+- a draw function
+- an update function
+- a collision function
+- a tag (entity name)
 
 We may also maintain a collision matrix to speed up collision detection.
+
+### questions
+
+stuff to perhaps leave out from general entity interface:
+
+- colour on minimap (support for mapping would be for another interface that some entities could choose to adhere to)
+- ???

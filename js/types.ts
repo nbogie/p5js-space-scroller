@@ -9,13 +9,16 @@ interface Config {
     shouldDrawTrails: boolean;
     shouldDrawStars: boolean;
     shouldPlaySound: boolean;
+    steerSpeed: number;
 }
 
 type AsteroidSize = 4 | 3 | 2 | 1;
-interface Asteroid {
-    live: boolean;
-    pos: p5.Vector;
-    vel: p5.Vector;
+interface Asteroid extends Entity {
+    // from Entity
+    //   pos: p5.Vector;
+    //   vel: p5.Vector;
+    //   live: boolean;
+
     resType: ResourceType;
     sizeCategory: AsteroidSize;
     radius: number;
@@ -37,19 +40,6 @@ interface Collidable {
     radius: number;
 }
 
-interface Orb {
-    pos: p5.Vector;
-    vel: p5.Vector;
-    live: boolean;
-    life: number;
-    radius: number;
-    exploding: boolean;
-}
-
-interface OrbOptions {
-    pos: p5.Vector;
-    vel: p5.Vector;
-}
 interface Palette {
     colors: p5.Color[];
     name: string;
@@ -66,30 +56,12 @@ interface Particle {
 interface ResourceType {
     label: string;
     hue: number;
-    color: p5.Color;
-}
-interface Shot {
-    live: boolean;
-    pos: p5.Vector;
-    rotation: number;
-    vel: p5.Vector;
-    radius: number;
-    damage: number;
-    color: p5.Color;
-    life: number;
-}
-interface ShotOptions {
-    vel: p5.Vector;
-    pos: p5.Vector;
+    color: p5.Color | null;
 }
 interface Star {
     pos: p5.Vector;
     radius: number;
     strength: number;
-}
-interface Target {
-    pos: p5.Vector;
-    live: boolean;
 }
 interface Trail {
     particles: Particle[];

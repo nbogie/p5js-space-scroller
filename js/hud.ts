@@ -9,7 +9,6 @@ function drawHUD() {
         text("Health: " + world.trackedVehicle.hp, width - 100, 50);
     }
     text(Math.round(frameRate()) + " fps", 50, 575);
-    text(world.mobs.length + " mob(s)", 50, 475);
 
     text(
         "Camera: " +
@@ -21,20 +20,22 @@ function drawHUD() {
         600,
     );
 
-    push();
-    if (world.trackedVehicle !== undefined) {
+    drawMessages();
+    const vehicleToFocus = world.trackedVehicle;
+    if (vehicleToFocus !== undefined) {
+        push();
         //plot nearby mobs on radar
         const nearestExploderMob = calcNearestEntity(
-            world.trackedVehicle,
-            world.mobs.filter((m) => m.type === "exploder"),
+            vehicleToFocus,
+            getExploderMobs(),
         );
 
         const nearestTeleporterMob = calcNearestEntity(
-            world.trackedVehicle,
-            world.mobs.filter((m) => m.type === "teleporter"),
+            vehicleToFocus,
+            getTeleporterMobs(),
         );
 
-        translateForScreenCoords(world.trackedVehicle.pos);
+        translateForScreenCoords(vehicleToFocus.pos);
 
         //radar outline
         noFill();
@@ -43,13 +44,13 @@ function drawHUD() {
         pop();
 
         nearestExploderMob &&
-            plotEntityOnRadar(nearestExploderMob, world.trackedVehicle.pos);
+            plotEntityOnRadar(nearestExploderMob, vehicleToFocus.pos);
         nearestTeleporterMob &&
-            plotEntityOnRadar(nearestTeleporterMob, world.trackedVehicle.pos);
+            plotEntityOnRadar(nearestTeleporterMob, vehicleToFocus.pos);
 
-        world.asteroids
-            .filter((a) => a.live)
-            .forEach((ast) => plotEntityOnRadar(ast, world.trackedVehicle.pos));
+        getLiveAsteroids().forEach((ast) =>
+            plotEntityOnRadar(ast, vehicleToFocus.pos),
+        );
     }
 }
 

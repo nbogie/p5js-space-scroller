@@ -1,16 +1,14 @@
-function addTarget(pos: Target) {
-    world.targets.unshift(pos);
-    world.targets.splice(world.MAX_NUM_TARGETS);
-    world.vehicles.forEach((v, ix) => {
-        v.target = world.targets[ix % world.targets.length];
-    });
+interface Target {
+    pos: p5.Vector;
+    live: boolean;
 }
 
 function acquireTarget(vehicle: Vehicle) {
-    const closeAsteroids = world.asteroids.filter(
+    const allAsteroids = getLiveAsteroids();
+    const closeAsteroids = getLiveAsteroids().filter(
         (a) => a.pos.dist(vehicle.pos) < height,
     );
-    return random(closeAsteroids.length > 0 ? closeAsteroids : world.asteroids);
+    return random(closeAsteroids.length > 0 ? closeAsteroids : allAsteroids);
 }
 
 function drawTarget(t: Target) {

@@ -40,7 +40,7 @@ function drawAsteroid(a: Asteroid) {
 }
 
 function addAsteroid(opts: AsteroidOpts) {
-    world.asteroids.push(createAsteroidAt(opts));
+    world.entities.push(createAsteroidAt(opts));
 }
 
 function createAsteroid() {
@@ -50,6 +50,7 @@ function createAsteroid() {
 function createAsteroidAt(opts: AsteroidOpts) {
     const sz = opts.sizeCategory || random([1, 2, 3, 4]);
     return {
+        tag: "asteroid",
         live: true,
         pos: opts.pos.copy(),
         vel: p5.Vector.random2D().mult(random(1, 5)),
@@ -63,11 +64,15 @@ function createAsteroidAt(opts: AsteroidOpts) {
         rotationSpeed: random(-0.1, 0.1),
         tookDamage: false,
         minimapColour: color(0, 200, 200, 100),
+        updatePriority: 0,
+        zIndex: 0,
+        drawFn: drawAsteroid,
+        updateFn: updateAsteroid,
     } satisfies Asteroid;
 }
 
 function setupAsteroids(n: number) {
-    world.asteroids = collect(n, createAsteroid);
+    world.entities.push(...collect(n, createAsteroid));
 }
 
 function updateAsteroid(p: Asteroid) {
@@ -89,27 +94,33 @@ function updateAsteroid(p: Asteroid) {
         }
         p.rotation += p.rotationSpeed;
 
-        world.vehicles
-            .filter((v) => true || v.live)
-            .forEach((v) => {
-                if (isColliding(p, v)) {
-                    p.hp -= v.rammingDamage;
-                    p.tookDamage = true;
-                    v.hp -= p.damage;
-                    if (v.hp <= 0) {
-                        v.live = false;
-                    }
-                    v.tookDamage = true;
-                    if (p.hp <= 0) {
-                        p.live = false;
-                        shatterAsteroid(p);
-                    }
+        getLiveVehicles().forEach((v) => {
+            if (isColliding(p, v)) {
+                p.hp -= v.rammingDamage;
+                p.tookDamage = true;
+                v.hp -= p.damage;
+                if (v.hp <= 0) {
+                    destroy(v);
                 }
-            });
+                v.tookDamage = true;
+                if (p.hp <= 0) {
+                    destroy(p);
+                    shatterAsteroid(p);
+                }
+            }
+        });
     }
     p.tookDamage = false;
 }
 
 function randomMineral(): Mineral {
     return random([...allMineralNames]);
+}
+
+function getAsteroids() {
+    return world.entities.filter((e) => e.tag === "asteroid") as Asteroid[];
+}
+
+function getLiveAsteroids() {
+    return getAsteroids().filter((a) => a.live);
 }

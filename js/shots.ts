@@ -1,37 +1,62 @@
+interface Shot extends Entity {
+    //pos and vel from Entity
+    rotation: number;
+    radius: number;
+    damage: number;
+    color: p5.Color;
+    life: number;
+}
+interface ShotOptions {
+    facing: number;
+    vel: p5.Vector;
+    pos: p5.Vector;
+    hue: number;
+    drawFn?: (shot: Shot) => void;
+}
+
 function createShot(opts: ShotOptions): Shot {
     push();
     colorMode(HSB, 100);
-    const shotSpread = PI / 32;
     const sz = random([4, 5, 6, 7]);
-    const vel = opts.vel
-        .copy()
-        .normalize()
-        .mult(25)
-        .rotate(random(-shotSpread, shotSpread));
-
+    const vel = opts.vel.copy();
+    const rotation = opts.facing;
+    push();
+    colorMode(HSB, 360, 100, 100);
+    const shotColor = color(
+        constrain(randomGaussian(opts.hue, 10), 0, 360),
+        100,
+        100,
+        100,
+    );
+    const drawFn = opts.drawFn ?? drawDefaultShot;
+    pop();
     const shot = {
         live: true,
+        tag: "shot",
+        zIndex: 0,
+        updatePriority: 0,
+        drawFn,
+        updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
-        rotation: vel.heading(),
+        rotation, //NOT inferred from the velocity
         vel: vel,
         radius: Math.pow(sz, 2),
         damage: sz,
-        color: color(random(50, 70), 100, 100, 100),
+        color: shotColor,
         life: 1,
-    };
+    } satisfies Shot;
     pop();
     return shot;
 }
 
 function addShot(opts: ShotOptions) {
     const shot = createShot(opts);
-    world.shots.unshift(shot);
-    world.shots.splice(100);
+    world.entities.push(shot);
     if (nearCamera(shot.pos)) {
         playSoundShot();
     }
 }
-function drawShot(s: Shot) {
+function drawDefaultShot(s: Shot) {
     if (s.live) {
         push();
         translateForScreenCoords(s.pos);
@@ -44,44 +69,32 @@ function drawShot(s: Shot) {
 }
 
 function updateShot(p: Shot) {
+    if (p.life <= 0) {
+        destroy(p);
+        return;
+    }
+
+    if (!p.live) {
+        return;
+    }
+
+    const asteroids = getLiveAsteroids();
     if (p.live) {
-        p.pos.x += p.vel.x;
-        p.pos.y += p.vel.y;
-        world.asteroids
+        p.pos.x += p.vel.x * world.timeSpeed;
+        p.pos.y += p.vel.y * world.timeSpeed;
+        asteroids
             .filter((a) => a.live)
             .forEach((a) => {
                 if (isColliding(a, p)) {
                     a.hp -= p.damage;
                     a.tookDamage = true;
-                    p.live = false;
+                    destroy(p);
                     if (a.hp <= 0) {
-                        a.live = false;
+                        destroy(a);
                         shatterAsteroid(a);
                     }
                 }
             });
-        p.life -= random(0.001, 0.01);
-    }
-}
-
-function shootIfTime(srcVehicle: Vehicle) {
-    const ms = millis();
-    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
-        addShot({
-            pos: srcVehicle.pos,
-            vel: p5.Vector.fromAngle(srcVehicle.facing)
-                .mult(40)
-                .add(srcVehicle.vel),
-        });
-        srcVehicle.lastShot = ms;
-    }
-}
-
-function updateShooting(p: Vehicle) {
-    const angleOff = p.desiredVector.angleBetween(p.vel);
-
-    p.canShoot = angleOff < TWO_PI / 36;
-    if (p.canShoot) {
-        shootIfTime(p);
+        p.life -= random(0.03, 0.04) * world.timeSpeed;
     }
 }
