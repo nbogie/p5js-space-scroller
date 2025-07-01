@@ -39,7 +39,7 @@ mindmap
       interact w<br/>environ
       collectable 🛒
       upgradable 🔨
-    Relics (from STS)
+    Relics 🏛️<br/>from STS
       run-changing<br/>behaviours
     Enemies
       Emergent<br/>Behaviours
