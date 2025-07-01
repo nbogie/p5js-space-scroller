@@ -1,9 +1,24 @@
+interface Shot extends Entity {
+    //pos and vel from Entity
+    rotation: number;
+    radius: number;
+    damage: number;
+    color: p5.Color;
+    life: number;
+}
+interface ShotOptions {
+    facing: number;
+    vel: p5.Vector;
+    pos: p5.Vector;
+    hue: number;
+}
+
 function createShot(opts: ShotOptions): Shot {
     push();
     colorMode(HSB, 100);
     const sz = random([4, 5, 6, 7]);
     const vel = opts.vel.copy();
-
+    const rotation = opts.facing;
     push();
     colorMode(HSB, 360, 100, 100);
     const shotColor = color(
@@ -21,7 +36,7 @@ function createShot(opts: ShotOptions): Shot {
         drawFn: drawShot,
         updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
-        rotation: vel.heading(),
+        rotation, //NOT inferred from the velocity
         vel: vel,
         radius: Math.pow(sz, 2),
         damage: sz,

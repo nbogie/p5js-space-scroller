@@ -17,6 +17,7 @@ function createDefaultWeaponSystem() {
 
             addShot({
                 pos: srcVehicle.pos,
+                facing: srcVehicle.facing,
                 vel: p5.Vector.fromAngle(srcVehicle.facing + randomAngleOffset)
                     .mult(speed)
                     .add(srcVehicle.vel),
@@ -40,9 +41,11 @@ function createSpreadWeaponSystem() {
 
             const angles = [0, -1, 1].map((sgn) => sgn * random(0.1, 0.3));
             for (const angle of angles) {
+                const heading = srcVehicle.facing + angle;
                 addShot({
                     pos: srcVehicle.pos,
-                    vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
+                    facing: heading,
+                    vel: p5.Vector.fromAngle(heading)
                         .mult(speed)
                         .add(srcVehicle.vel),
                     hue: MAGENTA_HUE,
@@ -66,11 +69,13 @@ function createSurroundWeaponSystem() {
             const numShots = 16;
             const angles = collect(numShots, (ix) => (ix * TWO_PI) / numShots);
             for (const angle of angles) {
+                const facing = srcVehicle.facing + angle;
                 addShot({
                     pos: srcVehicle.pos,
-                    vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
+                    vel: p5.Vector.fromAngle(facing)
                         .mult(speed)
                         .add(srcVehicle.vel),
+                    facing,
                     hue: LIME_HUE,
                 });
             }

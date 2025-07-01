@@ -782,6 +782,7 @@ function createShot(opts) {
     colorMode(HSB, 100);
     var sz = random([4, 5, 6, 7]);
     var vel = opts.vel.copy();
+    var rotation = opts.facing;
     push();
     colorMode(HSB, 360, 100, 100);
     var shotColor = color(constrain(randomGaussian(opts.hue, 10), 0, 360), 100, 100, 100);
@@ -794,7 +795,7 @@ function createShot(opts) {
         drawFn: drawShot,
         updateFn: updateShot,
         pos: opts.pos.copy().add(vel),
-        rotation: vel.heading(),
+        rotation: rotation,
         vel: vel,
         radius: Math.pow(sz, 2),
         damage: sz,
@@ -1258,6 +1259,7 @@ function createDefaultWeaponSystem() {
             var randomAngleOffset = random(-shotSpread, shotSpread);
             addShot({
                 pos: srcVehicle.pos,
+                facing: srcVehicle.facing,
                 vel: p5.Vector.fromAngle(srcVehicle.facing + randomAngleOffset)
                     .mult(speed)
                     .add(srcVehicle.vel),
@@ -1280,9 +1282,11 @@ function createSpreadWeaponSystem() {
             var angles = [0, -1, 1].map(function (sgn) { return sgn * random(0.1, 0.3); });
             for (var _i = 0, angles_1 = angles; _i < angles_1.length; _i++) {
                 var angle = angles_1[_i];
+                var heading = srcVehicle.facing + angle;
                 addShot({
                     pos: srcVehicle.pos,
-                    vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
+                    facing: heading,
+                    vel: p5.Vector.fromAngle(heading)
                         .mult(speed)
                         .add(srcVehicle.vel),
                     hue: MAGENTA_HUE,
@@ -1306,11 +1310,13 @@ function createSurroundWeaponSystem() {
             var angles = collect(numShots, function (ix) { return (ix * TWO_PI) / numShots; });
             for (var _i = 0, angles_2 = angles; _i < angles_2.length; _i++) {
                 var angle = angles_2[_i];
+                var facing = srcVehicle.facing + angle;
                 addShot({
                     pos: srcVehicle.pos,
-                    vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
+                    vel: p5.Vector.fromAngle(facing)
                         .mult(speed)
                         .add(srcVehicle.vel),
+                    facing: facing,
                     hue: LIME_HUE,
                 });
             }

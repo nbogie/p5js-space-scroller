@@ -58,19 +58,6 @@ interface ResourceType {
     hue: number;
     color: p5.Color;
 }
-interface Shot extends Entity {
-    //pos and vel from Entity
-    rotation: number;
-    radius: number;
-    damage: number;
-    color: p5.Color;
-    life: number;
-}
-interface ShotOptions {
-    vel: p5.Vector;
-    pos: p5.Vector;
-    hue: number;
-}
 interface Star {
     pos: p5.Vector;
     radius: number;
