@@ -9,6 +9,7 @@
 
 ## Refactoring ideas
 
+- sort type issues
 - use events to make it easier for us to have entities react to changes in other entities (e.g. ooh, X died, I should go scavenge, or become stronger / berserk)
 
 ## Done
