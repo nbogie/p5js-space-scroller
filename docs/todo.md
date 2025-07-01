@@ -20,7 +20,7 @@
 # Features Mindmap
 
 ```mermaid
-%%{init: {'theme': 'dark'}}%%
+%%{init: {'theme': 'default'}}%%
 mindmap
   root((space shooter))
     Playstyle
@@ -50,4 +50,4 @@ mindmap
       mining
 ```
 
-note: can force theme with `%%{init: {'theme': 'dark|forest'}}%%`
+note: can force theme with `%%{init: {'theme': 'neutral|dark|forest|default|base'}}%%`
