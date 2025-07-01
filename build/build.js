@@ -451,7 +451,11 @@ function setupMobs(n) {
     world.entities.push(...collect(n, (ix) => createRandomMob()));
 }
 function createRandomMob() {
-    const fn = random([createExploderMob, createTeleporterMob]);
+    const fn = random([
+        createExploderMob,
+        createTeleporterMob,
+        createChaserMob,
+    ]);
     const mob = fn();
     return mob;
 }
@@ -478,7 +482,8 @@ function drawTeleporterMob(mob) {
 function updateExploderMob() {
 }
 function updateTeleporterMob(mob) {
-    const shouldTeleport = millis() - mob.timeOfLastTeleport > 3000 && random() < 0.01;
+    var _a;
+    const shouldTeleport = millis() - ((_a = mob.timeOfLastTeleport) !== null && _a !== void 0 ? _a : 0) > 3000 && random() < 0.01;
     if (shouldTeleport) {
         const hopDist = random(400, 4000);
         mob.pos.add(p5.Vector.random2D().mult(hopDist));
@@ -516,6 +521,44 @@ function createTeleporterMob() {
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     };
+}
+function createChaserMob() {
+    return {
+        tag: "mob-chaser",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
+        pos: randomWorldPos(),
+        vel: p5.Vector.random2D().mult(0.3),
+        state: "dormant",
+        type: "chaser",
+        colour: color(random(200, 255), random(200, 255), random(0, 50)),
+        minimapColour: color("orange"),
+        drawFn: drawChaserMob,
+        updateFn: updateChaserMob,
+    };
+}
+function drawChaserMob(mob) {
+    push();
+    noStroke();
+    fill(mob.colour);
+    translateForScreenCoords(mob.pos);
+    rotate(mob.vel.heading());
+    rectMode(CENTER);
+    rect(0, 0, 30, 10);
+    text("Chaser", 20, 20);
+    pop();
+}
+function updateChaserMob(mob) {
+    if (!mob.target) {
+        mob.target = world.trackedVehicle;
+    }
+    if (mob.target) {
+        const desired = p5.Vector.sub(mob.target.pos, mob.pos);
+        desired.setMag(2);
+        mob.vel.lerp(desired, 0.1);
+        mob.pos.add(mob.vel);
+    }
 }
 function getTeleporterMobs() {
     return world.entities.filter((e) => e.tag === "mob-teleporter");
