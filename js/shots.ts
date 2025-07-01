@@ -1,13 +1,9 @@
 function createShot(opts: ShotOptions): Shot {
     push();
     colorMode(HSB, 100);
-    const shotSpread = PI / 32;
     const sz = random([4, 5, 6, 7]);
-    const vel = opts.vel
-        .copy()
-        .normalize()
-        .mult(25)
-        .rotate(random(-shotSpread, shotSpread));
+    const vel = opts.vel.copy();
+
     push();
     colorMode(HSB, 360, 100, 100);
     const shotColor = color(

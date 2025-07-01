@@ -20,8 +20,6 @@ interface Vehicle extends Entity {
     steer: p5.Vector;
     isLinedUpToShoot: boolean;
     rammingDamage: number;
-    lastShot: number;
-    shotDelay: number;
     trail: Trail;
     target: Target;
     desiredVector: p5.Vector;
@@ -165,8 +163,7 @@ function createVehicle(): Vehicle {
         steer: createVector(0, 0),
         rammingDamage: 3,
         isLinedUpToShoot: false,
-        lastShot: -99999,
-        shotDelay: 100,
+
         trail: createTrail(),
         tookDamage: false,
         life: 1,
@@ -192,6 +189,12 @@ function steerVehicleWithUserInput(v: Vehicle) {
     if (keyIsDown(RIGHT_ARROW)) {
         v.facing += config.steerSpeed * world.timeSpeed;
     }
+}
+function changeWeaponSystemForTrackedVehicle(systemNumber: number) {
+    if (!world.trackedVehicle) {
+        return;
+    }
+    changeWeaponSystemForVehicle(systemNumber, world.trackedVehicle);
 }
 
 function toggleAutopilot() {
@@ -230,11 +233,22 @@ function getLiveVehicles() {
 //todo: needs to consider world.timeSpeed or you'll be able to spawn much faster during pause/unpause, for example.
 //todo: consider vehicle's weapon system
 function shootIfTime(srcVehicle: Vehicle) {
+    tryToShootUsingWeaponSystem(srcVehicle);
+}
+
+function tryToShootUsingWeaponSystem(srcVehicle: Vehicle) {
     const ms = millis();
-    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
+    if (
+        ms - srcVehicle.weaponSystem.lastShot >
+        srcVehicle.weaponSystem.shotDelay
+    ) {
         shootUsingWeaponSystem(srcVehicle);
-        srcVehicle.lastShot = ms;
+        srcVehicle.weaponSystem.lastShot = ms;
     }
+}
+
+function shootUsingWeaponSystem(srcVehicle: Vehicle) {
+    srcVehicle.weaponSystem.shootFn(srcVehicle);
 }
 
 function updateAutomatedShooting(p: Vehicle) {
@@ -247,6 +261,24 @@ function updateAutomatedShooting(p: Vehicle) {
     }
 }
 
-function shootUsingWeaponSystem(srcVehicle: Vehicle) {
-    srcVehicle.weaponSystem.shootFn(srcVehicle);
+function changeWeaponSystemForVehicle(systemNumber: number, vehicle: Vehicle) {
+    const system = createWeaponSystemOfNumberOrNull(systemNumber);
+    if (!system) {
+        return;
+    }
+    vehicle.weaponSystem = system;
+    //TODO: any clean-up needed?
+}
+function createWeaponSystemOfNumberOrNull(systemNumber: number) {
+    const systemCreators = [
+        createDefaultWeaponSystem,
+        createSpreadWeaponSystem,
+        createSurroundWeaponSystem,
+    ];
+    const creatorFn = systemCreators[systemNumber - 1];
+    if (!creatorFn) {
+        return null;
+    }
+
+    return creatorFn();
 }

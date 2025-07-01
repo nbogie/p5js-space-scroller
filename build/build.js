@@ -363,6 +363,11 @@ var resTypes = [
     { label: "magic", hue: 80, color: null },
 ];
 function keyPressed() {
+    if (key.length === 1 && key >= "1" && key <= "9") {
+        var num = parseInt(key, 10);
+        changeWeaponSystemForTrackedVehicle(num);
+        return;
+    }
     switch (key) {
         case "m":
             toggleMute();
@@ -745,13 +750,8 @@ function drawPauseDialogIfNeeded() {
 function createShot(opts) {
     push();
     colorMode(HSB, 100);
-    var shotSpread = PI / 32;
     var sz = random([4, 5, 6, 7]);
-    var vel = opts.vel
-        .copy()
-        .normalize()
-        .mult(25)
-        .rotate(random(-shotSpread, shotSpread));
+    var vel = opts.vel.copy();
     push();
     colorMode(HSB, 360, 100, 100);
     var shotColor = color(constrain(randomGaussian(opts.hue, 10), 0, 360), 100, 100, 100);
@@ -1124,8 +1124,6 @@ function createVehicle() {
         steer: createVector(0, 0),
         rammingDamage: 3,
         isLinedUpToShoot: false,
-        lastShot: -99999,
-        shotDelay: 100,
         trail: createTrail(),
         tookDamage: false,
         life: 1,
@@ -1149,6 +1147,12 @@ function steerVehicleWithUserInput(v) {
     if (keyIsDown(RIGHT_ARROW)) {
         v.facing += config.steerSpeed * world.timeSpeed;
     }
+}
+function changeWeaponSystemForTrackedVehicle(systemNumber) {
+    if (!world.trackedVehicle) {
+        return;
+    }
+    changeWeaponSystemForVehicle(systemNumber, world.trackedVehicle);
 }
 function toggleAutopilot() {
     if (world.trackedVehicle) {
@@ -1177,11 +1181,18 @@ function getLiveVehicles() {
     return getVehicles().filter(function (a) { return a.live; });
 }
 function shootIfTime(srcVehicle) {
+    tryToShootUsingWeaponSystem(srcVehicle);
+}
+function tryToShootUsingWeaponSystem(srcVehicle) {
     var ms = millis();
-    if (ms - srcVehicle.lastShot > srcVehicle.shotDelay) {
+    if (ms - srcVehicle.weaponSystem.lastShot >
+        srcVehicle.weaponSystem.shotDelay) {
         shootUsingWeaponSystem(srcVehicle);
-        srcVehicle.lastShot = ms;
+        srcVehicle.weaponSystem.lastShot = ms;
     }
+}
+function shootUsingWeaponSystem(srcVehicle) {
+    srcVehicle.weaponSystem.shootFn(srcVehicle);
 }
 function updateAutomatedShooting(p) {
     var angleOff = p.desiredVector.angleBetween(p.vel);
@@ -1190,42 +1201,69 @@ function updateAutomatedShooting(p) {
         shootIfTime(p);
     }
 }
-function shootUsingWeaponSystem(srcVehicle) {
-    srcVehicle.weaponSystem.shootFn(srcVehicle);
+function changeWeaponSystemForVehicle(systemNumber, vehicle) {
+    var system = createWeaponSystemOfNumberOrNull(systemNumber);
+    if (!system) {
+        return;
+    }
+    vehicle.weaponSystem = system;
+}
+function createWeaponSystemOfNumberOrNull(systemNumber) {
+    var systemCreators = [
+        createDefaultWeaponSystem,
+        createSpreadWeaponSystem,
+        createSurroundWeaponSystem,
+    ];
+    var creatorFn = systemCreators[systemNumber - 1];
+    if (!creatorFn) {
+        return null;
+    }
+    return creatorFn();
 }
 function createDefaultWeaponSystem() {
     return {
         shootFn: function (srcVehicle) {
+            var speed = srcVehicle.weaponSystem.shotSpeed;
+            var shotSpread = PI / 32;
+            var randomAngleOffset = random(-shotSpread, shotSpread);
             addShot({
                 pos: srcVehicle.pos,
-                vel: p5.Vector.fromAngle(srcVehicle.facing)
-                    .mult(40)
+                vel: p5.Vector.fromAngle(srcVehicle.facing + randomAngleOffset)
+                    .mult(speed)
                     .add(srcVehicle.vel),
                 hue: BLUE_HUE,
             });
         },
+        lastShot: -99999,
+        shotDelay: 200,
+        shotSpeed: 10,
     };
 }
 function createSpreadWeaponSystem() {
     return {
         shootFn: function (srcVehicle) {
+            var speed = srcVehicle.weaponSystem.shotSpeed;
             var angles = [0, -1, 1].map(function (sgn) { return sgn * random(0.1, 0.3); });
             for (var _i = 0, angles_1 = angles; _i < angles_1.length; _i++) {
                 var angle = angles_1[_i];
                 addShot({
                     pos: srcVehicle.pos,
                     vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
-                        .mult(40)
+                        .mult(speed)
                         .add(srcVehicle.vel),
                     hue: MAGENTA_HUE,
                 });
             }
         },
+        shotSpeed: 4,
+        lastShot: -99999,
+        shotDelay: 400,
     };
 }
 function createSurroundWeaponSystem() {
     return {
         shootFn: function (srcVehicle) {
+            var speed = srcVehicle.weaponSystem.shotSpeed;
             var numShots = 16;
             var angles = collect(numShots, function (ix) { return (ix * TWO_PI) / numShots; });
             for (var _i = 0, angles_2 = angles; _i < angles_2.length; _i++) {
@@ -1233,12 +1271,15 @@ function createSurroundWeaponSystem() {
                 addShot({
                     pos: srcVehicle.pos,
                     vel: p5.Vector.fromAngle(srcVehicle.facing + angle)
-                        .mult(40)
+                        .mult(speed)
                         .add(srcVehicle.vel),
                     hue: LIME_HUE,
                 });
             }
         },
+        lastShot: -99999,
+        shotDelay: 800,
+        shotSpeed: 10,
     };
 }
 var BLUE_HUE = 200;
