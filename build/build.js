@@ -454,8 +454,10 @@ const allMineralNames = [
     "ruthenium",
     "palladium",
 ];
-function setupMobs(n) {
-    world.entities.push(...collect(n, (ix) => createRandomMob()));
+const MAX_MOBS_IN_WORLD = 100;
+function setupMobs(numToAdd) {
+    addRandomMobsToWorld(numToAdd);
+    setInterval(maybeAddMoreMobs, 3000);
 }
 function createRandomMob() {
     const fn = random([
@@ -465,6 +467,18 @@ function createRandomMob() {
     ]);
     const mob = fn();
     return mob;
+}
+function addRandomMobsToWorld(numToAdd) {
+    world.entities.push(...collect(numToAdd, (ix) => createRandomMob()));
+}
+function getAllLiveMobs() {
+    return world.entities.filter((e) => e.tag.startsWith("mob") && e.live);
+}
+function maybeAddMoreMobs() {
+    const capacityForMore = MAX_MOBS_IN_WORLD - getAllLiveMobs().length;
+    if (capacityForMore > 0) {
+        addRandomMobsToWorld(min(capacityForMore, 10));
+    }
 }
 function mouseMoved() { }
 function mousePressed() {
