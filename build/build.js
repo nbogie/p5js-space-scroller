@@ -817,7 +817,7 @@ function doAnyShotEntityCollisionsExceptAsteroids(shot) {
 }
 function reflectShot(shot, ent) {
     shot.vel.mult(-1);
-    shot.rotation += PI;
+    shot.rotation += PI + randomGaussian(0, PI / 20);
 }
 let shootOsc;
 let shootEnv;
@@ -1412,6 +1412,9 @@ function drawChaserMob(mob) {
 function takeDamageChaserMob(mob) {
     const t = getNewTargetForChaserMobOrUndefined(mob);
     mob.target = t;
+    if (nearCamera(mob.pos)) {
+        playSoundShot();
+    }
     return "reflected";
 }
 function updateChaserMob(mob) {

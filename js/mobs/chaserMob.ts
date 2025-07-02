@@ -35,6 +35,9 @@ function drawChaserMob(mob: Mob) {
 function takeDamageChaserMob(mob: ChaserMob): CollisionResult {
     const t = getNewTargetForChaserMobOrUndefined(mob);
     mob.target = t;
+    if (nearCamera(mob.pos)) {
+        playSoundShot();
+    }
     return "reflected";
 }
 

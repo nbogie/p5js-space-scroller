@@ -45,6 +45,7 @@ function draw() {
     // }
 
     background(15);
+
     world.timeSpeed = processAnyTimeDistortion();
     text("timeSpeed: " + world.timeSpeed, 10, 10);
     text("state: " + pauseState.type, 10, 40);

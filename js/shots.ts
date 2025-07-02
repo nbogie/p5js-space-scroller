@@ -133,5 +133,5 @@ function doAnyShotEntityCollisionsExceptAsteroids(shot: Shot) {
 
 function reflectShot(shot: Shot, ent: Entity<any>) {
     shot.vel.mult(-1);
-    shot.rotation += PI;
+    shot.rotation += PI + randomGaussian(0, PI / 20);
 }
