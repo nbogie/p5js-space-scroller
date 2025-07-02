@@ -36,7 +36,7 @@ function createShot(opts: ShotOptions): Shot {
         updatePriority: 0,
         drawFn,
         updateFn: updateShot,
-        takeDamageFn: () => {},
+        takeDamageFn: () => "no-collision", //shots don't get shot,
         pos: opts.pos.copy().add(vel),
         rotation, //NOT inferred from the velocity
         vel: vel,
@@ -82,6 +82,7 @@ function updateShot(shot: Shot) {
         shot.pos.x += shot.vel.x * world.timeSpeed;
         shot.pos.y += shot.vel.y * world.timeSpeed;
         doAnyShotAsteroidCollisions(shot);
+        doAnyShotEntityCollisionsExceptAsteroids(shot);
         shot.life -= random(0.03, 0.04) * world.timeSpeed;
     }
 }
@@ -93,6 +94,7 @@ function doAnyShotAsteroidCollisions(shot: Shot) {
         .filter((ast) => ast.live)
         .forEach((ast) => {
             if (isColliding(ast, shot)) {
+                //TODO: move to asteroid's takeDamageFn
                 ast.hp -= shot.damage;
                 ast.tookDamage = true;
                 destroy(shot);
@@ -105,14 +107,17 @@ function doAnyShotAsteroidCollisions(shot: Shot) {
 }
 
 function doAnyShotEntityCollisionsExceptAsteroids(shot: Shot) {
+    debugger;
     const allExceptAsteroidsAndShots = world.entities.filter(
         (e: Entity<any>) => e.tag !== "asteroid" && e.tag !== "shot" && e.live,
     );
     for (let ent of allExceptAsteroidsAndShots) {
         if (isColliding(ent, shot)) {
-            ent.takeDamageFn(ent);
-            destroy(shot);
-            break;
+            const collisionResult = ent.takeDamageFn(ent);
+            if (collisionResult !== "no-collision") {
+                destroy(shot);
+                break;
+            }
         }
     }
 }

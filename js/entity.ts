@@ -1,6 +1,7 @@
 type DrawFunction<T> = (selfEntity: T) => void;
 type UpdateFunction<T> = (selfEntity: T) => void;
-type TakeDamageFunction<T> = (selfEntity: T) => void;
+type TakeDamageFunction<T> = (selfEntity: T) => CollisionResult;
+type CollisionResult = "no-collision" | "damaged" | "destroyed" | "reflected";
 
 type EntityTag =
     | "asteroid"

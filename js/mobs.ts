@@ -60,8 +60,8 @@ function updateExploderMob() {
     //no-op for now...
 }
 
-function takeDamageExploderMob() {
-    //no-op for now...
+function takeDamageExploderMob(): CollisionResult {
+    return "reflected";
 }
 
 function updateTeleporterMob(mob: TeleporterMob): void {
@@ -106,7 +106,7 @@ function createTeleporterMob() {
         colour: color("magenta"),
         drawFn: drawTeleporterMob,
         updateFn: updateTeleporterMob,
-        takeDamageFn: () => {}, //no op for now
+        takeDamageFn: () => "no-collision",
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     } satisfies TeleporterMob;
@@ -127,7 +127,7 @@ function createChaserMob() {
         minimapColour: color("orange"),
         drawFn: drawChaserMob,
         updateFn: updateChaserMob,
-        takeDamageFn: () => takeDamageChaserMob,
+        takeDamageFn: takeDamageChaserMob,
     } satisfies ChaserMob;
 }
 function drawChaserMob(mob: Mob) {
@@ -141,9 +141,12 @@ function drawChaserMob(mob: Mob) {
     text("Chaser", 20, 20);
     pop();
 }
-function takeDamageChaserMob(mob: ChaserMob): void {
+function takeDamageChaserMob(mob: ChaserMob): CollisionResult {
+    console.log("CHASER TOOK DMG");
     destroy(mob);
+    return "destroyed";
 }
+
 function updateChaserMob(mob: ChaserMob): void {
     if (!mob.target) {
         mob.target = world.trackedVehicle;

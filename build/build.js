@@ -107,7 +107,9 @@ function updateAsteroid(p) {
     }
     p.tookDamage = false;
 }
-function takeDamageAsteroid(a) { }
+function takeDamageAsteroid(a) {
+    return "no-collision";
+}
 function randomMineral() {
     return random([...allMineralNames]);
 }
@@ -487,6 +489,7 @@ function drawTeleporterMob(mob) {
 function updateExploderMob() {
 }
 function takeDamageExploderMob() {
+    return "reflected";
 }
 function updateTeleporterMob(mob) {
     var _a;
@@ -528,7 +531,7 @@ function createTeleporterMob() {
         colour: color("magenta"),
         drawFn: drawTeleporterMob,
         updateFn: updateTeleporterMob,
-        takeDamageFn: () => { },
+        takeDamageFn: () => "no-collision",
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     };
@@ -547,7 +550,7 @@ function createChaserMob() {
         minimapColour: color("orange"),
         drawFn: drawChaserMob,
         updateFn: updateChaserMob,
-        takeDamageFn: () => takeDamageChaserMob,
+        takeDamageFn: takeDamageChaserMob,
     };
 }
 function drawChaserMob(mob) {
@@ -562,7 +565,9 @@ function drawChaserMob(mob) {
     pop();
 }
 function takeDamageChaserMob(mob) {
+    console.log("CHASER TOOK DMG");
     destroy(mob);
+    return "destroyed";
 }
 function updateChaserMob(mob) {
     if (!mob.target) {
@@ -621,7 +626,7 @@ function addOrb(opts) {
         updatePriority: 0,
         drawFn: drawOrb,
         updateFn: updateOrb,
-        takeDamageFn: () => { },
+        takeDamageFn: () => "no-collision",
         collisionRadius: 0,
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
@@ -846,7 +851,7 @@ function createShot(opts) {
         updatePriority: 0,
         drawFn,
         updateFn: updateShot,
-        takeDamageFn: () => { },
+        takeDamageFn: () => "no-collision",
         pos: opts.pos.copy().add(vel),
         rotation,
         vel: vel,
@@ -888,6 +893,7 @@ function updateShot(shot) {
         shot.pos.x += shot.vel.x * world.timeSpeed;
         shot.pos.y += shot.vel.y * world.timeSpeed;
         doAnyShotAsteroidCollisions(shot);
+        doAnyShotEntityCollisionsExceptAsteroids(shot);
         shot.life -= random(0.03, 0.04) * world.timeSpeed;
     }
 }
@@ -908,12 +914,15 @@ function doAnyShotAsteroidCollisions(shot) {
     });
 }
 function doAnyShotEntityCollisionsExceptAsteroids(shot) {
+    debugger;
     const allExceptAsteroidsAndShots = world.entities.filter((e) => e.tag !== "asteroid" && e.tag !== "shot" && e.live);
     for (let ent of allExceptAsteroidsAndShots) {
         if (isColliding(ent, shot)) {
-            ent.takeDamageFn(ent);
-            destroy(shot);
-            break;
+            const collisionResult = ent.takeDamageFn(ent);
+            if (collisionResult !== "no-collision") {
+                destroy(shot);
+                break;
+            }
         }
     }
 }
@@ -1199,7 +1208,7 @@ function createVehicle() {
         tag: "vehicle",
         updateFn: updateVehicle,
         drawFn: drawVehicle,
-        takeDamageFn: () => { },
+        takeDamageFn: () => "no-collision",
         zIndex: 0,
         updatePriority: 0,
         live: true,

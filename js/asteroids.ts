@@ -140,7 +140,9 @@ function updateAsteroid(p: Asteroid) {
     p.tookDamage = false;
 }
 
-function takeDamageAsteroid(a: Asteroid) {}
+function takeDamageAsteroid(a: Asteroid): CollisionResult {
+    return "no-collision"; //TODO: handle shatter and destruction here instead of in shots.ts
+}
 
 function randomMineral(): Mineral {
     return random([...allMineralNames]);

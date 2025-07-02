@@ -141,7 +141,7 @@ function createVehicle(): Vehicle {
         tag: "vehicle",
         updateFn: updateVehicle,
         drawFn: drawVehicle,
-        takeDamageFn: () => {},
+        takeDamageFn: () => "no-collision", //TODO: no collision for shot owner, but yes for other vehicles...
         zIndex: 0,
         updatePriority: 0,
         live: true,
