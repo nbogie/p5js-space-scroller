@@ -1,5 +1,5 @@
 let gPalette: Palette;
-type ColourName = "white" | "black";
+type ColourName = "white" | "black" | "gray100";
 let stdColours: Record<ColourName, p5.Color>;
 
 const FaveColors = {
@@ -56,7 +56,11 @@ const FaveColors = {
 };
 
 function setupStandardColours() {
-    stdColours = { white: color("white"), black: color("black") };
+    stdColours = {
+        white: color("white"),
+        black: color("black"),
+        gray100: color(100),
+    };
 }
 
 function randomizePalette() {

@@ -17,7 +17,11 @@ function drawAsteroid(a: Asteroid) {
 
         push();
         rotate(a.rotation);
-        fill(a.tookDamage ? stdColours.white : a.resType.color);
+        fill(
+            a.tookDamage
+                ? stdColours.white
+                : (a.resType.color ?? stdColours.gray100),
+        );
         if (a.mineral) {
             stroke("lime");
             const t = map(sin(frameCount / 10), -1, 1, 0, 1);
