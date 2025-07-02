@@ -26,7 +26,7 @@ function setup() {
     setupAsteroids(10);
     setupStarfield();
     setupVehicles(world.MAX_NUM_VEHICLES);
-    setupMobs(10);
+    setupMobs(30);
 
     const firstLiveVehicle = getLiveVehicles().find((v: Vehicle) => v.hp > 0);
     switchPlayerControlToVehicle(firstLiveVehicle);
