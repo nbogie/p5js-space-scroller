@@ -122,7 +122,9 @@ function randomMineral(): Mineral {
 }
 
 function getAsteroids() {
-    return world.entities.filter((e) => e.tag === "asteroid") as Asteroid[];
+    return world.entities.filter(
+        (e: Entity<any>) => e.tag === "asteroid",
+    ) as Asteroid[];
 }
 
 function getLiveAsteroids() {

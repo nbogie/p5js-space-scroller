@@ -1,4 +1,4 @@
-interface Orb extends Entity {
+interface Orb extends Entity<Orb> {
     life: number;
     radius: number;
     exploding: boolean;

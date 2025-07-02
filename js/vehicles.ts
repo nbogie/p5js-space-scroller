@@ -1,4 +1,4 @@
-interface Vehicle extends Entity {
+interface Vehicle extends Entity<Vehicle> {
     // from Entity
     //   pos: p5.Vector;
     //   vel: p5.Vector;
@@ -173,7 +173,7 @@ function createVehicle(): Vehicle {
             createSpreadWeaponSystem,
             createSurroundWeaponSystem,
         ])(),
-    };
+    } satisfies Vehicle;
 }
 function steerVehicleWithUserInput(v: Vehicle) {
     if (keyIsDown(UP_ARROW)) {

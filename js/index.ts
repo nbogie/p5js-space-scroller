@@ -4,7 +4,7 @@
 p5.disableFriendlyErrors = true;
 
 /** almost all game state (asteroids, ship, bullets, etc) */
-let world: World;
+let world: World<Entity<any>>;
 
 let pauseState: PauseState = { type: "unpaused", simplified: "unpaused" };
 

@@ -13,7 +13,7 @@ interface Config {
 }
 
 type AsteroidSize = 4 | 3 | 2 | 1;
-interface Asteroid extends Entity {
+interface Asteroid extends Entity<Asteroid> {
     // from Entity
     //   pos: p5.Vector;
     //   vel: p5.Vector;

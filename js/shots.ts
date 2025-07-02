@@ -1,4 +1,4 @@
-interface Shot extends Entity {
+interface Shot extends Entity<Shot> {
     //pos and vel from Entity
     rotation: number;
     radius: number;

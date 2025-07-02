@@ -1,5 +1,5 @@
-interface World {
-    entities: Entity[];
+interface World<AnyEntity extends Entity<any>> {
+    entities: AnyEntity[];
     stars: Star[];
     MAX_NUM_VEHICLES: number;
     trackedVehicle?: Vehicle;
@@ -10,8 +10,8 @@ interface World {
     timeSpeed: number;
 }
 
-function createWorld(): World {
-    const entities: Entity[] = [];
+function createWorld(): World<Entity<any>> {
+    const entities: Entity<any>[] = [];
     const stars: Star[] = [];
     const MAX_NUM_TARGETS: number = 6;
     const MAX_NUM_VEHICLES: number = 6;
@@ -36,6 +36,6 @@ function createWorld(): World {
         worldHeight,
         camera,
         timeSpeed: 1,
-    } satisfies World;
+    } satisfies World<Entity<any>>;
     return newWorld;
 }

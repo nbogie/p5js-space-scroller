@@ -1,6 +1,6 @@
 type Mob = ExploderMob | TeleporterMob | ChaserMob;
 
-interface BaseMob extends Entity {
+interface BaseMob<T extends Entity<T>> extends Entity<T> {
     colour: p5.Color;
     minimapColour: p5.Color;
 }
@@ -13,17 +13,17 @@ interface UpdatableMob {
     updateFn: (mob: Mob) => void;
 }
 
-interface ExploderMob extends BaseMob {
+interface ExploderMob extends BaseMob<ExploderMob> {
     state: "dormant" | "exploding";
     type: "exploder";
 }
 
-interface TeleporterMob extends BaseMob {
+interface TeleporterMob extends BaseMob<TeleporterMob> {
     type: "teleporter";
     timeOfLastTeleport: number | null;
 }
 
-interface ChaserMob extends BaseMob {
+interface ChaserMob extends BaseMob<ChaserMob> {
     type: "chaser";
     target?: Vehicle;
 }
@@ -123,7 +123,6 @@ function createChaserMob() {
 
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
-        state: "dormant",
         type: "chaser",
         colour: color(random(200, 255), random(200, 255), random(0, 50)),
         minimapColour: color("orange"),
