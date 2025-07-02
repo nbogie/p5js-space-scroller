@@ -5,14 +5,6 @@ interface BaseMob<T extends Entity<T>> extends Entity<T> {
     minimapColour: p5.Color;
 }
 
-interface DrawableMob {
-    drawFn: (mob: Mob) => void;
-}
-
-interface UpdatableMob {
-    updateFn: (mob: Mob) => void;
-}
-
 interface ExploderMob extends BaseMob<ExploderMob> {
     state: "dormant" | "exploding";
     type: "exploder";
@@ -128,6 +120,7 @@ function createChaserMob() {
         minimapColour: color("orange"),
         drawFn: drawChaserMob,
         updateFn: updateChaserMob,
+        // takeDamageFn: takeDamageChaserMob,
     } satisfies ChaserMob;
 }
 function drawChaserMob(mob: Mob) {

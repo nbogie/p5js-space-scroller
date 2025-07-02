@@ -10,13 +10,16 @@ function shatterAsteroid(a) {
     }
 }
 function drawAsteroid(a) {
+    var _a;
     if (a.live) {
         push();
         translateForScreenCoords(a.pos);
         colorMode(HSB, 100);
         push();
         rotate(a.rotation);
-        fill(a.tookDamage ? stdColours.white : a.resType.color);
+        fill(a.tookDamage
+            ? stdColours.white
+            : ((_a = a.resType.color) !== null && _a !== void 0 ? _a : stdColours.gray100));
         if (a.mineral) {
             stroke("lime");
             const t = map(sin(frameCount / 10), -1, 1, 0, 1);
@@ -530,7 +533,6 @@ function createChaserMob() {
         updatePriority: 0,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
-        state: "dormant",
         type: "chaser",
         colour: color(random(200, 255), random(200, 255), random(0, 50)),
         minimapColour: color("orange"),
@@ -674,7 +676,11 @@ const FaveColors = {
     },
 };
 function setupStandardColours() {
-    stdColours = { white: color("white"), black: color("black") };
+    stdColours = {
+        white: color("white"),
+        black: color("black"),
+        gray100: color(100),
+    };
 }
 function randomizePalette() {
     gPalette = FaveColors.randomPalette();
