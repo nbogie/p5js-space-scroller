@@ -872,32 +872,32 @@ function drawDefaultShot(s) {
         pop();
     }
 }
-function updateShot(p) {
-    if (p.life <= 0) {
-        destroy(p);
+function updateShot(shot) {
+    if (shot.life <= 0) {
+        destroy(shot);
         return;
     }
-    if (!p.live) {
+    if (!shot.live) {
         return;
     }
     const asteroids = getLiveAsteroids();
-    if (p.live) {
-        p.pos.x += p.vel.x * world.timeSpeed;
-        p.pos.y += p.vel.y * world.timeSpeed;
+    if (shot.live) {
+        shot.pos.x += shot.vel.x * world.timeSpeed;
+        shot.pos.y += shot.vel.y * world.timeSpeed;
         asteroids
-            .filter((a) => a.live)
-            .forEach((a) => {
-            if (isColliding(a, p)) {
-                a.hp -= p.damage;
-                a.tookDamage = true;
-                destroy(p);
-                if (a.hp <= 0) {
-                    destroy(a);
-                    shatterAsteroid(a);
+            .filter((ast) => ast.live)
+            .forEach((ast) => {
+            if (isColliding(ast, shot)) {
+                ast.hp -= shot.damage;
+                ast.tookDamage = true;
+                destroy(shot);
+                if (ast.hp <= 0) {
+                    destroy(ast);
+                    shatterAsteroid(ast);
                 }
             }
         });
-        p.life -= random(0.03, 0.04) * world.timeSpeed;
+        shot.life -= random(0.03, 0.04) * world.timeSpeed;
     }
 }
 let shootOsc;
