@@ -280,7 +280,7 @@ function setup() {
     setupAsteroids(10);
     setupStarfield();
     setupVehicles(world.MAX_NUM_VEHICLES);
-    setupMobs(10);
+    setupMobs(30);
     const firstLiveVehicle = getLiveVehicles().find((v) => v.hp > 0);
     switchPlayerControlToVehicle(firstLiveVehicle);
     frameRate(60);
@@ -1410,9 +1410,9 @@ function drawChaserMob(mob) {
     pop();
 }
 function takeDamageChaserMob(mob) {
-    console.log("CHASER TOOK DMG");
-    destroy(mob);
-    return "destroyed";
+    const t = getNewTargetForChaserMobOrUndefined(mob);
+    mob.target = t;
+    return "reflected";
 }
 function updateChaserMob(mob) {
     if (!mob.target) {
@@ -1424,6 +1424,9 @@ function updateChaserMob(mob) {
         mob.vel.lerp(desired, 0.1);
         mob.pos.add(mob.vel);
     }
+}
+function getNewTargetForChaserMobOrUndefined(mob) {
+    return random(getLiveVehicles().filter((v) => mob.target !== v));
 }
 function createExploderMob() {
     return {

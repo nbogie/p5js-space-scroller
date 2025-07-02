@@ -3,7 +3,6 @@ interface ChaserMob extends BaseMob<ChaserMob> {
     target?: Vehicle;
 }
 
-
 function createChaserMob() {
     return {
         tag: "mob-chaser",
@@ -34,9 +33,9 @@ function drawChaserMob(mob: Mob) {
     pop();
 }
 function takeDamageChaserMob(mob: ChaserMob): CollisionResult {
-    console.log("CHASER TOOK DMG");
-    destroy(mob);
-    return "destroyed";
+    const t = getNewTargetForChaserMobOrUndefined(mob);
+    mob.target = t;
+    return "reflected";
 }
 
 function updateChaserMob(mob: ChaserMob): void {
@@ -49,4 +48,7 @@ function updateChaserMob(mob: ChaserMob): void {
         mob.vel.lerp(desired, 0.1); // Smoothly adjust velocity towards the target
         mob.pos.add(mob.vel);
     }
+}
+function getNewTargetForChaserMobOrUndefined(mob: ChaserMob) {
+    return random(getLiveVehicles().filter((v) => mob.target !== v));
 }
