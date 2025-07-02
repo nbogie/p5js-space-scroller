@@ -35,6 +35,7 @@ function addOrb(opts: OrbOptions) {
         updatePriority: 0,
         drawFn: drawOrb,
         updateFn: updateOrb,
+        takeDamageFn: () => {},
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
         live: true,

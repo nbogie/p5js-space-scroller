@@ -37,6 +37,7 @@ function createShot(opts: ShotOptions): Shot {
         updatePriority: 0,
         drawFn,
         updateFn: updateShot,
+        takeDamageFn: () => {},
         pos: opts.pos.copy().add(vel),
         rotation, //NOT inferred from the velocity
         vel: vel,

@@ -12,29 +12,6 @@ interface Config {
     steerSpeed: number;
 }
 
-type AsteroidSize = 4 | 3 | 2 | 1;
-interface Asteroid extends Entity<Asteroid> {
-    // from Entity
-    //   pos: p5.Vector;
-    //   vel: p5.Vector;
-    //   live: boolean;
-
-    resType: ResourceType;
-    sizeCategory: AsteroidSize;
-    radius: number;
-    damage: number;
-    mineral: Mineral | null;
-    hp: number;
-    tookDamage: boolean;
-    rotation: number;
-    rotationSpeed: number;
-    minimapColour: p5.Color;
-}
-interface AsteroidOpts {
-    sizeCategory?: number;
-    mineral?: Mineral | null;
-    pos: p5.Vector;
-}
 interface Collidable {
     pos: p5.Vector;
     radius: number;

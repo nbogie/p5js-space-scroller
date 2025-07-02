@@ -60,6 +60,10 @@ function updateExploderMob() {
     //no-op for now...
 }
 
+function takeDamageExploderMob() {
+    //no-op for now...
+}
+
 function updateTeleporterMob(mob: TeleporterMob): void {
     const shouldTeleport =
         millis() - (mob.timeOfLastTeleport ?? 0) > 3000 && random() < 0.01; //mob.pos.dist(world.trackedVehicle.pos) < 200;
@@ -85,6 +89,7 @@ function createExploderMob() {
         minimapColour: color("orange"),
         drawFn: drawExploderMob,
         updateFn: updateExploderMob,
+        takeDamageFn: takeDamageExploderMob,
     } satisfies ExploderMob;
 }
 
@@ -101,6 +106,7 @@ function createTeleporterMob() {
         colour: color("magenta"),
         drawFn: drawTeleporterMob,
         updateFn: updateTeleporterMob,
+        takeDamageFn: () => {}, //no op for now
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     } satisfies TeleporterMob;
@@ -120,7 +126,7 @@ function createChaserMob() {
         minimapColour: color("orange"),
         drawFn: drawChaserMob,
         updateFn: updateChaserMob,
-        // takeDamageFn: takeDamageChaserMob,
+        takeDamageFn: () => takeDamageChaserMob,
     } satisfies ChaserMob;
 }
 function drawChaserMob(mob: Mob) {
@@ -133,6 +139,9 @@ function drawChaserMob(mob: Mob) {
     rect(0, 0, 30, 10);
     text("Chaser", 20, 20);
     pop();
+}
+function takeDamageChaserMob(mob: ChaserMob): void {
+    destroy(mob);
 }
 function updateChaserMob(mob: ChaserMob): void {
     if (!mob.target) {

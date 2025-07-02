@@ -66,6 +66,7 @@ function createAsteroidAt(opts) {
         zIndex: 0,
         drawFn: drawAsteroid,
         updateFn: updateAsteroid,
+        takeDamageFn: takeDamageAsteroid,
     };
 }
 function setupAsteroids(n) {
@@ -106,6 +107,7 @@ function updateAsteroid(p) {
     }
     p.tookDamage = false;
 }
+function takeDamageAsteroid(a) { }
 function randomMineral() {
     return random([...allMineralNames]);
 }
@@ -484,6 +486,8 @@ function drawTeleporterMob(mob) {
 }
 function updateExploderMob() {
 }
+function takeDamageExploderMob() {
+}
 function updateTeleporterMob(mob) {
     var _a;
     const shouldTeleport = millis() - ((_a = mob.timeOfLastTeleport) !== null && _a !== void 0 ? _a : 0) > 3000 && random() < 0.01;
@@ -507,6 +511,7 @@ function createExploderMob() {
         minimapColour: color("orange"),
         drawFn: drawExploderMob,
         updateFn: updateExploderMob,
+        takeDamageFn: takeDamageExploderMob,
     };
 }
 function createTeleporterMob() {
@@ -521,6 +526,7 @@ function createTeleporterMob() {
         colour: color("magenta"),
         drawFn: drawTeleporterMob,
         updateFn: updateTeleporterMob,
+        takeDamageFn: () => { },
         minimapColour: color("magenta"),
         timeOfLastTeleport: 0,
     };
@@ -538,6 +544,7 @@ function createChaserMob() {
         minimapColour: color("orange"),
         drawFn: drawChaserMob,
         updateFn: updateChaserMob,
+        takeDamageFn: () => takeDamageChaserMob,
     };
 }
 function drawChaserMob(mob) {
@@ -550,6 +557,9 @@ function drawChaserMob(mob) {
     rect(0, 0, 30, 10);
     text("Chaser", 20, 20);
     pop();
+}
+function takeDamageChaserMob(mob) {
+    destroy(mob);
 }
 function updateChaserMob(mob) {
     if (!mob.target) {
@@ -608,6 +618,7 @@ function addOrb(opts) {
         updatePriority: 0,
         drawFn: drawOrb,
         updateFn: updateOrb,
+        takeDamageFn: () => { },
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
         live: true,
@@ -831,6 +842,7 @@ function createShot(opts) {
         updatePriority: 0,
         drawFn,
         updateFn: updateShot,
+        takeDamageFn: () => { },
         pos: opts.pos.copy().add(vel),
         rotation,
         vel: vel,
@@ -1169,6 +1181,7 @@ function createVehicle() {
         tag: "vehicle",
         updateFn: updateVehicle,
         drawFn: drawVehicle,
+        takeDamageFn: () => { },
         zIndex: 0,
         updatePriority: 0,
         live: true,

@@ -142,6 +142,7 @@ function createVehicle(): Vehicle {
         tag: "vehicle",
         updateFn: updateVehicle,
         drawFn: drawVehicle,
+        takeDamageFn: () => {},
         zIndex: 0,
         updatePriority: 0,
         live: true,

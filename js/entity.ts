@@ -1,5 +1,6 @@
 type DrawFunction<T> = (selfEntity: T) => void;
 type UpdateFunction<T> = (selfEntity: T) => void;
+type TakeDamageFunction<T> = (selfEntity: T) => void;
 
 type EntityTag =
     | "asteroid"
@@ -19,6 +20,7 @@ interface Entity<T extends Entity<T>> {
     live: boolean;
     drawFn: DrawFunction<T>;
     updateFn: UpdateFunction<T>;
+    takeDamageFn: TakeDamageFunction<T>;
 }
 
 //Note: some uses of destroy will expect to be able to further manipulate the entity
