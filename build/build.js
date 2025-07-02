@@ -466,126 +466,6 @@ function createRandomMob() {
     const mob = fn();
     return mob;
 }
-function drawExploderMob(mob) {
-    push();
-    noStroke();
-    fill(mob.colour);
-    translateForScreenCoords(mob.pos);
-    rectMode(CENTER);
-    square(0, 0, 20 + sin(frameCount / 20) * 10);
-    text("Exploder", 20, 20);
-    pop();
-}
-function drawTeleporterMob(mob) {
-    push();
-    noStroke();
-    fill(mob.colour);
-    translateForScreenCoords(mob.pos);
-    rectMode(CENTER);
-    circle(0, 0, 20);
-    text("Teleporter", 20, 20);
-    pop();
-}
-function updateExploderMob() {
-}
-function takeDamageExploderMob() {
-    return "reflected";
-}
-function updateTeleporterMob(mob) {
-    var _a;
-    const shouldTeleport = millis() - ((_a = mob.timeOfLastTeleport) !== null && _a !== void 0 ? _a : 0) > 3000 && random() < 0.01;
-    if (shouldTeleport) {
-        const hopDist = random(400, 4000);
-        mob.pos.add(p5.Vector.random2D().mult(hopDist));
-        mob.timeOfLastTeleport = millis();
-    }
-}
-function createExploderMob() {
-    return {
-        tag: "mob-exploder",
-        live: true,
-        zIndex: 0,
-        updatePriority: 0,
-        collisionRadius: 10,
-        pos: randomWorldPos(),
-        vel: p5.Vector.random2D().mult(0.3),
-        state: "dormant",
-        type: "exploder",
-        colour: color(random(200, 255), random(200, 255), random(0, 50)),
-        minimapColour: color("orange"),
-        drawFn: drawExploderMob,
-        updateFn: updateExploderMob,
-        takeDamageFn: takeDamageExploderMob,
-    };
-}
-function createTeleporterMob() {
-    return {
-        tag: "mob-teleporter",
-        live: true,
-        zIndex: 0,
-        updatePriority: 0,
-        pos: randomWorldPos(),
-        vel: p5.Vector.random2D().mult(0.3),
-        collisionRadius: 10,
-        type: "teleporter",
-        colour: color("magenta"),
-        drawFn: drawTeleporterMob,
-        updateFn: updateTeleporterMob,
-        takeDamageFn: () => "no-collision",
-        minimapColour: color("magenta"),
-        timeOfLastTeleport: 0,
-    };
-}
-function createChaserMob() {
-    return {
-        tag: "mob-chaser",
-        live: true,
-        zIndex: 0,
-        updatePriority: 0,
-        pos: randomWorldPos(),
-        vel: p5.Vector.random2D().mult(0.3),
-        collisionRadius: 10,
-        type: "chaser",
-        colour: color(random(200, 255), random(200, 255), random(0, 50)),
-        minimapColour: color("orange"),
-        drawFn: drawChaserMob,
-        updateFn: updateChaserMob,
-        takeDamageFn: takeDamageChaserMob,
-    };
-}
-function drawChaserMob(mob) {
-    push();
-    noStroke();
-    fill(mob.colour);
-    translateForScreenCoords(mob.pos);
-    rotate(mob.vel.heading());
-    rectMode(CENTER);
-    rect(0, 0, 30, 10);
-    text("Chaser", 20, 20);
-    pop();
-}
-function takeDamageChaserMob(mob) {
-    console.log("CHASER TOOK DMG");
-    destroy(mob);
-    return "destroyed";
-}
-function updateChaserMob(mob) {
-    if (!mob.target) {
-        mob.target = world.trackedVehicle;
-    }
-    if (mob.target) {
-        const desired = p5.Vector.sub(mob.target.pos, mob.pos);
-        desired.setMag(2);
-        mob.vel.lerp(desired, 0.1);
-        mob.pos.add(mob.vel);
-    }
-}
-function getTeleporterMobs() {
-    return world.entities.filter((e) => e.tag === "mob-teleporter");
-}
-function getExploderMobs() {
-    return world.entities.filter((e) => e.tag === "mob-exploder");
-}
 function mouseMoved() { }
 function mousePressed() {
     if (config.shouldPlaySound && soundNotYetEnabledByGesture) {
@@ -1487,5 +1367,125 @@ function createWorld() {
         timeSpeed: 1,
     };
     return newWorld;
+}
+function createChaserMob() {
+    return {
+        tag: "mob-chaser",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
+        pos: randomWorldPos(),
+        vel: p5.Vector.random2D().mult(0.3),
+        collisionRadius: 10,
+        type: "chaser",
+        colour: color(random(200, 255), random(200, 255), random(0, 50)),
+        minimapColour: color("orange"),
+        drawFn: drawChaserMob,
+        updateFn: updateChaserMob,
+        takeDamageFn: takeDamageChaserMob,
+    };
+}
+function drawChaserMob(mob) {
+    push();
+    noStroke();
+    fill(mob.colour);
+    translateForScreenCoords(mob.pos);
+    rotate(mob.vel.heading());
+    rectMode(CENTER);
+    rect(0, 0, 30, 10);
+    text("Chaser", 20, 20);
+    pop();
+}
+function takeDamageChaserMob(mob) {
+    console.log("CHASER TOOK DMG");
+    destroy(mob);
+    return "destroyed";
+}
+function updateChaserMob(mob) {
+    if (!mob.target) {
+        mob.target = world.trackedVehicle;
+    }
+    if (mob.target) {
+        const desired = p5.Vector.sub(mob.target.pos, mob.pos);
+        desired.setMag(2);
+        mob.vel.lerp(desired, 0.1);
+        mob.pos.add(mob.vel);
+    }
+}
+function createExploderMob() {
+    return {
+        tag: "mob-exploder",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
+        collisionRadius: 10,
+        pos: randomWorldPos(),
+        vel: p5.Vector.random2D().mult(0.3),
+        state: "dormant",
+        type: "exploder",
+        colour: color(random(200, 255), random(200, 255), random(0, 50)),
+        minimapColour: color("orange"),
+        drawFn: drawExploderMob,
+        updateFn: updateExploderMob,
+        takeDamageFn: takeDamageExploderMob,
+    };
+}
+function drawExploderMob(mob) {
+    push();
+    noStroke();
+    fill(mob.colour);
+    translateForScreenCoords(mob.pos);
+    rectMode(CENTER);
+    square(0, 0, 20 + sin(frameCount / 20) * 10);
+    text("Exploder", 20, 20);
+    pop();
+}
+function updateExploderMob() {
+}
+function takeDamageExploderMob() {
+    return "reflected";
+}
+function getExploderMobs() {
+    return world.entities.filter((e) => e.tag === "mob-exploder");
+}
+function createTeleporterMob() {
+    return {
+        tag: "mob-teleporter",
+        live: true,
+        zIndex: 0,
+        updatePriority: 0,
+        pos: randomWorldPos(),
+        vel: p5.Vector.random2D().mult(0.3),
+        collisionRadius: 10,
+        type: "teleporter",
+        colour: color("magenta"),
+        drawFn: drawTeleporterMob,
+        updateFn: updateTeleporterMob,
+        takeDamageFn: () => "no-collision",
+        minimapColour: color("magenta"),
+        timeOfLastTeleport: 0,
+    };
+}
+function drawTeleporterMob(mob) {
+    push();
+    noStroke();
+    fill(mob.colour);
+    translateForScreenCoords(mob.pos);
+    rectMode(CENTER);
+    circle(0, 0, 20);
+    text("Teleporter", 20, 20);
+    pop();
+}
+function updateTeleporterMob(mob) {
+    var _a;
+    const shouldTeleport = millis() - ((_a = mob.timeOfLastTeleport) !== null && _a !== void 0 ? _a : 0) > 3000 && random() < 0.01;
+    if (shouldTeleport) {
+        const hopDist = random(400, 4000);
+        mob.pos.add(p5.Vector.random2D().mult(hopDist));
+        mob.timeOfLastTeleport = millis();
+    }
+}
+function getTeleporterMobs() {
+    return world.entities.filter((e) => e.tag === "mob-teleporter");
 }
 //# sourceMappingURL=build.js.map
