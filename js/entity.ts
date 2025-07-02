@@ -26,6 +26,8 @@ interface Entity<T extends Entity<T>> extends Collidable {
     live: boolean;
     drawFn: DrawFunction<T>;
     updateFn: UpdateFunction<T>;
+    /** TODO: perhaps this should be collideWithFn, or we should introduce that test separately.
+     */
     takeDamageFn: TakeDamageFunction<T>;
 }
 
