@@ -1,7 +1,6 @@
 interface Shot extends Entity<Shot> {
     //pos and vel from Entity
     rotation: number;
-    radius: number;
     damage: number;
     color: p5.Color;
     life: number;
@@ -41,7 +40,7 @@ function createShot(opts: ShotOptions): Shot {
         pos: opts.pos.copy().add(vel),
         rotation, //NOT inferred from the velocity
         vel: vel,
-        radius: Math.pow(sz, 2),
+        collisionRadius: Math.pow(sz, 2),
         damage: sz,
         color: shotColor,
         life: 1,
@@ -64,7 +63,7 @@ function drawDefaultShot(s: Shot) {
         fill(s.color);
         noStroke();
         rotate(s.rotation);
-        rect(0, 0, s.radius, s.radius / 2);
+        rect(0, 0, s.collisionRadius, s.collisionRadius / 2);
         pop();
     }
 }
@@ -79,23 +78,41 @@ function updateShot(shot: Shot) {
         return;
     }
 
-    const asteroids = getLiveAsteroids();
     if (shot.live) {
         shot.pos.x += shot.vel.x * world.timeSpeed;
         shot.pos.y += shot.vel.y * world.timeSpeed;
-        asteroids
-            .filter((ast) => ast.live)
-            .forEach((ast) => {
-                if (isColliding(ast, shot)) {
-                    ast.hp -= shot.damage;
-                    ast.tookDamage = true;
-                    destroy(shot);
-                    if (ast.hp <= 0) {
-                        destroy(ast);
-                        shatterAsteroid(ast);
-                    }
-                }
-            });
+        doAnyShotAsteroidCollisions(shot);
         shot.life -= random(0.03, 0.04) * world.timeSpeed;
+    }
+}
+
+function doAnyShotAsteroidCollisions(shot: Shot) {
+    const asteroids = getLiveAsteroids();
+
+    asteroids
+        .filter((ast) => ast.live)
+        .forEach((ast) => {
+            if (isColliding(ast, shot)) {
+                ast.hp -= shot.damage;
+                ast.tookDamage = true;
+                destroy(shot);
+                if (ast.hp <= 0) {
+                    destroy(ast);
+                    shatterAsteroid(ast);
+                }
+            }
+        });
+}
+
+function doAnyShotEntityCollisionsExceptAsteroids(shot: Shot) {
+    const allExceptAsteroidsAndShots = world.entities.filter(
+        (e: Entity<any>) => e.tag !== "asteroid" && e.tag !== "shot" && e.live,
+    );
+    for (let ent of allExceptAsteroidsAndShots) {
+        if (isColliding(ent, shot)) {
+            ent.takeDamageFn(ent);
+            destroy(shot);
+            break;
+        }
     }
 }

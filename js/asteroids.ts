@@ -7,7 +7,6 @@ interface Asteroid extends Entity<Asteroid> {
 
     resType: ResourceType;
     sizeCategory: AsteroidSize;
-    radius: number;
     damage: number;
     mineral: Mineral | null;
     hp: number;
@@ -48,11 +47,11 @@ function drawAsteroid(a: Asteroid) {
         if (a.mineral) {
             stroke("lime");
             const t = map(sin(frameCount / 10), -1, 1, 0, 1);
-            strokeWeight((t * a.radius) / 6);
+            strokeWeight((t * a.collisionRadius) / 6);
         } else {
             noStroke();
         }
-        square(0, 0, a.radius * 2.7, 6, 6);
+        square(0, 0, a.collisionRadius * 2.7, 6, 6);
 
         pop();
         fill("white");
@@ -83,7 +82,7 @@ function createAsteroidAt(opts: AsteroidOpts) {
         vel: p5.Vector.random2D().mult(random(1, 5)),
         resType: random(resTypes),
         sizeCategory: sz,
-        radius: sz * 7,
+        collisionRadius: sz * 7,
         damage: sz,
         mineral: random() < 0.2 ? randomMineral() : null,
         hp: sz * 20,

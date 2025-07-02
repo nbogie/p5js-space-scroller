@@ -11,9 +11,14 @@ type EntityTag =
     | "mob-exploder"
     | "mob-chaser";
 
-interface Entity<T extends Entity<T>> {
-    tag: EntityTag;
+//todo: simplify by putting these properties in Entity, and auto-gen this type from Entity.
+interface Collidable {
     pos: p5.Vector;
+    collisionRadius: number;
+}
+
+interface Entity<T extends Entity<T>> extends Collidable {
+    tag: EntityTag;
     vel: p5.Vector;
     zIndex: number;
     updatePriority: number;

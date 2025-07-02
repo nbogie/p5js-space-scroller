@@ -6,7 +6,6 @@ interface Vehicle extends Entity<Vehicle> {
 
     accel: p5.Vector;
     life: number;
-    radius: number;
     hp: number;
     fuel: number;
     maxSteeringForce: number;
@@ -149,7 +148,7 @@ function createVehicle(): Vehicle {
         pos: randomWorldPos(),
         vel: createVector(0, 0),
         accel: createVector(0, 0),
-        radius: 10,
+        collisionRadius: 10,
         hp: 100,
         target: undefined,
         fuel: 100,

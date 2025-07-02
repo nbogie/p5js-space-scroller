@@ -80,7 +80,7 @@ function createExploderMob() {
         live: true,
         zIndex: 0,
         updatePriority: 0,
-
+        collisionRadius: 10,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
         state: "dormant",
@@ -99,9 +99,9 @@ function createTeleporterMob() {
         live: true,
         zIndex: 0,
         updatePriority: 0,
-
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
+        collisionRadius: 10,
         type: "teleporter",
         colour: color("magenta"),
         drawFn: drawTeleporterMob,
@@ -121,6 +121,7 @@ function createChaserMob() {
 
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
+        collisionRadius: 10,
         type: "chaser",
         colour: color(random(200, 255), random(200, 255), random(0, 50)),
         minimapColour: color("orange"),

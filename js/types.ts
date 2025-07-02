@@ -12,11 +12,6 @@ interface Config {
     steerSpeed: number;
 }
 
-interface Collidable {
-    pos: p5.Vector;
-    radius: number;
-}
-
 interface Palette {
     colors: p5.Color[];
     name: string;

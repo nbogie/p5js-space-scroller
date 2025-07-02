@@ -50,7 +50,10 @@ function drawVec(
 }
 
 function isColliding(a: Collidable, s: Collidable) {
-    return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
+    return (
+        dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) <
+        a.collisionRadius + s.collisionRadius
+    );
 }
 
 function calcNearestEntity<

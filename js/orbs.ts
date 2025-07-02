@@ -36,6 +36,7 @@ function addOrb(opts: OrbOptions) {
         drawFn: drawOrb,
         updateFn: updateOrb,
         takeDamageFn: () => {},
+        collisionRadius: 0,
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
         live: true,

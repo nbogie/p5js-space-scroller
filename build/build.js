@@ -23,12 +23,12 @@ function drawAsteroid(a) {
         if (a.mineral) {
             stroke("lime");
             const t = map(sin(frameCount / 10), -1, 1, 0, 1);
-            strokeWeight((t * a.radius) / 6);
+            strokeWeight((t * a.collisionRadius) / 6);
         }
         else {
             noStroke();
         }
-        square(0, 0, a.radius * 2.7, 6, 6);
+        square(0, 0, a.collisionRadius * 2.7, 6, 6);
         pop();
         fill("white");
         textSize(14);
@@ -54,7 +54,7 @@ function createAsteroidAt(opts) {
         vel: p5.Vector.random2D().mult(random(1, 5)),
         resType: random(resTypes),
         sizeCategory: sz,
-        radius: sz * 7,
+        collisionRadius: sz * 7,
         damage: sz,
         mineral: random() < 0.2 ? randomMineral() : null,
         hp: sz * 20,
@@ -503,6 +503,7 @@ function createExploderMob() {
         live: true,
         zIndex: 0,
         updatePriority: 0,
+        collisionRadius: 10,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
         state: "dormant",
@@ -522,6 +523,7 @@ function createTeleporterMob() {
         updatePriority: 0,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
+        collisionRadius: 10,
         type: "teleporter",
         colour: color("magenta"),
         drawFn: drawTeleporterMob,
@@ -539,6 +541,7 @@ function createChaserMob() {
         updatePriority: 0,
         pos: randomWorldPos(),
         vel: p5.Vector.random2D().mult(0.3),
+        collisionRadius: 10,
         type: "chaser",
         colour: color(random(200, 255), random(200, 255), random(0, 50)),
         minimapColour: color("orange"),
@@ -619,6 +622,7 @@ function addOrb(opts) {
         drawFn: drawOrb,
         updateFn: updateOrb,
         takeDamageFn: () => { },
+        collisionRadius: 0,
         pos: opts.pos.copy(),
         vel: opts.vel.copy(),
         live: true,
@@ -846,7 +850,7 @@ function createShot(opts) {
         pos: opts.pos.copy().add(vel),
         rotation,
         vel: vel,
-        radius: Math.pow(sz, 2),
+        collisionRadius: Math.pow(sz, 2),
         damage: sz,
         color: shotColor,
         life: 1,
@@ -868,7 +872,7 @@ function drawDefaultShot(s) {
         fill(s.color);
         noStroke();
         rotate(s.rotation);
-        rect(0, 0, s.radius, s.radius / 2);
+        rect(0, 0, s.collisionRadius, s.collisionRadius / 2);
         pop();
     }
 }
@@ -880,24 +884,37 @@ function updateShot(shot) {
     if (!shot.live) {
         return;
     }
-    const asteroids = getLiveAsteroids();
     if (shot.live) {
         shot.pos.x += shot.vel.x * world.timeSpeed;
         shot.pos.y += shot.vel.y * world.timeSpeed;
-        asteroids
-            .filter((ast) => ast.live)
-            .forEach((ast) => {
-            if (isColliding(ast, shot)) {
-                ast.hp -= shot.damage;
-                ast.tookDamage = true;
-                destroy(shot);
-                if (ast.hp <= 0) {
-                    destroy(ast);
-                    shatterAsteroid(ast);
-                }
-            }
-        });
+        doAnyShotAsteroidCollisions(shot);
         shot.life -= random(0.03, 0.04) * world.timeSpeed;
+    }
+}
+function doAnyShotAsteroidCollisions(shot) {
+    const asteroids = getLiveAsteroids();
+    asteroids
+        .filter((ast) => ast.live)
+        .forEach((ast) => {
+        if (isColliding(ast, shot)) {
+            ast.hp -= shot.damage;
+            ast.tookDamage = true;
+            destroy(shot);
+            if (ast.hp <= 0) {
+                destroy(ast);
+                shatterAsteroid(ast);
+            }
+        }
+    });
+}
+function doAnyShotEntityCollisionsExceptAsteroids(shot) {
+    const allExceptAsteroidsAndShots = world.entities.filter((e) => e.tag !== "asteroid" && e.tag !== "shot" && e.live);
+    for (let ent of allExceptAsteroidsAndShots) {
+        if (isColliding(ent, shot)) {
+            ent.takeDamageFn(ent);
+            destroy(shot);
+            break;
+        }
     }
 }
 let shootOsc;
@@ -1071,7 +1088,8 @@ function drawVec(vec, len, minMag, maxMag, c, lineWidth = 1) {
     pop();
 }
 function isColliding(a, s) {
-    return dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) < a.radius + s.radius;
+    return (dist(a.pos.x, a.pos.y, s.pos.x, s.pos.y) <
+        a.collisionRadius + s.collisionRadius);
 }
 function calcNearestEntity(ship, entities) {
     let recordDist = Number.MAX_SAFE_INTEGER;
@@ -1188,7 +1206,7 @@ function createVehicle() {
         pos: randomWorldPos(),
         vel: createVector(0, 0),
         accel: createVector(0, 0),
-        radius: 10,
+        collisionRadius: 10,
         hp: 100,
         target: undefined,
         fuel: 100,
