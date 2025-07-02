@@ -796,15 +796,28 @@ function doAnyShotAsteroidCollisions(shot) {
 function doAnyShotEntityCollisionsExceptAsteroids(shot) {
     debugger;
     const allExceptAsteroidsAndShots = world.entities.filter((e) => e.tag !== "asteroid" && e.tag !== "shot" && e.live);
-    for (let ent of allExceptAsteroidsAndShots) {
+    entityLoop: for (let ent of allExceptAsteroidsAndShots) {
         if (isColliding(ent, shot)) {
             const collisionResult = ent.takeDamageFn(ent);
-            if (collisionResult !== "no-collision") {
-                destroy(shot);
-                break;
+            switch (collisionResult) {
+                case "no-collision":
+                    break;
+                case "damaged":
+                case "destroyed":
+                    destroy(shot);
+                    break entityLoop;
+                case "reflected":
+                    reflectShot(shot, ent);
+                    break;
+                default:
+                    break;
             }
         }
     }
+}
+function reflectShot(shot, ent) {
+    shot.vel.mult(-1);
+    shot.rotation += PI;
 }
 let shootOsc;
 let shootEnv;
