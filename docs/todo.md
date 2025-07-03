@@ -2,6 +2,7 @@
 
 ## Feature ideas
 
+- exploders can be shot only say 3 times, then they explode sending other shots everywhere, possibly in chain reaction.
 - collectable power-ups
 - allow weapon systems to process (or ignore) standard upgrades: shot-speed, shot number, dmg, fire rate, electric-dmg, fire-dmg, ice-dmg, shot spread increase/decrease, chain lightning, explosive...
 - various mobs with different emergent behaviours through interactions and desires
