@@ -67,3 +67,5 @@ mindmap
 Note:
 
 - [mermaid mindmap diagram documentation](https://mermaid.js.org/syntax/mindmap.html)
+
+- [older mindmap on excalidraw](https://excalidraw.com/#json=UADx5icxu7EYxfx8HjlzB,c38pi8CQoI5-rajndM-luw)
